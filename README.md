@@ -1,7 +1,9 @@
 ## **Surfacia**
 **SURF Atomic Chemical Interaction Analyzer - Surfacia**
 
-**Surfacia** (Surface Atomic Chemical Interaction Analyzer) is a comprehensive toolset designed to automate the workflow for analyzing surface atomic chemical interactions. It integrates molecular structure generation, quantum chemical computations, feature extraction, and machine learning analysis, providing a streamlined solution for surface chemistry research.
+**Surfacia** (Surface Atomic Chemical Interaction Analyzer) is a powerful tool that automates the workflow for analyzing surface atomic chemical interactions and generating interpretable descriptors, focusing on properties that are directly relevant to chemists. It extracts molecular descriptors related to electrostatic potential (ESP) and electron interaction properties, such as averaged local ionization energy (ALIE) and local electron attachment energy (LEAE). These descriptors are particularly useful for quantifying electron-withdrawing effects and steric hindrance, which are key factors in understanding molecular behavior in chemical interactions.
+
+By leveraging these surface properties, Surfacia provides a chemically interpretable framework for quantitative structure-property relationships (QSPR). The integration of molecular structure generation, quantum chemical computations, feature extraction, and machine learning analysis within Surfacia offers a comprehensive and streamlined solution for interpretable machine learning in chemistry research.
 
 ### **Features**
 - **3D Structure Generation**: Converts SMILES strings to 3D molecular structures (XYZ format).
@@ -71,7 +73,8 @@ Run the `XGB_Stepregression.py` script (submitted via `sbatch python.sh`) to per
 ---
 
 ## **Developer**
-**Dr. Yuming Su** is the primary developer of **Surfacia: Surface Atomic Chemical Interaction Analyzer**. Dr. Su completed his Ph.D. in 2024 from the **College of Chemistry and Chemical Engineering** at **Xiamen University**.
+**Dr. Yuming Su** is the primary developer of **Surfacia: Surface Atomic Chemical Interaction Analyzer**. Dr. Su completed his Ph.D. in 2024 from the **College of Chemistry and Chemical Engineering** at **Xiamen University**.  
+orcid=0009-0001-9510-4173
 
 ---
 
