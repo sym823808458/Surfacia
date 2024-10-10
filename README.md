@@ -1,5 +1,6 @@
 ## **Surfacia**
 **SURF Atomic Chemical Interaction Analyzer - Surfacia**
+![b3897a252151144e7189324c07bb5dd](https://github.com/user-attachments/assets/b018d383-4626-494c-86d0-8748a7c35cb4)
 
 **Surfacia** (Surface Atomic Chemical Interaction Analyzer) is a powerful tool that automates the workflow for analyzing surface atomic chemical interactions and generating interpretable descriptors, focusing on properties that are directly relevant to chemists. It extracts molecular descriptors related to electrostatic potential (ESP) and electron interaction properties, such as averaged local ionization energy (ALIE) and local electron attachment energy (LEAE). These descriptors are particularly useful for quantifying electron-withdrawing effects and steric hindrance, which are key factors in understanding molecular behavior in chemical interactions.
 
