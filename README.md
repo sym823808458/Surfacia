@@ -35,41 +35,38 @@ Ensure that the following computational chemistry software is available on your 
 
 ## **Workflow Overview**
 
-### **Generate 3D Structures**
-Run the `smi2xyz.py` script to convert SMILES strings from the input CSV into 3D coordinates (XYZ format). The input CSV should contain two columns: `SMILES` and `TARGET`. The script outputs multiple `.xyz` files (e.g., `000001.xyz`, `000002.xyz`, etc.).
+### **Surfacia Command Line Usage Manual**
 
-### **Reorder Atom Positions (Optional)**
-Run the `extract_element_first.py` script to reorder atoms in XYZ files. This step allows for rearranging specific atoms to the beginning of the file. Input and output are both XYZ files, and the reordered files are saved in the `reorder/` folder.
+This manual provides a step-by-step guide on how to use the Surfacia software through the command line. The steps include activating the appropriate environment, running various tasks within Surfacia, and installing the software as needed.
 
-### **XTB Structure Optimization (Optional)**
-Run the `run_xtb.sh` script (submitted via `sbatch run_xtb.sh`) to perform rough optimization using **XTB**. Input and output are XYZ files, and optimized files are saved in the `reorder/xtb_opted/` folder.
+### **Prerequisites**
+- Ensure you have **Anaconda** or **Miniconda** installed.
+- **Surfacia** software should be cloned or downloaded to your machine.
+- Dependencies should be installed (you can find them in `requirements.txt`).
 
-### **Generate Gaussian Input Files**
-Run the `xyz2gaussian.py` script to convert XYZ files into Gaussian input files (`.com` format). It also generates a Slurm script (`run_gaussian.sh`) for submitting Gaussian jobs.  
-**Input**: XYZ and `template.com` files.  
-**Output**: multiple `.com` and `.sh` files.
+### **Activate Environment and Install Surfacia**
 
-### **Run Gaussian Calculations**
-Submit the `.com` files and Slurm script via `sbatch run_gaussian.sh` to begin Gaussian calculations.  
-**Input**: `.com` and `.sh` files.  
-**Output**: `.chk` and `.log` files.
+conda activate sympy37  # Replace 'sympy37' with your environment name if needed  
+cd /path/to/Surfacia/  # Replace with the actual path to your Surfacia directory  
+python setup.py install  
 
-### **Convert Wavefunction Files**
-After Gaussian completes, run `chk2fchk.sh` to convert `.chk` files into `.fchk` format (required by Multiwfn).  
-**Input**: `.chk` files.  
-**Output**: `.fchk` files.
+Convert SMILES to XYZ  
+python scripts/surfacia_main.py smi2xyz --smiles_csv data/177smiles.csv  
 
-### **Calculate Descriptors**
-Run the `run_Multiwfn.sh` script (submitted via `sbatch Multiwfn.sh`) to compute molecular descriptors using **Multiwfn**. The script calculates both global and surface atomic interaction descriptors, saving results in `.txt` files.
+Reorder Atoms  
+python scripts/surfacia_main.py reorder --element P --input_dir data/<timestamp>/ --output_dir data/<timestamp>/reorder/  
 
-### **Read Descriptor Data**
-Run the `readMultiwfn.py` script to extract descriptors from the `.txt` files and compile them into a feature matrix. This matrix, along with the `smiles` and `target` columns from the initial CSV, is merged into a single file and saved as a `.csv`.
+Convert XYZ to Gaussian Input Files  
+python scripts/surfacia_main.py xyz2gaussian --xyz_folder data/<timestamp>/reorder/ --template_file config/template.com --output_dir data/<timestamp>/reorder/gaussian_files  
 
-### **Split Feature Matrix**
-Run `split_featurematrix.py` to split the merged data into four separate CSV files: `Smiles`, `Value`, `Feature`, and `Title`, for use in machine learning.
+Run Gaussian Calculations and Convert Checkpoint Files  
+python scripts/surfacia_main.py run_gaussian --com_dir data/<timestamp>/reorder/gaussian_files/ --esp_descriptor_dir config/ESP_descriptor.txt1  
 
-### **Machine Learning Analysis**
-Run the `XGB_Stepregression.py` script (submitted via `sbatch python.sh`) to perform machine learning analysis using the feature matrix. You must provide a CSV file containing `title`, `featurematrix`, `label`, and `SMILES`. The script outputs machine learning results and SHAP analysis plots.
+Read Multiwfn Output  
+python scripts/surfacia_main.py readmultiwfn --input_dir /home/yumingsu/Python/Project_Surfacia/Surfacia/data/20241010-150850/reorder/gaussian_files/ --output_dir /home/yumingsu/Python/Project_Surfacia/Surfacia/data/20241010-150850/reorder/gaussian_files/ --smiles_target_csv /home/yumingsu/Python/Project_Surfacia/Surfacia/data/177smiles.csv  
+
+Run Machine Learning Analysis  
+python scripts/surfacia_main.py machinelearning --ml_input_dir data/ml_input/ --test_indices <test_indices> # Replace placeholders with actual values  
 
 ---
 
