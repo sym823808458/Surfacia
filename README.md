@@ -50,6 +50,7 @@ conda activate sympy37  # Replace 'sympy37' with your environment name if needed
 cd /path/to/Surfacia/  # Replace with the actual path to your Surfacia directory  
 python setup.py install  
 
+### **step-by-step python guide**
 Convert SMILES to XYZ  
 python scripts/surfacia_main.py smi2xyz --smiles_csv data/177smiles.csv  
 
