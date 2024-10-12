@@ -42,6 +42,7 @@ This manual provides a step-by-step guide on how to use Surfacia.
 - **Surfacia Installation:** Clone or download Surfacia to your local machine.
 - **Dependencies:** Install required dependencies listed in `requirements.txt`.
 
+### **Command Line Usage**  
  **1. Activate Environment and Install Surfacia**  
 conda activate sympy37  # Replace 'sympy37' with your environment name if needed  
 cd /path/to/Surfacia/  # Replace with the actual path to your Surfacia directory  
