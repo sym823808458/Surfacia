@@ -1,5 +1,6 @@
 ## **Surfacia**
 **SURF Atomic Chemical Interaction Analyzer - Surfacia**
+![167273d2f11fef9ec1402476857c931](https://github.com/user-attachments/assets/e6c40f2a-4ca2-4ed6-a1f0-2d70767a5b55)
 
 **Surfacia** (Surface Atomic Chemical Interaction Analyzer) is a comprehensive toolset designed to automate the workflow for analyzing surface atomic chemical interactions. It integrates molecular structure generation, quantum chemical computations, feature extraction, and machine learning analysis, providing a streamlined solution for surface chemistry research.
 
@@ -30,52 +31,33 @@ Ensure that the following computational chemistry software is available on your 
 
 ---
 
-## **Workflow Overview**
+### **Workflow Overview**
 
-Surfacia Command Line Usage Manual
-This manual provides a step-by-step guide on how to use the Surfacia software through the command line. The steps include activating the appropriate environment, running various tasks within Surfacia, and installing the software as needed.
+### **Surfacia Command Line Usage Manual**
 
-Prerequisites
-Ensure you have Anaconda or Miniconda installed.
-Surfacia software should be cloned or downloaded to your machine.
-Dependencies should be installed (you can find them in requirements.txt).
+This manual provides a step-by-step guide on how to use Surfacia.
 
-Activate Environment and Install Surfacia
-bash
+### **Prerequisites**
+- **Anaconda/Miniconda:** Ensure you have Anaconda or Miniconda installed.
+- **Surfacia Installation:** Clone or download Surfacia to your local machine.
+- **Dependencies:** Install required dependencies listed in `requirements.txt`.
 
-复制
-conda activate sympy37
-cd /path/to/Surfacia/
-
-python setup.py install
-Convert SMILES to XYZ
-bash
-
-复制
-python scripts/surfacia_main.py smi2xyz --smiles_csv data/177smiles.csv
-Reorder Atoms
-bash
-
-复制
-python scripts/surfacia_main.py reorder --element P --input_dir data/<timestamp>/ --output_dir data/<timestamp>/reorder/
-Convert XYZ to Gaussian Input Files
-bash
-
-复制
-python scripts/surfacia_main.py xyz2gaussian --xyz_folder data/<timestamp>/reorder/ --template_file config/template.com --output_dir data/<timestamp>/reorder/gaussian_files
-Run Gaussian Calculations and Convert Checkpoint Files
-bash
-
-复制
-python scripts/surfacia_main.py run_gaussian --com_dir data/<timestamp>/reorder/gaussian_files/ --esp_descriptor_dir config/ESP_descriptor.txt1
-
-python scripts/surfacia_main.py readmultiwfn --input_dir /home/yumingsu/Python/Project_Surfacia/Surfacia/data/20241010-150850/reorder/gaussian_files/ --output_dir /home/yumingsu/Python/Project_Surfacia/Surfacia/data/20241010-150850/reorder/gaussian_files/ --smiles_target_csv /home/yumingsu/Python/Project_Surfacia/Surfacia/data/177smiles.csv
-
-
-
-
-
-
+ **1. Activate Environment and Install Surfacia**  
+conda activate sympy37  # Replace 'sympy37' with your environment name if needed  
+cd /path/to/Surfacia/  # Replace with the actual path to your Surfacia directory  
+python setup.py install  
+**2. Convert SMILES to XYZ**  
+python scripts/surfacia_main.py smi2xyz --smiles_csv data/input_smiles.csv # Replace 'data/input_smiles.csv' with your SMILES input file  
+**3. Reorder Atoms (Optional)**  
+python scripts/surfacia_main.py reorder --element <element_symbol> --input_dir data/input_xyz/ --output_dir data/reordered_xyz/ # Replace placeholders with actual values  
+**4. Convert XYZ to Gaussian Input Files**  
+python scripts/surfacia_main.py xyz2gaussian --xyz_folder data/input_xyz/ --template_file config/template.com --output_dir data/gaussian_input/ # Replace placeholders with actual values  
+**5. Run Gaussian Calculations**  
+python scripts/surfacia_main.py run_gaussian --com_dir data/gaussian_input/ --esp_descriptor_dir config/ESP_descriptor.txt1 # Replace placeholders with actual values  
+**6. Process Multiwfn Output**  
+python scripts/surfacia_main.py readmultiwfn --input_dir data/gaussian_output/ --output_dir data/multiwfn_output/ --smiles_target_csv data/input_smiles.csv # Replace placeholders with actual values  
+**7. Run Machine Learning Analysis**  
+python scripts/surfacia_main.py machinelearning --ml_input_dir data/ml_input/ --test_indices <test_indices> # Replace placeholders with actual values  
 
 ---
 
