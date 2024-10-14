@@ -61,7 +61,7 @@ python scripts/surfacia_main.py readmultiwfn --input_dir data/gaussian_output/ -
 python scripts/surfacia_main.py machinelearning --ml_input_dir data/ml_input/ --test_indices <test_indices> # Replace placeholders with actual values  
 
 ---
-### I. Descriptor List Extracted from the Program
+### ** Descriptor List Extracted from the Program**
 
 #### General Molecular Properties
 - **Sample Name**: Sample name
