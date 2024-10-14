@@ -151,6 +151,18 @@ In the program, there is a matrix `matrix['Matrix Data']`, which contains the fo
 - **ALIE Max value**: Maximum value of ALIE (eV)
 - **ALIE Average**: Average value of ALIE (eV)
 - **ALIE Variance**: Variance of ALIE (eV²)
+
+ When applied in practical scenarios, the surface chemical interactions of individual atoms can sometimes be extremely important. However, in many cases, certain physical quantities may result in `NaN`, as not every atom is exposed on the surface, or due to other computational reasons. Therefore, some descriptors in this section must be ignored. Here, we retain the following key features, with the prefix `Atom1` to indicate they pertain to atomic properties:
+
+- **Atom1_LEAE_Minimal_value**
+- **Atom1_LEAE_All_average**
+- **Atom1_ESP_All_area_(Å²)**
+- **Atom1_ESP_Minimal_value_(kcal/mol)**
+- **Atom1_ESP_Maximal_value_(kcal/mol)**
+- **Atom1_ESP_All_average_(kcal/mol)**
+- **Atom1_ESP_Pi_(kcal/mol)**
+- **Atom1_ALIE_Min_value**
+- **Atom1_ALIE_Max_value**
   
 ---
 ## **Developer**
