@@ -1,97 +1,211 @@
-# surfacia/readMultiwfn.py
-
-import os
-import numpy as np
-import pandas as pd
 import csv
+import os
+import glob
+import subprocess
+import logging
 import time
-from pathlib import Path
+import pandas as pd
+import numpy as np
 import re
+from pathlib import Path
+import warnings
+
+warnings.filterwarnings("ignore")
 
 def extract_after(text, keyword):
     """
-    提取指定关键字之后的文本。
-
-    Args:
-        text (str): 要搜索的文本。
-        keyword (str): 关键字。
-
-    Returns:
-        str: 关键字之后的文本。如果未找到关键字，返回 None。
+    Extracts text after the specified keyword.
     """
-    start_index = text.find(keyword)
-    if start_index != -1:
-        return text[start_index + len(keyword):].strip()
-    return None
+    partitioned_text = text.partition(keyword)
+    if partitioned_text[1] == '':
+        return None
+    else:
+        return partitioned_text[2].strip()
 
 def extract_before(text, keyword):
     """
-    提取指定关键字之前的文本。
-
-    Args:
-        text (str): 要搜索的文本。
-        keyword (str): 关键字。
-
-    Returns:
-        str: 关键字之前的文本。如果未找到关键字，返回原始文本。
+    Extracts text before the specified keyword.
     """
-    end_index = text.find(keyword)
-    if end_index != -1:
-        return text[:end_index].strip()
-    return text
+    partitioned_text = text.partition(keyword)
+    if partitioned_text[1] == '':
+        return text.strip()
+    else:
+        return partitioned_text[0].strip()
 
 def extract_between(text, start_delimiter, end_delimiter):
     """
-    提取两个指定分隔符之间的文本。
-
-    Args:
-        text (str): 要搜索的文本。
-        start_delimiter (str): 起始分隔符。
-        end_delimiter (str): 结束分隔符。
-
-    Returns:
-        str: 分隔符之间的文本。如果未找到分隔符，返回 None。
+    Extracts text between two specified delimiters.
     """
     start_index = text.find(start_delimiter)
     if start_index == -1:
         return None
-    subtext = text[start_index + len(start_delimiter):]
-    end_index = subtext.find(end_delimiter)
+    start_index += len(start_delimiter)
+    end_index = text.find(end_delimiter, start_index)
     if end_index == -1:
         return None
-    return subtext[:end_index].strip()
+    return text[start_index:end_index].strip()
 
-def process_txt_files(input_directory, output_directory, smiles_target_csv_path):
+def read_first_matches_csv(csv_path):
     """
-    处理指定目录中的所有 .txt 文件，提取特征并生成特征矩阵。
+    Reads the first_matches CSV and returns a dictionary mapping xyz_file to list of indices.
+    """
+    first_matches = {}
+    with open(csv_path, 'r') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            xyz_file = row['xyz_file']
+            first_match = row['first_match']
+            indices = [int(i.strip()) for i in first_match.strip().split()]
+            first_matches[xyz_file] = indices
+    return first_matches
+
+def create_descriptors_content(fragment_indices_list):
+    # Adjust indices by adding one for 1-based indexing, if necessary
+    adjusted_indices = [i + 1 for i in fragment_indices_list]
+    indices_str = ",".join(map(str, adjusted_indices))
+    print(f"Descriptors content indices: {indices_str}")
+    content = f"""0
+100
+21
+size
+0
+MPP
+a
+n
+q
+0
+300
+5
+0
+8
+8
+1
+h-1
+h
+l
+l+1
+0
+-10
+12
+2
+-4
+1
+1
+0.002
+0
+11
+n
+12
+{indices_str}
+n
+-1
+2
+1
+1
+1
+0.002
+0
+11
+n
+12
+{indices_str}
+n
+-1
+2
+2
+1
+1
+1
+0.002
+0
+11
+n
+12
+{indices_str}
+n
+-1
+
+"""
+    return content
+
+def run_multiwfn_on_fchk_files(input_path='.', first_matches={}):
+    original_dir = os.getcwd()
+    os.chdir(input_path)
+    fchk_files = glob.glob('*.fchk')
+    processed_files = []
+
+    for fchk_file in fchk_files:
+        sample_name = os.path.splitext(fchk_file)[0]  # e.g., '003' if fchk_file is '003.fchk'
+        xyz_file = sample_name + '.xyz'
+
+        if xyz_file in first_matches:
+            fragment_indices = first_matches[xyz_file]
+        else:
+            fragment_indices = []
+            logging.warning(f"No fragment indices found for {xyz_file}, using empty fragment list.")
+
+        descriptors_content = create_descriptors_content(fragment_indices)
+        print(f"Descriptors content for {sample_name}:\n{descriptors_content}")
+        output_file = f"{sample_name}.txt"
+
+        # Construct the command argument list, only adding the -silent option
+        command = ["Multiwfn", fchk_file, "-silent"]
+
+        try:
+            with open(output_file, 'w') as outfile:
+                subprocess.run(
+                    command,
+                    input=descriptors_content,
+                    text=True,
+                    stdout=outfile,
+                    stderr=subprocess.PIPE,
+                    check=True
+                )
+            logging.info(f"Multiwfn output saved to {output_file}")
+            processed_files.append(output_file)
+        except subprocess.CalledProcessError as e:
+            logging.warning(f"Warning: An error occurred while running Multiwfn on {fchk_file}: {e}")
+            logging.warning(f"stderr: {e.stderr}")
+
+        if os.path.exists(output_file):
+            if output_file not in processed_files:
+                processed_files.append(output_file)
+                logging.info(f"Output file {output_file} was created. Good!")
+        else:
+            logging.error(f"Error: Output file {output_file} was not created for {fchk_file}.")
+
+    os.chdir(original_dir)
+
+def process_txt_files(input_directory, output_directory, smiles_target_csv_path, first_matches_csv_path, descriptor_option=1):
+    """
+    Process all .txt files in the specified directory, extract features, and generate a feature matrix.
 
     Args:
-        input_directory (str): 包含 .txt 文件的目录。
-        output_directory (str): 保存输出文件的目录。
-        smiles_target_csv_path (str): 包含 SMILES 和 target 的 CSV 文件路径。
+        input_directory (str): Directory containing .txt files.
+        output_directory (str): Directory to save output files.
+        smiles_target_csv_path (str): Path to the CSV file containing SMILES and target.
+        first_matches_csv_path (str): Path to the CSV file containing fragment indices.
+        descriptor_option (int): Select descriptor type. 1=Only molecular properties, 2=Molecular + specific atom properties, 3=Molecular + specific atom + fragment properties.
 
     Returns:
         None
     """
-    # 设置版本和时间戳
-    Version = '1.1'
+    Version = '2.0'
     c_time = time.strftime("%Y%m%d_%H%M%S", time.localtime())
     DIR = os.path.join(output_directory, f'Surfacia_{Version}_{c_time}')
     os.makedirs(DIR, exist_ok=True)
 
-    # 获取当前目录中的所有 .txt 文件
     current_directory = input_directory
     file_list = [f for f in os.listdir(current_directory) if f.endswith('.txt')]
 
     print("Found text files:", file_list)
 
-    # 初始化数据框
     df = pd.DataFrame()
 
-    # 遍历每个 .txt 文件，提取特征
+    # Iterate through each .txt file to extract features
     for filename in file_list:
         data = {}
-        with open(os.path.join(current_directory, filename), 'r') as file:
+        with open(os.path.join(input_directory, filename), 'r') as file:
             lines_iter = iter(file.readlines())
 
         sample_name = filename[:-4]
@@ -99,12 +213,13 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
         data['Sample Name'] = sample_name
         matrix = {}
         odi_values = []
-        summary_count = 0  # 用于计数 Summary 标记出现的次数
+        summary_count = 0  # Counts the number of Summary sections encountered
+        in_fragment_section = False
 
         while True:
             try:
                 line = next(lines_iter)
-                # 基本信息
+                # Basic Information Extraction
                 if 'Atoms:' in line:
                     atom_num = int(extract_between(line, "Atoms: ", ","))
                     data['Atom Number'] = atom_num
@@ -127,7 +242,7 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                             xyz.append([x, y, z])
                         else:
                             break
-                # HOMO/LUMO 能级
+                # HOMO/LUMO Energy Levels
                 if 'is HOMO, energy:' in line:
                     homo_energy = extract_between(line, "is HOMO, energy:", "a.u.")
                     data['HOMO'] = float(homo_energy)
@@ -137,7 +252,7 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                 if 'HOMO-LUMO gap:' in line:
                     gap_energy = extract_between(line, "gap:", "a.u.")
                     data['HOMO-LUMO Gap'] = float(gap_energy)
-                # 分子形状
+                # Molecular Shape
                 if 'Farthest distance:' in line:
                     farthest_distance = float(extract_between(line, "):", "Angstrom"))
                     data['Farthest Distance'] = farthest_distance
@@ -158,7 +273,7 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                 if 'Span of deviation from plane' in line:
                     sdp = float(extract_before(extract_after(line, "is"), "Angstrom"))
                     data['SDP'] = sdp
-                # 偶极矩
+                # Dipole Moment
                 if 'Magnitude of dipole moment:' in line:
                     dipole_moment = float(extract_between(line, 'Magnitude of dipole moment:', "a.u."))
                     data['Dipole Moment (a.u.)'] = dipole_moment
@@ -168,7 +283,7 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                 if 'Magnitude: |Q_3|=' in line:
                     octopole_moment = float(extract_after(line, "|Q_3|= "))
                     data['Octopole Moment'] = octopole_moment
-                # ODI 指数
+                # ODI Index
                 if 'Orbital delocalization index:' in line:
                     odi_value = float(extract_after(line, "index:"))
                     odi_values.append(odi_value)
@@ -184,36 +299,36 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                 if 'Sphericity:' in line:
                     sphericity = float(extract_after(line, "Sphericity:"))
                     data['Sphericity'] = sphericity
-                # LEAE、ESP、ALIE
+                # LEAE, ESP, ALIE Sections
                 try:
                     if '================= Summary of surface analysis =================' in line:
                         summary_count += 1
                         print('Summary of surface analysis', summary_count)
                         if summary_count == 1:
-                            # LEAE 部分
+                            # LEAE Section
                             while True:
                                 line = next(lines_iter)
-                                if 'Volume:' in line:
-                                    data['Volume (Angstrom^3)'] = float(extract_between(line, "Bohr^3  (", 'Angstrom^3)'))
-                                elif 'Estimated density according to mass and volume (M/V):' in line:
-                                    data['Density (g/cm^3)'] = float(extract_between(line, "M/V):", 'g/cm^3'))
-                                elif 'Minimal value:' in line:
+                                if 'Minimal value:' in line and not in_fragment_section:
+                                    # Extract molecule's minimal and maximal values
                                     data['LEAE Minimal Value'] = float(extract_between(line, "Minimal value:", 'eV,   Maximal value:'))
                                     data['LEAE Maximal Value'] = float(extract_between(line, "eV,   Maximal value:", 'eV'))
+                                elif 'Overall average value:' in line and not in_fragment_section:
+                                    data['LEAE Average Value'] = float(extract_between(line, "a.u. (", 'eV'))
+                                elif 'Variance:' in line and not in_fragment_section:
+                                    data['LEAE Variance'] = float(extract_between(line, "a.u.^2  (", 'eV'))
                                 if 'Note: Below minimal and maximal values are in eV' in line:
-                                    next(lines_iter)
+                                    next(lines_iter)  # Skip note line
                                     matrix_data = []
-                                    matrix_data0 = []
                                     for _ in range(atom_num):
                                         matrix_line = next(lines_iter).strip()
                                         if matrix_line:
                                             matrix_data.append(matrix_line)
                                         else:
                                             break
-                                    next(lines_iter)
+                                    next(lines_iter)  # Skip empty line
                                     line = next(lines_iter)
                                     if 'Note: Average and variance below are in eV and eV^2 respectively' in line:
-                                        next(lines_iter)
+                                        next(lines_iter)  # Skip note line
                                     matrix_data2 = []
                                     for _ in range(atom_num):
                                         matrix_line = next(lines_iter).strip()
@@ -222,16 +337,43 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                                         else:
                                             break
                                     num_rows = min(len(matrix_data), len(matrix_data2))
-                                    data['Surface eff atom num'] = num_rows
+                                    data['Surface exposed atom num'] = num_rows
                                     for i in range(num_rows):
                                         matrix_data[i] += ' ' + ' '.join(matrix_data2[i].split()[-6:])
                                     matrix['Matrix Data'] = matrix_data
+                                # Check for fragment properties section
+                                if 'Properties on the surface of this fragment:' in line:
+                                    in_fragment_section = True
+                                    # Begin parsing fragment properties
+                                    while True:
+                                        line = next(lines_iter).strip()
+                                        if 'Minimal value:' in line:
+                                            frag_min_val_str = extract_between(line, "Minimal value:", 'eV,   Maximal value:')
+                                            frag_max_val_str = extract_between(line, "eV,   Maximal value:", 'eV')
+                                            # Handle possible '**************' in fragment min and max values
+                                            if frag_min_val_str.strip() == '**************':
+                                                data['Frag LEAE Minimal Value'] = np.nan
+                                            else:
+                                                data['Frag LEAE Minimal Value'] = float(frag_min_val_str)
+                                            if frag_max_val_str.strip() == '**************':
+                                                data['Frag LEAE Maximal Value'] = np.nan
+                                            else:
+                                                data['Frag LEAE Maximal Value'] = float(frag_max_val_str)
+                                        # Extract fragment's overall average value
+                                        elif 'Overall average value:' in line:
+                                            data['Frag LEAE Average Value'] = float(extract_between(line, "a.u. (", 'eV'))
+                                            break
+                                    in_fragment_section = False
                                     break
                         elif summary_count == 2:
-                            # ESP 部分
+                            # ESP Section
                             while True:
                                 line = next(lines_iter)
-                                if 'Minimal value:' in line:
+                                if 'Volume:' in line:
+                                    data['Volume (Angstrom^3)'] = float(extract_between(line, "Bohr^3  (", 'Angstrom^3)'))
+                                elif 'Estimated density according to mass and volume (M/V):' in line:
+                                    data['Density (g/cm^3)'] = float(extract_between(line, "M/V):", 'g/cm^3'))
+                                elif 'Minimal value:' in line:
                                     data['ESP Minimal Value'] = float(extract_between(line, "Minimal value:", 'kcal/mol   Maximal value:'))
                                     data['ESP Maximal Value'] = float(extract_between(line, "kcal/mol   Maximal value:", 'kcal/mol'))
                                 elif 'Overall average value:' in line:
@@ -250,7 +392,7 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                                     data['Polar Surface Area (Angstrom^2)'] = float(extract_between(line, "Polar surface area (|ESP| > 10 kcal/mol):", 'Angstrom^2'))
                                     data['Polar Surface Area (%)'] = float(extract_between(line, "Angstrom^2  (", '%)'))
                                 if 'Note: Minimal and maximal value below are in kcal/mol' in line:
-                                    next(lines_iter)
+                                    next(lines_iter)  # Skip note line
                                     matrix_data3 = []
                                     for _ in range(atom_num):
                                         matrix_line = next(lines_iter).strip()
@@ -258,10 +400,10 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                                             matrix_data3.append(matrix_line)
                                         else:
                                             break
-                                    next(lines_iter)
+                                    next(lines_iter)  # Skip empty line
                                     line = next(lines_iter)
                                     if 'Note: Average and variance below are in' in line:
-                                        next(lines_iter)
+                                        next(lines_iter)  # Skip note line
                                     matrix_data4 = []
                                     for _ in range(atom_num):
                                         matrix_line = next(lines_iter).strip()
@@ -269,10 +411,10 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                                             matrix_data4.append(matrix_line)
                                         else:
                                             break
-                                    next(lines_iter)
+                                    next(lines_iter)  # Skip another line
                                     line = next(lines_iter)
                                     if 'Note: Internal charge separation' in line:
-                                        next(lines_iter)
+                                        next(lines_iter)  # Skip note line
                                     matrix_data5 = []
                                     for _ in range(atom_num):
                                         matrix_line = next(lines_iter).strip()
@@ -283,9 +425,39 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                                     for i in range(num_rows):
                                         matrix_data[i] += ' ' + ' '.join(matrix_data3[i].split()[-5:]) + ' ' + ' '.join(matrix_data4[i].split()[-6:]) + ' ' + ' '.join(matrix_data5[i].split()[-3:])
                                     matrix['Matrix Data'] = matrix_data
+                                # Check for fragment properties section
+                                if 'Properties on the surface of this fragment:' in line:
+                                    in_fragment_section = True
+                                    # Begin parsing fragment properties
+                                    while True:
+                                        line = next(lines_iter).strip()
+                                        if 'Minimal value:' in line:
+                                            frag_min_val_str = extract_between(line, "Minimal value:", 'kcal/mol   Maximal value:')
+                                            frag_max_val_str = extract_between(line, "kcal/mol   Maximal value:", 'kcal/mol')
+                                            # Handle possible '**************' in fragment min and max values
+                                            if frag_min_val_str.strip() == '**************':
+                                                data['Frag ESP Minimal Value'] = np.nan
+                                            else:
+                                                data['Frag ESP Minimal Value'] = float(frag_min_val_str)
+                                            if frag_max_val_str.strip() == '**************':
+                                                data['Frag ESP Maximal Value'] = np.nan
+                                            else:
+                                                data['Frag ESP Maximal Value'] = float(frag_max_val_str)
+                                        # Extract fragment's overall surface area
+                                        elif 'Overall surface area:' in line:
+                                            data['Frag ESP Overall Surface Area (Angstrom^2)'] = float(extract_between(line, '(', 'Angstrom^2)'))
+                                        # Extract fragment's overall average value
+                                        elif 'Overall average value:' in line:
+                                            data['Frag ESP Average Value'] = float(extract_between(line, "a.u. (", 'kcal/mol)'))
+                                        elif 'Overall variance (sigma^2_tot):' in line:
+                                            data['Frag ESP variance Value'] = float(extract_between(line, "a.u.^2 (", '(kcal/mol)'))
+                                        elif 'Internal charge separation (Pi):' in line:
+                                            data['Frag ESP Pi Value'] = float(extract_between(line, "a.u. (", 'kcal/mol)'))
+                                            break
+                                    in_fragment_section = False
                                     break
                         elif summary_count == 3:
-                            # ALIE 部分
+                            # ALIE Section
                             while True:
                                 line = next(lines_iter)
                                 if 'Minimal value:' in line:
@@ -296,7 +468,7 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                                 elif 'Variance:' in line:
                                     data['ALIE Variance'] = float(extract_between(line, "a.u.^2  (", 'eV'))
                                 if 'Minimal, maximal and average value are in eV, variance is in eV^2' in line:
-                                    next(lines_iter)
+                                    next(lines_iter)  # Skip note line
                                     matrix_data6 = []
                                     for _ in range(atom_num):
                                         matrix_line = next(lines_iter).strip()
@@ -318,59 +490,87 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
                                     for i in range(num_rows):
                                         matrix_data[i] += ' ' + ' '.join(matrix_data6[i].split()[-5:])
                                     matrix['Matrix Data'] = matrix_data
+                                # Check for fragment properties section
+                                if 'Properties on the surface of this fragment:' in line:
+                                    in_fragment_section = True
+                                    # Begin parsing fragment properties
+                                    while True:
+                                        line = next(lines_iter).strip()
+                                        if 'Minimal value:' in line:
+                                            frag_min_val_str = extract_between(line, "Minimal value:", 'eV   Maximal value:')
+                                            frag_max_val_str = extract_between(line, "eV   Maximal value:", 'eV')
+                                            # Handle possible '**************' in fragment min and max values
+                                            if frag_min_val_str.strip() == '**************':
+                                                data['Frag ALIE Minimal Value'] = np.nan
+                                            else:
+                                                data['Frag ALIE Minimal Value'] = float(frag_min_val_str)
+                                            if frag_max_val_str.strip() == '**************':
+                                                data['Frag ALIE Maximal Value'] = np.nan
+                                            else:
+                                                data['Frag ALIE Maximal Value'] = float(frag_max_val_str)
+                                        # Extract fragment's overall average value
+                                        elif 'Average value:' in line:
+                                            data['Frag ALIE Average Value'] = float(extract_between(line, "a.u. (", 'eV'))
+                                        elif 'Variance:' in line:
+                                            data['Frag ALIE Variance Value'] = float(extract_between(line, "a.u.^2  (", 'eV'))
+                                            break
+                                    in_fragment_section = False
                                     break
                 except ValueError as e:
-                    error_message = f"Error converting string to float in file {filename}, sample name {sample_name}: {e}\n"
-                    print(error_message)
-                    with open(c_time + 'error_log.txt', 'a') as log_file:
-                        log_file.write(error_message)
                     continue
             except StopIteration:
                 break
-
         temp_df = pd.DataFrame([data])
         df = pd.concat([df, temp_df], ignore_index=True)
 
-        new_filename = 'AtomProp_' + sample_name + '.csv'  # 添加 '.csv' 扩展名
+        if 'Matrix Data' in matrix:
+            matrix_data = matrix['Matrix Data']
+            new_filename = 'AtomProp_' + sample_name + '.csv'  # Add '.csv' extension
 
-        max_index = max(int(row.split()[0]) for row in matrix_data)
-        merged_data = [['NaN'] * (len(matrix_data[0].split()) + len(xyz[0])) for _ in range(max_index)]
-        num_xyz_columns = len(xyz[0])
-        num_matrix_columns = len(matrix_data[0].split())
+            max_index = max(int(row.split()[0]) for row in matrix_data)
+            merged_data = [['NaN'] * (len(matrix_data[0].split()) + len(xyz[0])) for _ in range(max_index)]
+            num_xyz_columns = len(xyz[0])
+            num_matrix_columns = len(matrix_data[0].split())
 
-        for row in matrix_data:
-            parts = row.split()
-            index = int(parts[0]) - 1  # 将 1-based 索引转换为 0-based 索引
-            if index < len(xyz):
-                merged_data[index] = xyz[index] + parts[:]  # 不包括 matrix_data 中的索引部分
+            for row in matrix_data:
+                parts = row.split()
+                index = int(parts[0]) - 1  # Convert 1-based index to 0-based index
+                if index < len(xyz):
+                    merged_data[index] = xyz[index] + parts[:]  # Exclude index part from matrix_data
 
-        while len(merged_data) < len(xyz):
-            merged_data.append(['NaN'] * (num_xyz_columns + num_matrix_columns))
+            while len(merged_data) < len(xyz):
+                merged_data.append(['NaN'] * (num_xyz_columns + num_matrix_columns))
 
-        for i in range(len(xyz)):
-            if len(merged_data[i]) > num_xyz_columns:
-                if merged_data[i][num_xyz_columns] == 'NaN':
-                    merged_data[i] = xyz[i] + ['NaN'] * num_matrix_columns
-            else:
-                additional_nans = ['NaN'] * (num_xyz_columns + 1 - len(merged_data[i]))
-                merged_data[i] = merged_data[i] + additional_nans
-                if merged_data[i][num_xyz_columns] == 'NaN':
-                    merged_data[i] = xyz[i] + ['NaN'] * num_matrix_columns
+            for i in range(len(xyz)):
+                if len(merged_data[i]) > num_xyz_columns:
+                    if merged_data[i][num_xyz_columns] == 'NaN':
+                        merged_data[i] = xyz[i] + ['NaN'] * num_matrix_columns
+                else:
+                    additional_nans = ['NaN'] * (num_xyz_columns + 1 - len(merged_data[i]))
+                    merged_data[i] = merged_data[i] + additional_nans
+                    if merged_data[i][num_xyz_columns] == 'NaN':
+                        merged_data[i] = xyz[i] + ['NaN'] * num_matrix_columns
 
-        for i in range(len(merged_data)):
-            if i < len(atoms):
-                merged_data[i].insert(0, atoms[i])
-            else:
-                merged_data[i].insert(0, 'NaN')
+            for i in range(len(merged_data)):
+                if i < len(atoms):
+                    merged_data[i].insert(0, atoms[i])
+                else:
+                    merged_data[i].insert(0, 'NaN')
 
-        title_parts = ['Element', 'X', 'Y', 'Z'] + titles
-        merged_data.insert(0, title_parts)
+            title_parts = ['Element', 'X', 'Y', 'Z'] + titles
+            merged_data.insert(0, title_parts)
 
-        output_filename = Path(DIR, new_filename)
-        with open(output_filename, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(merged_data)
-        print(f"Data successfully written to {output_filename}")
+            output_filename = Path(DIR, new_filename)
+            with open(output_filename, 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerows(merged_data)
+            print(f"Data successfully written to {output_filename}")
+        else:
+            # If there is no matrix_data, still generate an empty AtomProp file so that subsequent processing won't fail
+            new_filename = 'AtomProp_' + sample_name + '.csv'
+            output_filename = Path(DIR, new_filename)
+            with open(output_filename, 'w', newline='') as file:
+                pass  # Create an empty file
 
     RECORD_NAME1 = 'RawFull_' + str(df.shape[0]) + '_' + str(df.shape[1]) + '.csv'
     RECORD_NAME = Path(DIR, RECORD_NAME1)
@@ -381,84 +581,122 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
     RECORD_NAME_CLEAN = 'Full0_' + str(df_cleaned.shape[0]) + '_' + str(df_cleaned.shape[1]) + '.csv'
     df_cleaned.to_csv(Path(DIR, RECORD_NAME_CLEAN), index=False)
 
-    # 初始化要提取特征的原子索引列表
-    atomlist = [1]  # 列出你想要提取特征的原子索引
-    featnums = [9, 11, 17, 20, 21, 22, 28, 32, 33]
+    # Choose processing method based on descriptor_option
+    if descriptor_option == 1:
+        # Consider only molecular properties
+        final_df = df_cleaned.copy()
+    else:
+        featnums = [9, 10, 11, 17, 20, 21, 22, 28, 32, 33, 34, 35]  # Adjust as needed
 
-    # 获取当前目录中的所有 AtomProp_*.csv 文件
-    filelist = [
-        f
-        for f in os.listdir(DIR)
-        if f.startswith("AtomProp_") and f.endswith(".csv")
-    ]
+        # Get all AtomProp_*.csv files in the current directory
+        filelist = [
+            f
+            for f in os.listdir(DIR)
+            if f.startswith("AtomProp_") and f.endswith(".csv")
+        ]
 
-    # 从第一个文件的标题行获取特征名称
-    first_file = Path(DIR, filelist[0])
-    titles = pd.read_csv(first_file, nrows=0).columns
+        if not filelist:
+            print("No AtomProp_*.csv files found.")
+            exit()
 
-    # 基于 atomlist 和 featnums 创建最终的标题
-    final_titles = ['Filename']  # 以 Filename 作为第一列
-    for atom_idx in atomlist:
+        # Get feature names from the header of the first file
+        first_file = Path(DIR, filelist[0])
+        try:
+            titles_df = pd.read_csv(first_file, nrows=0)
+            titles = titles_df.columns.tolist()
+        except pd.errors.EmptyDataError:
+            titles = []
+
+        # Create mapping from featnum to column name
+        featnum_to_colname = {}
         for featnum in featnums:
-            final_titles.append(f'Atom{atom_idx}_{titles[featnum - 1]}')
+            if featnum - 1 < len(titles):
+                colname = titles[featnum - 1]
+                featnum_to_colname[featnum] = colname
+            else:
+                logging.warning(f"Feature number {featnum} exceeds number of columns in atom properties")
+                featnum_to_colname[featnum] = f'Feature{featnum}'
 
-    # 初始化一个数据框来存储特征数据
-    t = np.zeros((len(filelist), len(final_titles) - 1))  # 调整大小以扣除 Filename 列
+        # Initialize a dataframe to store feature data
+        feature_df = pd.DataFrame()
+        # Read fragment indices
+        first_matches = read_first_matches_csv(first_matches_csv_path)
+        # Process each file in the file list
+        for i, file in enumerate(filelist):
+            # Read data from the file
+            df_atom = pd.read_csv(Path(DIR, file))
+            sample_name = file.replace('AtomProp_', '').replace('.csv', '')
+            temp_features = {'Sample Name': sample_name}
 
-    # 处理文件列表中的每个文件
-    for i, file in enumerate(filelist):
-        # 读取文件中的数据
-        df_atom = pd.read_csv(Path(DIR, file))
+            # Print debug information
+            print(f"Processing file: {file}")
+            print(f"File contents (first few rows):\n{df_atom.head()}")
+            print(f"DataFrame shape: {df_atom.shape}")
 
-        # 初始化一个临时数组来保存当前文件的特征
-        temp_features = np.zeros(len(final_titles) - 1)  # 不包括 Filename 列
 
-        # 遍历 atomlist 和 featnums 的每个组合
-        idx = 0
-        for atom_idx in atomlist:
-            for featnum in featnums:
-                # 更新 temp_features 中的位置
-                if atom_idx - 1 < len(df_atom) and featnum - 1 < len(df_atom.columns):
-                    temp_features[idx] = df_atom.iloc[atom_idx - 1, featnum - 1]
+            # Choose atomlist based on descriptor_option
+            if descriptor_option == 2:
+                # Consider only one specific atom, assuming the first atom here
+                atomlist = [1]
+            elif descriptor_option == 3:
+                # Read atomlist for current sample from first_matches
+                xyz_file = f"{sample_name}.xyz"
+                if xyz_file in first_matches:
+                    raw_atomlist = first_matches[xyz_file]
+                    # Filter out invalid indices, e.g., negative or exceeding atom count
+                    atomlist = [idx for idx in raw_atomlist if 0 <= idx < len(df_atom)]
+                    if not atomlist:
+                        print(f"Warning: After filtering, atomlist for {xyz_file} is empty.")
                 else:
-                    temp_features[idx] = np.nan  # 如果数据不足，填充 NaN
-                idx += 1
+                    atomlist = []
+                    print(f"Warning: No fragment indices found for {xyz_file}, using empty atomlist.")
 
-        # 将临时特征向量放入矩阵 t 的对应行
-        t[i, :] = temp_features
+            print(f"Atom list for {sample_name}: {atomlist}")
 
-    # 将矩阵 t 转换为 DataFrame 以便于保存为 CSV
-    feature_df = pd.DataFrame(t, columns=final_titles[1:])  # 此处不包括 Filename 列
-    feature_df.insert(0, 'Filename', filelist)  # 将文件名插入为第一列
+            # Iterate through each combination of atomlist and featnums
+            for pos, atom_idx in enumerate(atomlist, start=1):
+                for featnum in featnums:
+                    colname = featnum_to_colname.get(featnum, f'Feature{featnum}')
+                    key = f'Atom{pos}_{colname}'
 
-    # 从文件名中提取数字并根据这些数字排序 DataFrame
-    def extract_number(filename):
-        match = re.search(r'\d+', filename)
-        return int(match.group()) if match else 0
+                    if atom_idx is not None and atom_idx < len(df_atom):
+                        if colname in df_atom.columns:
+                            temp_features[key] = df_atom.loc[atom_idx, colname]
+                        else:
+                            temp_features[key] = np.nan
+                            print(f"Warning: Column {colname} not found in atom properties for sample {sample_name}")
+                    else:
+                        temp_features[key] = np.nan
+                        print(f"Warning: Atom index {atom_idx} exceeds number of atoms in sample {sample_name}")
 
-    feature_df['Sample Name'] = feature_df['Filename'].apply(extract_number)
-    feature_df.sort_values('Sample Name', inplace=True)
+            temp_df = pd.DataFrame([temp_features], columns=temp_features.keys())
+            feature_df = pd.concat([feature_df, temp_df], ignore_index=True)
 
-    feature_df = feature_df[['Sample Name'] + [col for col in feature_df.columns if col != 'Sample Name']]
-    feature_df.drop('Filename', axis=1, inplace=True)
+        # Merge feature_df with molecular properties df_cleaned
+        final_df = pd.merge(df_cleaned, feature_df, on='Sample Name', how='left')
 
-    # 定义输出 CSV 文件名
-    output_feature_matrix = Path(DIR, 'Atom_esp_feature_matrix.csv')
+        if descriptor_option == 3:
+            # Reorder columns: Sample Name -> Molecular properties -> Frag columns -> Atom features -> smiles, target
+            # 1. Molecular property columns (excluding 'Sample Name' and 'Frag' related columns)
+            molecule_cols = [col for col in df_cleaned.columns if col != 'Sample Name' and not col.startswith('Frag')]
+            # 2. Frag related columns
+            frag_columns = [col for col in df_cleaned.columns if col.startswith('Frag')]
+            frag_cols = frag_columns
+            # 3. Atom feature columns
+            atom_cols = [col for col in final_df.columns if col.startswith('Atom')]
+            # 4. 'Sample Name' column
+            sample_col = ['Sample Name']
 
-    # 将数据写入文件
-    feature_df.to_csv(output_feature_matrix, index=False, float_format='%.6f')
+            # Define new column order
+            new_order = sample_col + molecule_cols + frag_cols + atom_cols 
 
-    # 打印完成消息
-    print(f'Data written to {output_feature_matrix}')
+            # Ensure all columns exist in final_df
+            available_columns = [col for col in new_order if col in final_df.columns]
 
-    # 读取之前保存的全局特征数据
-    df1 = pd.read_csv(Path(DIR, RECORD_NAME_CLEAN))
-    df2 = pd.read_csv(output_feature_matrix)
+            # Reorder final_df
+            final_df = final_df[available_columns]
 
-    # 合并数据
-    merged_df = pd.merge(df1, df2, on='Sample Name')
-
-    # 合并 SMILES 和 target 列并保存
+    # Merge SMILES and target columns and save
     try:
         df_smiles_target = pd.read_csv(smiles_target_csv_path)
         df_smiles_target.columns = map(str.lower, df_smiles_target.columns)
@@ -467,15 +705,16 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
         print("No 'smiles' or 'target' column found in the CSV.")
         exit()
 
-    merged_df = pd.concat([merged_df, df_smiles_target], axis=1)
+    merged_df = pd.concat([final_df, df_smiles_target], axis=1)
 
-    RECORD_NAME_MERGED = 'Full_' + str(merged_df.shape[0]) + '_' + str(merged_df.shape[1]) + '.csv'
+    # Save final data
+    RECORD_NAME_MERGED = f'FinalDescriptorOption{descriptor_option}_' + str(merged_df.shape[0]) + '_' + str(merged_df.shape[1]) + '.csv'
     merged_output_filename = Path(DIR, RECORD_NAME_MERGED)
     merged_df.to_csv(merged_output_filename, index=False, float_format='%.6f')
 
     print(f'Data written to {merged_output_filename}')
- 
-    print("Splitting the merged feature matrix...")   
+    print("Processing completed.")
+
     merged_df = pd.read_csv(merged_output_filename)
     S_N = merged_df.shape[0]
     F_N = merged_df.shape[1] - 3  # Assuming 'Sample Name', 'smiles', 'target' are three columns
@@ -511,9 +750,17 @@ def process_txt_files(input_directory, output_directory, smiles_target_csv_path)
     print(f'  - Features: {INPUT_X.name}')
     print(f'  - Feature Titles: {INPUT_TITLE.name}')
     print("All processing completed.")
-if __name__ == '__main__':
-    input_directory = input("Enter the directory path containing .txt files: ")
-    output_directory = input("Enter the output directory path: ")
-    smiles_target_csv_path = input("Enter the path to the SMILES and target CSV file: ")
+    
+if __name__ == "__main__":
 
-    process_txt_files(input_directory, output_directory, smiles_target_csv_path)
+    # Interactive input for directories
+    input_directory = input("Please enter the input directory path: ")
+    output_directory = input("Please enter the output directory path: ")
+    
+    # Interactive input for CSV file paths
+    smiles_target_csv_path = input("Please enter the path for the SMILES target CSV file: ")
+    first_matches_csv_path = input("Please enter the path for the first matches CSV file: ")
+        # Interactive input for descriptor option
+
+    descriptor_option = input("Please choose a descriptor option (1, 2, or 3): ")
+    process_txt_files(input_directory, output_directory, smiles_target_csv_path, first_matches_csv_path, descriptor_option=1)

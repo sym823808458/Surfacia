@@ -5,7 +5,7 @@ import os
 import glob
 import shutil
 
-def run_gaussian(com_dir, esp_descriptor_dir):
+def run_gaussian(com_dir):
     """
     Runs Gaussian calculations for all .com files in the specified directory,
     converts .chk files to .fchk files, and then runs Multiwfn on the .fchk files.
@@ -17,11 +17,6 @@ def run_gaussian(com_dir, esp_descriptor_dir):
     # Ensure the directory exists
     if not os.path.isdir(com_dir):
         print(f"Directory {com_dir} does not exist.")
-        return
-
-    # Ensure the ESP_descriptor.txt1 file exists
-    if not os.path.isfile(esp_descriptor_dir):
-        print(f"ESP_descriptor.txt1 file not found at {esp_descriptor_dir}")
         return
 
     # Change the working directory to the .com files directory
@@ -59,26 +54,8 @@ def run_gaussian(com_dir, esp_descriptor_dir):
         except subprocess.CalledProcessError as e:
             print(f"An error occurred while converting {chk_file}: {e}")
 
-    # Run Multiwfn on .fchk files
-    print("Current working directory:", os.getcwd())
-    print("Multiwfn path:", subprocess.run(['which', 'Multiwfn'], capture_output=True, text=True).stdout.strip())
- 
-    # Copy ESP_descriptor.txt1 to the current directory
-    shutil.copy(esp_descriptor_dir, '.')
-
-    fchk_files = glob.glob('*.fchk')
-    for fchk_file in fchk_files:
-        print(f"Running Multiwfn on {fchk_file}...")
-        try:
-            output_file = f"{os.path.splitext(fchk_file)[0]}.txt"
-            subprocess.run(f"Multiwfn {fchk_file} < ESP_descriptor.txt1 > {output_file}", shell=True, check=True)
-            print(f"Multiwfn output saved to {output_file}")
-        except subprocess.CalledProcessError as e:
-            print(f"An error occurred while running Multiwfn on {fchk_file}: {e}")
-
     print("job finished")
 
 if __name__ == '__main__':
     com_directory = input("Enter the path to the directory containing .com files: ").strip()
-    esp_descriptor_path = input("Enter the path to the ESP_descriptor.txt1 file: ").strip()
-    run_gaussian(com_directory, esp_descriptor_path)
+    run_gaussian(com_directory)
