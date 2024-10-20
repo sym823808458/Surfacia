@@ -42,23 +42,46 @@ This manual provides a step-by-step guide on how to use Surfacia.
 - **Surfacia Installation:** Clone or download Surfacia to your local machine.
 - **Dependencies:** Install required dependencies listed in `requirements.txt`.
 
-### **Command Line Usage**  
- **1. Activate Environment and Install Surfacia**  
-conda activate sympy37  # Replace 'sympy37' with your environment name if needed  
-cd /path/to/Surfacia/  # Replace with the actual path to your Surfacia directory  
-python setup.py install  
-**2. Convert SMILES to XYZ**  
-python scripts/surfacia_main.py smi2xyz --smiles_csv data/input_smiles.csv # Replace 'data/input_smiles.csv' with your SMILES input file  
-**3. Reorder Atoms (Optional)**  
-python scripts/surfacia_main.py reorder --element <element_symbol> --input_dir data/input_xyz/ --output_dir data/reordered_xyz/ # Replace placeholders with actual values  
-**4. Convert XYZ to Gaussian Input Files**  
-python scripts/surfacia_main.py xyz2gaussian --xyz_folder data/input_xyz/ --template_file config/template.com --output_dir data/gaussian_input/ # Replace placeholders with actual values  
-**5. Run Gaussian Calculations**  
-python scripts/surfacia_main.py run_gaussian --com_dir data/gaussian_input/ --esp_descriptor_dir config/ESP_descriptor.txt1 # Replace placeholders with actual values  
-**6. Process Multiwfn Output**  
-python scripts/surfacia_main.py readmultiwfn --input_dir data/gaussian_output/ --output_dir data/multiwfn_output/ --smiles_target_csv data/input_smiles.csv # Replace placeholders with actual values  
-**7. Run Machine Learning Analysis**  
-python scripts/surfacia_main.py machinelearning --ml_input_dir data/ml_input/ --test_indices <test_indices> # Replace placeholders with actual values  
+### Surfacia Command Line Usage Guide
+
+## Prerequisites
+- Ensure you have Surfacia installed and the required environment set up.
+- Activate your Python environment (e.g., `conda activate sympy37`)
+
+## General Usage
+python scripts/surfacia_main.py <task> [options]
+
+Available tasks: smi2xyz, reorder, extract_substructure, xyz2gaussian, run_gaussian, readmultiwfn, machinelearning, fchk2matches
+
+## Task-specific Usage
+
+1. Convert SMILES to XYZ
+python scripts/surfacia_main.py smi2xyz --smiles_csv <path_to_smiles_csv>
+
+2. Reorder Atoms
+python scripts/surfacia_main.py reorder --element <element_symbol> --input_dir <input_directory> --output_dir <output_directory>
+
+3. Extract Substructure
+python scripts/surfacia_main.py extract_substructure --substructure_file <path_to_substructure_file> --input_dir <input_directory> --output_dir <output_directory> --threshold <matching_threshold>
+
+4. Convert XYZ to Gaussian Input
+python scripts/surfacia_main.py xyz2gaussian --xyz_folder <xyz_directory> --template_file <path_to_template_file> --output_dir <output_directory>
+
+5. Run Gaussian Calculations
+python scripts/surfacia_main.py run_gaussian --com_dir <com_file_directory>
+
+6. Process Multiwfn Output
+python scripts/surfacia_main.py readmultiwfn --input_dir <input_directory> --output_dir <output_directory> --smiles_target_csv <path_to_smiles_target_csv> --first_matches_csv <path_to_first_matches_csv> --descriptor_option <option_number>
+
+7. Run Machine Learning Analysis
+python scripts/surfacia_main.py machinelearning --input_x <path_to_feature_matrix> --input_y <path_to_labels> --input_title <path_to_feature_names> --ml_input_dir <ml_input_directory> [additional_options]
+
+8. FCHK to Matches
+python scripts/surfacia_main.py fchk2matches --input_path <fchk_directory> --xyz1_path <path_to_substructure_file> --threshold <matching_threshold>
+
+## Additional Options
+- Use --config <path_to_config_file> to specify a custom configuration file
+- For detailed help on each task, use: python scripts/surfacia_main.py <task> --help
 
 ---
 ### ** Descriptor List Extracted from the Program**
