@@ -86,107 +86,123 @@ python scripts/surfacia_main.py fchk2matches --input_path <fchk_directory> --xyz
 ---
 ### ** Descriptor List Extracted from the Program**
 
-#### General Molecular Properties
+This program extracts molecular descriptors based on the selected `descriptor_option`. There are three options:
+
+1. **Molecular Properties Only** (`descriptor_option=1`)
+2. **Molecular Properties + Specific Atomic Properties** (`descriptor_option=2`)
+3. **Molecular Properties + Specific Atomic Properties + Fragment Properties** (`descriptor_option=3`)
+
+### Descriptors Extracted
+
+#### 1. Molecular Properties Only (`descriptor_option=1`)
+
+Extracts only molecular-level descriptors.
+
+**General Molecular Properties**
 - **Sample Name**: Sample name
 - **Atom Number**: Number of atoms
 - **Molecule Weight**: Molecular weight (Da)
 - **Occupied Orbitals**: Number of occupied orbitals
-- **Isosurface area**: Isosurface area (Å²)
+- **Isosurface Area**: Isosurface area (Å²)
 - **Sphericity**: Sphericity
-- **Volume (Angstrom³)**: Molecular volume (Å³)
+- **Volume (Å³)**: Molecular volume (Å³)
 - **Density (g/cm³)**: Density (g/cm³)
-- **Surface eff atom num**: Number of surface effective atoms
+- **Surface Exposed Atom Number**: Number of surface-exposed atoms
 
-#### Electronic Properties
+**Electronic Properties**
 - **HOMO**: Highest Occupied Molecular Orbital energy (a.u.)
 - **LUMO**: Lowest Unoccupied Molecular Orbital energy (a.u.)
 - **HOMO-LUMO Gap**: HOMO-LUMO energy gap (a.u.)
 - **Dipole Moment (a.u.)**: Dipole moment (a.u.)
 - **Quadrupole Moment**: Quadrupole moment (a.u.)
 - **Octopole Moment**: Octopole moment (a.u.)
-- **ODI HOMO-1**: Orbital Delocalization Index of HOMO-1 orbital
-- **ODI HOMO**: Orbital Delocalization Index of HOMO orbital
-- **ODI LUMO**: Orbital Delocalization Index of LUMO orbital
-- **ODI LUMO+1**: Orbital Delocalization Index of LUMO+1 orbital
-- **ODI Mean**: Mean value of Orbital Delocalization Index
-- **ODI Std**: Standard deviation of Orbital Delocalization Index
+- **ODI HOMO-1**: Orbital Delocalization Index of HOMO-1
+- **ODI HOMO**: Orbital Delocalization Index of HOMO
+- **ODI LUMO**: Orbital Delocalization Index of LUMO
+- **ODI LUMO+1**: Orbital Delocalization Index of LUMO+1
+- **ODI Mean**: Mean Orbital Delocalization Index
+- **ODI Std**: Standard Deviation of Orbital Delocalization Index
 
-#### Molecular Size and Shape
+**Molecular Size and Shape**
 - **Farthest Distance**: Distance between the two farthest atoms (Å)
 - **Molecular Radius**: Molecular radius (Å)
-- **Molecular Size Short**: Molecular size (short axis, Å)
-- **Molecular Size Medium**: Molecular size (medium axis, Å)
-- **Molecular Size Long**: Molecular size (long axis, Å)
-- **Long/Sum Size Ratio**: Ratio of long axis length to the sum of all three axes lengths
+- **Molecular Size Short**: Short axis length (Å)
+- **Molecular Size Medium**: Medium axis length (Å)
+- **Molecular Size Long**: Long axis length (Å)
+- **Long/Sum Size Ratio**: Ratio of long axis to sum of all axes
 - **Length/Diameter**: Ratio of molecular length to diameter
 - **MPP**: Molecular Planarity Parameter (Å)
 - **SDP**: Span of Deviation from Plane (Å)
 
-#### Local Electronic Properties (LEAE, ESP, ALIE, etc.)
-- **LEAE Minimal Value**: Minimum value of Local Electron Attachment Energy (eV)
-- **LEAE Maximal Value**: Maximum value of Local Electron Attachment Energy (eV)
-- **ESP Minimal Value**: Minimum value of Electrostatic Potential (kcal/mol)
-- **ESP Maximal Value**: Maximum value of Electrostatic Potential (kcal/mol)
-- **ESP Overall Average Value (kcal/mol)**: Overall average value of Electrostatic Potential (kcal/mol)
-- **ESP Overall Variance ((kcal/mol)²)**: Overall variance of Electrostatic Potential ((kcal/mol)²)
-- **Balance of Charges (nu)**: Balance of charges (ν)
-- **Product of sigma²_tot and nu ((kcal/mol)²)**: Product of σ²_tot and ν ((kcal/mol)²)
-- **Internal Charge Separation (Pi) (kcal/mol)**: Internal charge separation (Π, kcal/mol)
-- **Molecular Polarity Index (MPI) (kcal/mol)**: Molecular Polarity Index (MPI, kcal/mol)
-- **Polar Surface Area (Angstrom²)**: Polar surface area (Å²)
-- **Polar Surface Area (%)**: Percentage of polar surface area (%)
-- **ALIE Minimal Value**: Minimum value of Averaged Local Ionization Energy (eV)
-- **ALIE Maximal Value**: Maximum value of Averaged Local Ionization Energy (eV)
-- **ALIE Average Value**: Average value of Averaged Local Ionization Energy (eV)
+**Local Electronic Properties (LEAE, ESP, ALIE, etc.)**
+- **LEAE Minimal Value**: Minimum Local Electron Attachment Energy (eV)
+- **LEAE Maximal Value**: Maximum Local Electron Attachment Energy (eV)
+- **ESP Minimal Value**: Minimum Electrostatic Potential (kcal/mol)
+- **ESP Maximal Value**: Maximum Electrostatic Potential (kcal/mol)
+- **ESP Overall Average Value (kcal/mol)**: Average Electrostatic Potential
+- **ESP Overall Variance ((kcal/mol)²)**: Variance of Electrostatic Potential
+- **Balance of Charges (ν)**: Charge balance
+- **Product of σ²_tot and ν ((kcal/mol)²)**: Product of σ²_tot and ν
+- **Internal Charge Separation (Π) (kcal/mol)**: Internal charge separation
+- **Molecular Polarity Index (MPI) (kcal/mol)**: Molecular Polarity Index
+- **Polar Surface Area (Å²)**: Polar surface area
+- **Polar Surface Area (%)**: Percentage of polar surface area
+- **ALIE Minimal Value**: Minimum Averaged Local Ionization Energy (eV)
+- **ALIE Maximal Value**: Maximum Averaged Local Ionization Energy (eV)
+- **ALIE Average Value**: Average Averaged Local Ionization Energy (eV)
 - **ALIE Variance**: Variance of Averaged Local Ionization Energy (eV²)
 
-#### Atomic Properties
-In the program, there is a matrix `matrix['Matrix Data']`, which contains the following atomic-level descriptors (one value per atom):
+#### 2. Molecular Properties + Specific Atomic Properties (`descriptor_option=2`)
 
-- **Atom#**: Atom number
-- **LEAE All area**: Total area of LEAE
-- **LEAE Positive area**: Positive area of LEAE
-- **LEAE Negative area**: Negative area of LEAE
-- **LEAE Minimal value**: Minimum value of LEAE
-- **LEAE Maximal value**: Maximum value of LEAE
-- **LEAE All average**: Overall average of LEAE
-- **LEAE Positive average**: Average of positive LEAE
-- **LEAE Negative average**: Average of negative LEAE
-- **LEAE All variance**: Overall variance of LEAE
-- **LEAE Positive variance**: Variance of positive LEAE
-- **LEAE Negative variance**: Variance of negative LEAE
-- **ESP All area (Å²)**: Total area of ESP (Å²)
-- **ESP Positive area (Å²)**: Positive area of ESP (Å²)
-- **ESP Negative area (Å²)**: Negative area of ESP (Å²)
-- **ESP Minimal value (kcal/mol)**: Minimum value of ESP (kcal/mol)
-- **ESP Maximal value (kcal/mol)**: Maximum value of ESP (kcal/mol)
-- **ESP All average (kcal/mol)**: Overall average of ESP (kcal/mol)
-- **ESP Positive average (kcal/mol)**: Average of positive ESP (kcal/mol)
-- **ESP Negative average (kcal/mol)**: Average of negative ESP (kcal/mol)
-- **ESP All variance ((kcal/mol)²)**: Overall variance of ESP ((kcal/mol)²)
-- **ESP Positive variance ((kcal/mol)²)**: Variance of positive ESP ((kcal/mol)²)
-- **ESP Negative variance ((kcal/mol)²)**: Variance of negative ESP ((kcal/mol)²)
-- **ESP Pi (kcal/mol)**: Internal charge separation of ESP (Π, kcal/mol)
-- **ESP nu**: Charge balance of ESP (ν)
-- **ESP nu*sigma²**: Product of σ²_tot and ν of ESP
-- **ALIE Area (Å²)**: Area of ALIE (Å²)
-- **ALIE Min value**: Minimum value of ALIE (eV)
-- **ALIE Max value**: Maximum value of ALIE (eV)
-- **ALIE Average**: Average value of ALIE (eV)
-- **ALIE Variance**: Variance of ALIE (eV²)
+Includes all descriptors from Option 1 plus specific atomic descriptors for selected atoms (e.g., Atom1).
 
- When applied in practical scenarios, the surface chemical interactions of individual atoms can sometimes be extremely important. However, in many cases, certain physical quantities may result in `NaN`, as not every atom is exposed on the surface, or due to other computational reasons. Therefore, some descriptors in this section must be ignored. Here, we retain the following key features, with the prefix `Atom1` to indicate they pertain to atomic properties:
+**Specific Atomic Properties**
+- **Atom1_LEAE_Minimal_value**: Minimum LEAE for Atom 1
+- **Atom1_LEAE_All_average**: Average LEAE for Atom 1
+- **Atom1_ESP_All_area_(Å²)**: Total ESP area for Atom 1 (Å²)
+- **Atom1_ESP_Minimal_value_(kcal/mol)**: Minimum ESP for Atom 1 (kcal/mol)
+- **Atom1_ESP_Maximal_value_(kcal/mol)**: Maximum ESP for Atom 1 (kcal/mol)
+- **Atom1_ESP_All_average_(kcal/mol)**: Average ESP for Atom 1 (kcal/mol)
+- **Atom1_ESP_Pi_(kcal/mol)**: Internal charge separation of ESP for Atom 1 (Π, kcal/mol)
+- **Atom1_ALIE_Min_value**: Minimum ALIE for Atom 1 (eV)
+- **Atom1_ALIE_Max_value**: Maximum ALIE for Atom 1 (eV)
 
-- **Atom1_LEAE_Minimal_value**
-- **Atom1_LEAE_All_average**
-- **Atom1_ESP_All_area_(Å²)**
-- **Atom1_ESP_Minimal_value_(kcal/mol)**
-- **Atom1_ESP_Maximal_value_(kcal/mol)**
-- **Atom1_ESP_All_average_(kcal/mol)**
-- **Atom1_ESP_Pi_(kcal/mol)**
-- **Atom1_ALIE_Min_value**
-- **Atom1_ALIE_Max_value**
-  
+**Note**: Only key atomic descriptors are retained to account for possible `NaN` values due to atoms not being surface-exposed.
+
+#### 3. Molecular Properties + Specific Atomic Properties + Fragment Properties (`descriptor_option=3`)
+
+Includes all descriptors from Option 2 plus fragment-level descriptors based on fragment indices from `first_matches_csv`.
+
+**Fragment-Level Properties**
+- **Frag_LEAE_Minimal_Value**: Minimum LEAE for the fragment (eV)
+- **Frag_LEAE_Maximal_Value**: Maximum LEAE for the fragment (eV)
+- **Frag_LEAE_Average_Value**: Average LEAE for the fragment (eV)
+- **Frag_ESP_Minimal_Value**: Minimum ESP for the fragment (kcal/mol)
+- **Frag_ESP_Maximal_Value**: Maximum ESP for the fragment (kcal/mol)
+- **Frag_ESP_Overall_Surface_Area_(Å²)**: Overall ESP surface area for the fragment (Å²)
+- **Frag_ESP_Average_Value**: Average ESP for the fragment (kcal/mol)
+- **Frag_ESP_variance_Value**: Variance of ESP for the fragment ((kcal/mol)²)
+- **Frag_ESP_Pi_Value**: Internal charge separation of ESP for the fragment (Π, kcal/mol)
+- **Frag_ALIE_Minimal_Value**: Minimum ALIE for the fragment (eV)
+- **Frag_ALIE_Maximal_Value**: Maximum ALIE for the fragment (eV)
+- **Frag_ALIE_Average_Value**: Average ALIE for the fragment (eV)
+- **Frag_ALIE_Variance_Value**: Variance of ALIE for the fragment (eV²)
+
+**Note**: Fragment descriptors also include atomic features of the atoms forming the fragment, as specified by the `sub.xyz1` files.
+
+**Key Atomic Descriptors Retained (`AtomN_` Prefix)**
+- **AtomN_LEAE_Minimal_value**
+- **AtomN_LEAE_All_average**
+- **AtomN_ESP_All_area_(Å²)**
+- **AtomN_ESP_Minimal_value_(kcal/mol)**
+- **AtomN_ESP_Maximal_value_(kcal/mol)**
+- **AtomN_ESP_All_average_(kcal/mol)**
+- **AtomN_ESP_Pi_(kcal/mol)**
+- **AtomN_ALIE_Min_value**
+- **AtomN_ALIE_Max_value**
+
+**Note**: These key descriptors are essential for evaluating the local electronic properties and chemical activity of specific atoms. The number of atoms (`N`) is determined based on fragments specified by `sub.xyz1` files.
+
 ---
 ## **Developer**
 **Dr. Yuming Su** is the primary developer of **Surfacia: Surface Atomic Chemical Interaction Analyzer**. Dr. Su completed his Ph.D. in 2024 from the **College of Chemistry and Chemical Engineering** at **Xiamen University**.
