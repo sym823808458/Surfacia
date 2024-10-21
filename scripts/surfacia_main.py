@@ -13,11 +13,12 @@ from surfacia import (
     extract_substructure_main,
     xyz2gaussian_main,
     run_gaussian,
-    process_txt_files, 
+    process_txt_files,
     xgb_stepwise_regression,
     fchk2matches_main,
+    run_multiwfn_on_fchk_files,  # Add this line
+    read_first_matches_csv,  # Add this line as well
 )
-
 def main():
     parser = argparse.ArgumentParser(description='SURF Atomic Chemical Interaction Analyzer - Surfacia')
     parser.add_argument('--config', type=str, default='config/setting.ini', help='Path to the configuration file')
@@ -128,20 +129,39 @@ def main():
         run_gaussian(com_dir)
 
     elif args.task == 'readmultiwfn':
+        # Retrieve arguments or use defaults from the config
         input_dir = args.input_dir or config.get('DEFAULT', 'input_dir', fallback='.')
         output_dir = args.output_dir or config.get('DEFAULT', 'output_dir', fallback='output')
         smiles_target_csv = args.smiles_target_csv or config.get('DEFAULT', 'smiles_target_csv', fallback=None)
         first_matches_csv = args.first_matches_csv or config.get('DEFAULT', 'first_matches_csv', fallback=None)
-        descriptor_option = args.descriptor_option or config.getint('DEFAULT', 'descriptor_option', fallback=1)
-
+    
+        # Convert descriptor_option to integer
+        try:
+            descriptor_option = int(args.descriptor_option) if args.descriptor_option else config.getint('DEFAULT', 'descriptor_option', fallback=1)
+        except ValueError:
+            print("Descriptor option must be an integer (1, 2, or 3).")
+            sys.exit(1)
+    
+        # Validate required CSV paths
         if not smiles_target_csv:
             print("SMILES and target CSV file not specified.")
             sys.exit(1)
         if not first_matches_csv:
             print("First matches CSV file not specified.")
             sys.exit(1)
-
-        process_txt_files(input_dir, output_dir, smiles_target_csv, first_matches_csv, descriptor_option)
+    
+        # Read fragment indices from the first_matches CSV
+        first_matches = read_first_matches_csv(first_matches_csv)
+    
+        # Run Multiwfn on FCHK files
+        run_multiwfn_on_fchk_files(input_path=input_dir, first_matches=first_matches)
+    
+        # Process the extracted TXT files to generate descriptors
+        process_txt_files(input_directory=input_dir,
+                          output_directory=output_dir,
+                          smiles_target_csv_path=smiles_target_csv,
+                          first_matches_csv_path=first_matches_csv,
+                          descriptor_option=descriptor_option)
 
     elif args.task == 'machinelearning':
         input_x = args.input_x or config.get('DEFAULT', 'input_x', fallback=None)
