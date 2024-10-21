@@ -2,7 +2,7 @@
 **SURF Atomic Chemical Interaction Analyzer - Surfacia**
 ![167273d2f11fef9ec1402476857c931](https://github.com/user-attachments/assets/e6c40f2a-4ca2-4ed6-a1f0-2d70767a5b55)
 
-**Surfacia** (Surface Atomic Chemical Interaction Analyzer) is a comprehensive toolset designed to automate the workflow for analyzing surface atomic chemical interactions. It integrates molecular structure generation, quantum chemical computations, feature extraction, and machine learning analysis, providing a streamlined solution for surface chemistry research.
+**Surfacia** (Surface Atomic Chemical Interaction Analyzer) is a comprehensive toolset designed to automate the workflow for analyzing surface atomic chemical interactions. It integrates molecular structure generation, quantum chemical computations, feature extraction, and machine learning analysis, providing a streamlined solution for **structure-activity relationships in chemistry research**, , with an emphasis on generating conclusions that are **interpretable by chemists**.
 
 ### **Features**
 - **3D Structure Generation**: Converts SMILES strings to 3D molecular structures (XYZ format).
@@ -55,28 +55,28 @@ Available tasks: smi2xyz, reorder, extract_substructure, xyz2gaussian, run_gauss
 
 ## Task-specific Usage
 
-1. Convert SMILES to XYZ
+1. Convert SMILES to XYZ  
 python scripts/surfacia_main.py smi2xyz --smiles_csv <path_to_smiles_csv>
 
-2. Reorder Atoms
+2. Reorder Atoms  
 python scripts/surfacia_main.py reorder --element <element_symbol> --input_dir <input_directory> --output_dir <output_directory>
 
-3. Extract Substructure
+3. Extract Substructure  
 python scripts/surfacia_main.py extract_substructure --substructure_file <path_to_substructure_file> --input_dir <input_directory> --output_dir <output_directory> --threshold <matching_threshold>
 
-4. Convert XYZ to Gaussian Input
+4. Convert XYZ to Gaussian Input  
 python scripts/surfacia_main.py xyz2gaussian --xyz_folder <xyz_directory> --template_file <path_to_template_file> --output_dir <output_directory>
 
-5. Run Gaussian Calculations
+5. Run Gaussian Calculations  
 python scripts/surfacia_main.py run_gaussian --com_dir <com_file_directory>
 
-6. Process Multiwfn Output
+6. Process Multiwfn Output  
 python scripts/surfacia_main.py readmultiwfn --input_dir <input_directory> --output_dir <output_directory> --smiles_target_csv <path_to_smiles_target_csv> --first_matches_csv <path_to_first_matches_csv> --descriptor_option <option_number>
 
-7. Run Machine Learning Analysis
+7. Run Machine Learning Analysis  
 python scripts/surfacia_main.py machinelearning --input_x <path_to_feature_matrix> --input_y <path_to_labels> --input_title <path_to_feature_names> --ml_input_dir <ml_input_directory> [additional_options]
 
-8. FCHK to Matches
+8. FCHK to Matches  
 python scripts/surfacia_main.py fchk2matches --input_path <fchk_directory> --xyz1_path <path_to_substructure_file> --threshold <matching_threshold>
 
 ## Additional Options
