@@ -763,4 +763,11 @@ if __name__ == "__main__":
         # Interactive input for descriptor option
 
     descriptor_option = input("Please choose a descriptor option (1, 2, or 3): ")
-    process_txt_files(input_directory, output_directory, smiles_target_csv_path, first_matches_csv_path, descriptor_option=1)
+    # Read the first matches CSV
+    first_matches = read_first_matches_csv(first_matches_csv_path)
+    
+    # Run Multiwfn on FCHK files
+    run_multiwfn_on_fchk_files(input_path=input_directory, first_matches=first_matches)
+    
+    # Process TXT files
+    process_txt_files(input_directory, output_directory, smiles_target_csv_path, first_matches_csv_path, descriptor_option)
