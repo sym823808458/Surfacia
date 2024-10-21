@@ -115,7 +115,6 @@ n
 2
 1
 1
-1
 0.002
 0
 11
@@ -137,6 +136,13 @@ def run_multiwfn_on_fchk_files(input_path='.', first_matches={}):
     for fchk_file in fchk_files:
         sample_name = os.path.splitext(fchk_file)[0]  # e.g., '003' if fchk_file is '003.fchk'
         xyz_file = sample_name + '.xyz'
+        output_file = f"{sample_name}.txt"
+
+        # Check if the output file already exists
+        if os.path.exists(output_file):
+            logging.info(f"Output file {output_file} already exists. Skipping calculation.")
+            processed_files.append(output_file)
+            continue
 
         if xyz_file in first_matches:
             fragment_indices = first_matches[xyz_file]
@@ -146,10 +152,9 @@ def run_multiwfn_on_fchk_files(input_path='.', first_matches={}):
 
         descriptors_content = create_descriptors_content(fragment_indices)
         print(f"Descriptors content for {sample_name}:\n{descriptors_content}")
-        output_file = f"{sample_name}.txt"
 
         # Construct the command argument list, only adding the -silent option
-        command = ["Multiwfn", fchk_file, "-silent"]
+        command = ["Multiwfn_noGUI", fchk_file, "-silent"]
 
         try:
             with open(output_file, 'w') as outfile:
@@ -175,6 +180,7 @@ def run_multiwfn_on_fchk_files(input_path='.', first_matches={}):
             logging.error(f"Error: Output file {output_file} was not created for {fchk_file}.")
 
     os.chdir(original_dir)
+    return processed_files
 
 def process_txt_files(input_directory, output_directory, smiles_target_csv_path, first_matches_csv_path, descriptor_option=1):
     """
@@ -763,4 +769,11 @@ if __name__ == "__main__":
         # Interactive input for descriptor option
 
     descriptor_option = input("Please choose a descriptor option (1, 2, or 3): ")
-    process_txt_files(input_directory, output_directory, smiles_target_csv_path, first_matches_csv_path, descriptor_option=1)
+    # Read the first matches CSV
+    first_matches = read_first_matches_csv(first_matches_csv_path)
+    
+    # Run Multiwfn on FCHK files
+    run_multiwfn_on_fchk_files(input_path=input_directory, first_matches=first_matches)
+    
+    # Process TXT files
+    process_txt_files(input_directory, output_directory, smiles_target_csv_path, first_matches_csv_path, descriptor_option)
