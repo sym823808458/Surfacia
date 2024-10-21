@@ -12,7 +12,6 @@ def run_gaussian(com_dir):
 
     Args:
         com_dir (str): The directory containing the .com files.
-        esp_descriptor_dir (str): The path to the ESP_descriptor.txt1 file.
     """
     # Ensure the directory exists
     if not os.path.isdir(com_dir):
@@ -22,14 +21,14 @@ def run_gaussian(com_dir):
     # Change the working directory to the .com files directory
     os.chdir(com_dir)
 
-    # Find all .com files in the directory
-    com_files = [f for f in os.listdir(com_dir) if f.endswith('.com')]
+    # Find all .com files in the directory and sort them by name
+    com_files = sorted([f for f in os.listdir(com_dir) if f.endswith('.com')])
 
     if not com_files:
         print("No .com files found for Gaussian calculations.")
         return
 
-    # Run Gaussian calculations for each .com file
+    # Run Gaussian calculations for each .com file in sorted order
     for com_file in com_files:
         print(f"Running Gaussian calculation for {com_file}...")
         try:
@@ -39,8 +38,8 @@ def run_gaussian(com_dir):
             print(f"An error occurred while processing {com_file}: {e}")
             continue
 
-    # Convert .chk files to .fchk files using formchk
-    chk_files = glob.glob('*.chk')
+    # Convert .chk files to .fchk files using formchk, also in sorted order
+    chk_files = sorted(glob.glob('*.chk'))
 
     if not chk_files:
         print("No .chk files found for conversion.")
@@ -54,7 +53,7 @@ def run_gaussian(com_dir):
         except subprocess.CalledProcessError as e:
             print(f"An error occurred while converting {chk_file}: {e}")
 
-    print("job finished")
+    print("Job finished")
 
 if __name__ == '__main__':
     com_directory = input("Enter the path to the directory containing .com files: ").strip()

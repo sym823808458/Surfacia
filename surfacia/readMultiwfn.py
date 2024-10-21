@@ -130,7 +130,7 @@ n
 def run_multiwfn_on_fchk_files(input_path='.', first_matches={}):
     original_dir = os.getcwd()
     os.chdir(input_path)
-    fchk_files = glob.glob('*.fchk')
+    fchk_files = sorted(glob.glob('*.fchk'))  # Sort the list of fchk files
     processed_files = []
 
     for fchk_file in fchk_files:
