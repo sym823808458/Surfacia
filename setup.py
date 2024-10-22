@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='surfacia',
-    version='0.0.1',
+    version='2.2.1',
     description='SURF Atomic Chemical Interaction Analyzer',
     author='Yuming Su',
     author_email='823808458@qq.com',
@@ -16,7 +16,7 @@ setup(
         'xgboost',
         'scikit-learn',
         'joblib',
-        'openbabel',  # Note: OpenBabel might need special instructions
+        # 'openbabel', # Removed because OpenBabel is installed via conda
     ],
     entry_points={
         'console_scripts': [
