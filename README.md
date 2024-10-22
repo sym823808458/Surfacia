@@ -51,32 +51,35 @@ This manual provides a step-by-step guide on how to use Surfacia.
 ## General Usage
 python scripts/surfacia_main.py <task> [options]
 
-Available tasks: smi2xyz, reorder, extract_substructure, xyz2gaussian, run_gaussian, readmultiwfn, machinelearning, fchk2matches
+Available tasks: smi2xyz,xtbopt, reorder, extract_substructure, xyz2gaussian, run_gaussian, readmultiwfn, machinelearning, fchk2matches
 
 ## Task-specific Usage
 
 1. Convert SMILES to XYZ  
 python scripts/surfacia_main.py smi2xyz --smiles_csv <path_to_smiles_csv>
 
-2. Reorder Atoms  
+2.Run xtb Optimization
+python scripts/surfacia_main.py xtbopt --input_folder <xyz_directory> --output_folder <output_directory> [--param_file <optional_param_file>]
+
+3. Reorder Atoms  
 python scripts/surfacia_main.py reorder --element <element_symbol> --input_dir <input_directory> --output_dir <output_directory>
 
-3. Extract Substructure  
+4. Extract Substructure  
 python scripts/surfacia_main.py extract_substructure --substructure_file <path_to_substructure_file> --input_dir <input_directory> --output_dir <output_directory> --threshold <matching_threshold>
 
-4. Convert XYZ to Gaussian Input  
+5. Convert XYZ to Gaussian Input  
 python scripts/surfacia_main.py xyz2gaussian --xyz_folder <xyz_directory> --template_file <path_to_template_file> --output_dir <output_directory>
 
-5. Run Gaussian Calculations  
+6. Run Gaussian Calculations  
 python scripts/surfacia_main.py run_gaussian --com_dir <com_file_directory>
 
-6. Process Multiwfn Output  
+7. Process Multiwfn Output  
 python scripts/surfacia_main.py readmultiwfn --input_dir <input_directory> --output_dir <output_directory> --smiles_target_csv <path_to_smiles_target_csv> --first_matches_csv <path_to_first_matches_csv> --descriptor_option <option_number>
 
-7. Run Machine Learning Analysis  
-python scripts/surfacia_main.py machinelearning --input_x <path_to_feature_matrix> --input_y <path_to_labels> --input_title <path_to_feature_names> --ml_input_dir <ml_input_directory> [additional_options]
+8. Run Machine Learning Analysis  
+python scripts/surfacia_main.py machinelearning --full_csv <path_to_full_csv> --output_dir <ml_output_directory> --nan_handling <nan_handling_option> --epoch <number_of_epochs> --core_num <cpu_cores> --train_test_split_ratio <split_ratio> --step_feat_num <number_of_features> [other_options]
 
-8. FCHK to Matches  
+9. FCHK to Matches  
 python scripts/surfacia_main.py fchk2matches --input_path <fchk_directory> --xyz1_path <path_to_substructure_file> --threshold <matching_threshold>
 
 ## Additional Options
