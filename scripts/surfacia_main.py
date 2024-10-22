@@ -18,6 +18,7 @@ from surfacia import (
     fchk2matches_main,
     run_multiwfn_on_fchk_files,  # Add this line
     read_first_matches_csv,  # Add this line as well
+    generate_feature_matrix,
 )
 def main():
     parser = argparse.ArgumentParser(description='SURF Atomic Chemical Interaction Analyzer - Surfacia')
@@ -63,10 +64,9 @@ def main():
 
     # machinelearning Task
     parser_ml = subparsers.add_parser('machinelearning', help='Machine Learning tasks')
-    parser_ml.add_argument('--input_x', type=str, required=True, help='Path to the feature matrix file')
-    parser_ml.add_argument('--input_y', type=str, required=True, help='Path to the label (target values) file')
-    parser_ml.add_argument('--input_title', type=str, required=True, help='Path to the feature names file')
-    parser_ml.add_argument('--ml_input_dir', type=str, required=True, help='Directory containing input files for machine learning')
+    parser_ml.add_argument('--full_csv', type=str, required=True, help='Path to the full CSV file containing title, smiles, features, and target')
+    parser_ml.add_argument('--output_dir', type=str, default='MachineLearning', help='Output directory path (default: MachineLearning)')
+    parser_ml.add_argument('--nan_handling', type=str, default='drop_rows', choices=['drop_rows', 'drop_columns'], help='How to handle NaN values')
     parser_ml.add_argument('--epoch', type=int, default=32, help='Number of epochs')
     parser_ml.add_argument('--core_num', type=int, default=32, help='Number of CPU cores to use')
     parser_ml.add_argument('--train_test_split_ratio', type=float, default=0.85, help='Train-test split ratio')
@@ -163,37 +163,24 @@ def main():
                           first_matches_csv_path=first_matches_csv,
                           descriptor_option=descriptor_option)
 
-    elif args.task == 'machinelearning':
-        input_x = args.input_x or config.get('DEFAULT', 'input_x', fallback=None)
-        input_y = args.input_y or config.get('DEFAULT', 'input_y', fallback=None)
-        input_title = args.input_title or config.get('DEFAULT', 'input_title', fallback=None)
-        ml_input_dir = args.ml_input_dir or config.get('DEFAULT', 'ml_input_dir', fallback=None)
+    elif args.task == 'generate_feature_matrix':
+        merged_csv = args.merged_csv or config.get('DEFAULT', 'merged_csv', fallback=None)
+        output_dir = args.output_dir or config.get('DEFAULT', 'output_dir', fallback=None)
+        nan_handling = args.nan_handling or config.get('DEFAULT', 'nan_handling', fallback='drop_rows')
 
-        if ml_input_dir and (not input_x or not input_y or not input_title):
-            def find_file_by_keyword(directory, keyword):
-                for filename in os.listdir(directory):
-                    if keyword.lower() in filename.lower():
-                        return os.path.join(directory, filename)
-                return None
-
-            input_x = input_x or find_file_by_keyword(ml_input_dir, 'Features')
-            input_y = input_y or find_file_by_keyword(ml_input_dir, 'Values')
-            input_title = input_title or find_file_by_keyword(ml_input_dir, 'Title')
-
-        if not input_x or not input_y or not input_title:
-            print("Input data files (input_x, input_y, input_title) not specified.")
+        if not merged_csv or not output_dir:
+            print("Merged CSV file or output directory not specified.")
             sys.exit(1)
-        else:
-            if not os.path.isfile(input_x):
-                print(f"Input X file not found: {input_x}")
-                sys.exit(1)
-            if not os.path.isfile(input_y):
-                print(f"Input Y file not found: {input_y}")
-                sys.exit(1)
-            if not os.path.isfile(input_title):
-                print(f"Input Title file not found: {input_title}")
-                sys.exit(1)
 
+        result = generate_feature_matrix(merged_csv, output_dir, nan_handling)
+        print("Generated files:")
+        for key, value in result.items():
+            print(f"  {key}: {value}")
+            
+    elif args.task == 'machinelearning':
+        full_csv = args.full_csv or config.get('DEFAULT', 'full_csv', fallback=None)
+        output_dir = args.output_dir or config.get('DEFAULT', 'output_dir', fallback='MachineLearning')
+        nan_handling = args.nan_handling or config.get('DEFAULT', 'nan_handling', fallback='drop_rows')
         epoch = args.epoch
         core_num = args.core_num
         train_test_split_ratio = args.train_test_split_ratio
@@ -202,6 +189,37 @@ def main():
         ini_feat = args.ini_feat if args.ini_feat else []
         test_indices = args.test_indices if args.test_indices else []
 
+        if not full_csv:
+            print("Full CSV file (--full_csv) not specified.")
+            sys.exit(1)
+
+        if not os.path.isfile(full_csv):
+            print(f"Full CSV file not found: {full_csv}")
+            sys.exit(1)
+
+
+        print("generate_feature_matrix ing")
+        generated_files = generate_feature_matrix(
+            merged_output_filename=full_csv,
+            output_dir=output_dir,
+            nan_handling=nan_handling
+        )
+
+
+        input_x = generated_files['features']
+        input_y = generated_files['values']
+        input_title = generated_files['titles']
+        ml_input_dir = generated_files['ml_dir']
+
+
+        for key in ['features', 'values', 'titles']:
+            file_path = generated_files[key]
+            if not os.path.isfile(file_path):
+                print(f"not found{file_path}")
+                sys.exit(1)
+
+
+        print("begin xgb_stepwise_regression")
         xgb_stepwise_regression(
             input_x=input_x,
             input_y=input_y,
