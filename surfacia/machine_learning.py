@@ -12,7 +12,73 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn import model_selection
 from multiprocessing import Pool
 import joblib
+import pandas as pd
 
+def generate_feature_matrix(merged_output_filename, output_dir, nan_handling='drop_rows'):
+    """
+    Generate feature matrix and related files from the merged CSV file.
+    
+    Args:
+        merged_output_filename (str): Path to the merged CSV file.
+        output_dir (str): Path to the output directory.
+        nan_handling (str): How to handle NaN values. Options are 'drop_rows' or 'drop_columns'.
+    
+    Returns:
+        dict: A dictionary containing the paths of the generated files.
+    """
+    merged_df = pd.read_csv(merged_output_filename)
+    
+    # Handle NaN values
+    if nan_handling == 'drop_rows':
+        merged_df = merged_df.dropna()
+    elif nan_handling == 'drop_columns':
+        merged_df = merged_df.dropna(axis=1)
+    else:
+        raise ValueError("nan_handling must be either 'drop_rows' or 'drop_columns'")
+    
+    S_N = merged_df.shape[0]
+    F_N = merged_df.shape[1] - 3  # Assuming 'Sample Name', 'smiles', 'target' are three columns
+
+    # Create a MachineLearning folder inside the specified output directory
+    ML_DIR = Path(output_dir, "MachineLearning")
+    ML_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Save SMILES
+    INPUT_SMILES = Path(ML_DIR, f'Smiles_{S_N}.csv')
+    merged_df[['smiles']].to_csv(INPUT_SMILES, index=False, header=False)
+
+    # Save labels (values)
+    INPUT_Y = Path(ML_DIR, f'Values_True_{S_N}.csv')
+    merged_df[['target']].to_csv(INPUT_Y, index=False, header=False)
+
+    # Save feature matrix
+    INPUT_X = Path(ML_DIR, f'Features_{S_N}_{F_N}.csv')
+    merged_df.drop(['Sample Name', 'smiles', 'target'], axis=1).to_csv(INPUT_X, index=False, float_format='%.6f', header=False)
+
+    # Save feature names with spaces replaced by underscores
+    INPUT_TITLE = Path(ML_DIR, f'Title_{F_N}.csv')
+    with open(INPUT_TITLE, 'w') as f:
+        for col in merged_df.columns[1:-2]:
+            # Replace spaces and slashes with underscores
+            formatted_col = col.replace(' ', '_').replace('/', '_')
+            f.write(formatted_col + '\n')
+
+    print(f'Machine Learning data split and saved in {ML_DIR}:')
+    print(f'  - SMILES: {INPUT_SMILES.name}')
+    print(f'  - Values: {INPUT_Y.name}')
+    print(f'  - Features: {INPUT_X.name}')
+    print(f'  - Feature Titles: {INPUT_TITLE.name}')
+    print("All processing completed.")
+
+    return {
+        'smiles': str(INPUT_SMILES),
+        'values': str(INPUT_Y),
+        'features': str(INPUT_X),
+        'titles': str(INPUT_TITLE),
+        'ml_dir': str(ML_DIR)
+    }
+    
+    
 def XGB_Fit(X, y, X_train, y_train, X_test, y_test, paras):
     clf_new = XGBRegressor()
     for k, v in paras.items():
@@ -27,8 +93,8 @@ def XGB_Fit(X, y, X_train, y_train, X_test, y_test, paras):
     shap_values = shap.TreeExplainer(clf_new).shap_values(X)
     s = np.mean(clf_new.predict(X)) - np.mean(y_train)
     s2 = np.mean(clf_new.predict(X)) - np.mean(y)
-    print(np.sum(shap_values), s, s2)
-    print(' MSE: %.5f' % mse, ' MAE: %.5f' % mae, ' R^2: %.5f' % r2)
+    #print(np.sum(shap_values), s, s2)
+    #print(' MSE: %.5f' % mse, ' MAE: %.5f' % mae, ' R^2: %.5f' % r2)
     return [mse, mae, r2, shap_values, clf_new]
     
 def xgb_stepwise_regression(
@@ -201,6 +267,7 @@ def xgb_stepwise_regression(
         perflist1 = []
         for j in range(F_N):
             print('Round', j)
+            f1.write(f'Round {j} - Initial Feature Selection\n')
             inifeat = title[j]
             inifeatindex = np.where(title == inifeat)[0][0]
             featlist = [inifeatindex]
@@ -208,37 +275,40 @@ def xgb_stepwise_regression(
             perf = poolfit(TRAIN_TEST_SPLIT, EPOCH, CORE_NUM, Xtemp, y, paras)
             perflist1.append(perf[0])
         inifeat = np.argmin(perflist1)
-        print('Best initial feature index:', inifeat)
-        print('Minimum MSE:', np.min(perflist1))
-        print('Performance list:', perflist1)
-        print('Sorted indices:', np.argsort(perflist1))
+        print(f'Best initial feature index: {inifeat}')
+        f1.write(f'Best initial feature index: {inifeat}\n')
+        print(f'Minimum MSE: {np.min(perflist1)}')
+        f1.write(f'Minimum MSE: {np.min(perflist1)}\n')
         perflistt = np.argsort(perflist1)
         print('Top 10 features:')
+        f1.write('Top 10 initial features:\n')
         for _ in range(10):
             print(title[perflistt[_]])
-        # Using the best initial feature
+            f1.write(f'{title[perflistt[_]]}\n')
         inifeatindex = inifeat
     else:
-        print('Already given first feature is ', title[inifeat], inifeat)
+        print(f'Initial feature provided: {title[inifeat]}')
+        f1.write(f'Initial feature provided: {title[inifeat]}\n')
         inifeatindex = ini_feat[0] if ini_feat else 0
 
     # Stepwise feature addition
     print('Starting stepwise feature selection...')
+    f1.write('Starting stepwise feature selection...\n')
     featlist = []
     bestfeatlist = []
-    mseind = []
     mselist = []
     for i in range(Stepfeatnum):
         perflist = np.full(len(title), np.inf)
-        print('Now we have ', i+1, ' feature(s). Beginning regression!')
+        print(f'Now selecting {i+1} features. Beginning regression!')
+        f1.write(f'Now selecting {i+1} features. Beginning regression!\n')
         if i == 0:
             featlist.append(inifeatindex)
             Xtemp = X[:, featlist]
             perf = poolfit(TRAIN_TEST_SPLIT, EPOCH, CORE_NUM, Xtemp, y, paras)
             perflist[inifeatindex] = perf[0]
             bestfeatlist = featlist.copy()
-            print('Round 1 - Features:', title[bestfeatlist], ' MSE:', perflist[inifeatindex], '\n')
-            f1.write('Round 1 - Features: ' + str(title[bestfeatlist]) + ' MSE: ' + str(perflist[inifeatindex]) + '\n')
+            print(f'Round 1 - Features: {title[bestfeatlist]} MSE: {perflist[inifeatindex]}\n')
+            f1.write(f'Round 1 - Features: {title[bestfeatlist]} MSE: {perflist[inifeatindex]}\n')
             mselist.append(perflist[inifeatindex])
         else:
             for j in range(F_N):
@@ -251,15 +321,15 @@ def xgb_stepwise_regression(
                 perflist[j] = perf[0]
             min_mse = np.min(perflist)
             mseind = np.argmin(perflist)
-            print('Selected feature index:', mseind)
-            print('Best performance MSE:', min_mse)
+            print(f'Selected feature index: {mseind}')
+            f1.write(f'Selected feature index: {mseind}\n')
             bestfeatlist.append(mseind)
-            print('Best feature list:', bestfeatlist)
-            round_info = ('Round ' + str(len(bestfeatlist)) + ' - Features: ' + str(title[bestfeatlist]) +
-                          ' MSE: ' + str(round(min_mse, 4)) + '\n')
+            round_info = (f'Round {len(bestfeatlist)} - Features: {title[bestfeatlist]} MSE: {round(min_mse, 4)}\n')
             print(round_info)
             f1.write(round_info)
             mselist.append(min_mse)
+
+    # Close the log file
     f1.close()
 
     # Save best features
