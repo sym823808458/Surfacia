@@ -58,7 +58,7 @@ Available tasks: smi2xyz,xtbopt, reorder, extract_substructure, xyz2gaussian, ru
 1. Convert SMILES to XYZ  
 python scripts/surfacia_main.py smi2xyz --smiles_csv <path_to_smiles_csv>
 
-2.Run xtb Optimization
+2.Run xtb Optimization  
 python scripts/surfacia_main.py xtbopt --input_folder <xyz_directory> --output_folder <output_directory> [--param_file <optional_param_file>]
 
 3. Reorder Atoms  
