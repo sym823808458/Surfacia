@@ -55,36 +55,54 @@ Available tasks: smi2xyz,xtbopt, reorder, extract_substructure, xyz2gaussian, ru
 
 ## Task-specific Usage
 
-1. Convert SMILES to XYZ  
+1. Convert SMILES to XYZ
+```bash
 python scripts/surfacia_main.py smi2xyz --smiles_csv <path_to_smiles_csv>
+```
 
-2.Run xtb Optimization  
+2. Run xtb Optimization  
+```bash
 python scripts/surfacia_main.py xtbopt --input_folder <xyz_directory> --output_folder <output_directory> [--param_file <optional_param_file>]
+```
 
-3. Reorder Atoms  
+3. Reorder Atoms
+```bash
 python scripts/surfacia_main.py reorder --element <element_symbol> --input_dir <input_directory> --output_dir <output_directory>
+```
 
-4. Extract Substructure  
+5. Extract Substructure
+```bash
 python scripts/surfacia_main.py extract_substructure --substructure_file <path_to_substructure_file> --input_dir <input_directory> --output_dir <output_directory> --threshold <matching_threshold>
+```
 
-5. Convert XYZ to Gaussian Input  
+7. Convert XYZ to Gaussian Input
+```bash
 python scripts/surfacia_main.py xyz2gaussian --xyz_folder <xyz_directory> --template_file <path_to_template_file> --output_dir <output_directory>
+```
 
-6. Run Gaussian Calculations  
+9. Run Gaussian Calculations
+```bash
 python scripts/surfacia_main.py run_gaussian --com_dir <com_file_directory>
+```
 
-7. Process Multiwfn Output  
+11. Process Multiwfn Output
+```bash
 python scripts/surfacia_main.py readmultiwfn --input_dir <input_directory> --output_dir <output_directory> --smiles_target_csv <path_to_smiles_target_csv> --first_matches_csv <path_to_first_matches_csv> --descriptor_option <option_number>
+```
 
-8. Run Machine Learning Analysis  
+12. Run Machine Learning Analysis
+```bash
 python scripts/surfacia_main.py machinelearning --full_csv <path_to_full_csv> --output_dir <ml_output_directory> --nan_handling <nan_handling_option> --epoch <number_of_epochs> --core_num <cpu_cores> --train_test_split_ratio <split_ratio> --step_feat_num <number_of_features> [other_options]
+```
 
-9. FCHK to Matches  
+13. FCHK to Matches
+```bash
 python scripts/surfacia_main.py fchk2matches --input_path <fchk_directory> --xyz1_path <path_to_substructure_file> --threshold <matching_threshold>
+```
 
 ## Additional Options
-- Use --config <path_to_config_file> to specify a custom configuration file
-- For detailed help on each task, use: python scripts/surfacia_main.py <task> --help
+- Use `--config <path_to_config_file>` to specify a custom configuration file
+- For detailed help on each task, use: `python scripts/surfacia_main.py <task> --help`
 
 ---
 ### ** Descriptor List Extracted from the Program**
