@@ -233,4 +233,5 @@ Includes all descriptors from Option 2 plus fragment-level descriptors based on 
 ## **Citation**
 If you use **Surfacia** in your work, please cite the following:
 
-Su, Y. **Surfacia: Surface Atomic Chemical Interaction Analyzer** (Version 0.0.1) [Software]. 2024. Available at: [GitHub Repository URL]
+Su, Y. **Surfacia: Surface Atomic Chemical Interaction Analyzer**, Version 0.0.1, https://github.com/sym823808458/Surfacia (accessed Dec 2023)
+
