@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/sym823808458/Surfacia/main/docs/logo.png" alt="Surfacia Logo" width="200"/>
+  <img src="https://raw.githubusercontent.com/sym823808458/Surfacia/main/Surfacia.png" alt="Surfacia Logo" width="200"/>
 </div>
 
 # Surfacia: From Molecules to Insights, Automatically
@@ -32,15 +32,6 @@ Our core philosophy is to empower **experimental and computational chemists alik
 *   📊 **Interactive AI-Powered Insights**: Our models are not black boxes. The `shap-viz` command launches an interactive web dashboard that provides a deep dive into model behavior. Visually identify which atoms or functional groups drive molecular activity, explore structure-activity relationships, and receive automated explanations from an integrated AI assistant.
 
 *   ⚙️ **Modular & Flexible**: While the automated workflow is powerful, Surfacia remains fully modular. Each step of the pipeline can be run independently, giving advanced users complete control over their computational experiments.
-
-## Visual Demo: The `surfacia workflow`
-
-Watch how Surfacia transforms a simple CSV file into a powerful, interactive analysis dashboard—all with a single command.
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/sym823808458/Surfacia/main/docs/workflow_demo.gif" alt="Surfacia Workflow Demo" width="800"/>
-  <p><em>From raw data to rich, explorable insights, seamlessly.</em></p>
-</div>
 
 ## Installation
 
