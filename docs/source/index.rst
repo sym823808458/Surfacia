@@ -14,34 +14,7 @@ Surfacia: Surface-Based Feature Engineering and Interpretable Machine Learning
    <p style="font-size: 1.2rem; color: #6b7280; margin-bottom: 2rem;">Surface-Based Feature Engineering and Interpretable Machine Learning</p>
    </div>
 
-**Surfacia** is an automated framework for surface-based feature engineering and interpretable machine learning with reasoning language model integration. It addresses the critical interpretability gap in structure-activity relationship analysis by systematically extracting quantitative descriptors across atomic, functional group, and molecular levels.
-
-.. grid:: 2
-   :gutter: 3
-
-   .. grid-item-card:: 🚀 Quick Start
-      :link: getting_started/index
-      :link-type: doc
-
-      Get up and running with Surfacia in minutes. Learn the basics and run your first analysis.
-
-   .. grid-item-card:: 📖 User Guide
-      :link: user_guide/index
-      :link-type: doc
-
-      Comprehensive guides for using all Surfacia features effectively.
-
-   .. grid-item-card:: 💻 Commands Reference
-      :link: commands/index
-      :link-type: doc
-
-      Detailed documentation for all CLI commands with examples and best practices.
-
-   .. grid-item-card:: 🧪 Tutorials
-      :link: tutorials/index
-      :link-type: doc
-
-      Step-by-step tutorials for common workflows and advanced techniques.
+**Surfacia** is an automated framework for surface-based feature engineering and interpretable machine learning with reasoning language model integration. It addresses critical interpretability gap in structure-activity relationship analysis by systematically extracting quantitative descriptors across atomic, functional group, and molecular levels.
 
 Key Features
 ------------
@@ -61,45 +34,6 @@ Key Features
 🔧 **Comprehensive Toolkit**
    Molecular visualization, batch processing, and error recovery tools
 
-The Interpretability Challenge
-------------------------------
-
-Modern computational chemistry faces a fundamental paradox: while machine learning models achieve unprecedented predictive accuracy in drug discovery, they operate as black boxes providing little insight into chemical principles governing molecular behavior. This interpretability crisis is particularly problematic in structure-activity relationship analysis, where understanding *why* molecular modifications enhance or diminish properties is essential for rational design.
-
-.. admonition:: The Solution
-   :class: tip
-
-   Surfacia bridges this gap by leveraging surface-based molecular properties such as local electron attachment energies, electrostatic potential distributions, and average local ionization energies. These properties directly encode electronic features responsible for molecular recognition and reactivity, providing a natural foundation for interpretable analysis.
-
-Scientific Foundation
----------------------
-
-Surface-based molecular interactions are fundamental to pharmaceutical activity. Our framework systematically quantifies these interactions through:
-
-**Multi-Scale Descriptor Generation**
-   - **Atomic Level**: Individual atom surface properties
-   - **Functional Group Level**: Chemical fragment characteristics  
-   - **Molecular Level**: Global molecular properties
-
-**Quantum Mechanical Foundation**
-   - Gaussian quantum chemistry calculations
-   - Multiwfn wavefunction analysis
-   - Surface-based property mapping
-
-**Interpretable Feature Engineering**
-   - Intelligent stepwise feature selection
-   - Chemical interpretability preservation
-   - Minimal feature sets with maintained predictive power
-
-Beyond Prediction: Chemical Insight
-------------------------------------
-
-Surfacia addresses the critical "beyond-prediction" challenge by:
-
-- **Identifying High-Potential Regions**: Systematic analysis of surface properties in top-performing molecules
-- **Automated Chemical Interpretation**: Language model integration for natural language explanations
-- **Extrapolative Design Guidance**: SHAP-based identification of molecular regions with exceptional potential
-
 Installation
 ------------
 
@@ -109,8 +43,8 @@ Installation
    pip install surfacia
 
    # Or install from source
-   git clone https://github.com/surfacia/surfacia.git
-   cd surfacia
+   git clone https://github.com/sym823808458/Surfacia.git
+   cd Surfacia
    pip install -e .
 
 Quick Example
@@ -127,26 +61,39 @@ Quick Example
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
+   :caption: Getting Started
    :hidden:
 
-   getting_started/index
-   user_guide/index
-   commands/index
-   tutorials/index
+   getting_started/installation
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+   :hidden:
+
+   tutorials/basic_workflow
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Descriptors
+   :hidden:
+
    descriptors/index
+   descriptors/mqsa_modes
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API Reference
+   :hidden:
+
    api/index
-   examples/index
 
 .. toctree::
    :maxdepth: 1
-   :caption: Development
+   :caption: About
    :hidden:
 
    citation
-   contributing
-   changelog
-   license
 
 Indices and Tables
 ==================
