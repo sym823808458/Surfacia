@@ -64,7 +64,7 @@ pip install -e .
 
 ## Quick Start: Your First Analysis in 5 Minutes
 
-Let's experience the power of Surfacia with a minimal example.
+Let's experience the power of Surfacia with a minimal example. Details see https://surfacia.readthedocs.io/zh-cn/latest/#
 
 **Step 1: Prepare Your Input Data**
 
@@ -124,9 +124,6 @@ surfacia workflow -i molecules.csv --test-samples "1,5,10"
 
 # Resume a previously interrupted job, automatically skipping completed steps
 surfacia workflow -i molecules.csv --test-samples "1,5,10" --resume
-
-# Customize Gaussian calculation parameters
-surfacia workflow -i molecules.csv --keywords "# B3LYP/6-31G* opt" --nproc 16 --memory 32GB
 
 # Customize the machine learning stage
 surfacia workflow -i molecules.csv --max-features 8 --stepreg-runs 5
