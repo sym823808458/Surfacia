@@ -30,8 +30,6 @@ extensions = [
     'sphinx_tabs.tabs',
     'sphinx_design',
     'sphinxcontrib.mermaid',
-    'nbsphinx',
-    'myst_parser',
     'sphinx_autodoc_typehints',
 ]
 

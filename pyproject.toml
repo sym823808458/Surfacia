@@ -73,6 +73,18 @@ dev = [
     "sphinx>=4.0",
     "sphinx-rtd-theme>=1.0",
 ]
+docs = [
+    "sphinx>=8.0",
+    "sphinx-rtd-theme",
+    "furo>=2024.0",
+    "sphinx-copybutton",
+    "sphinx-tabs",
+    "sphinx-design",
+    "sphinxcontrib-mermaid",
+    "sphinx-autodoc-typehints",
+    "myst-parser",
+    "nbsphinx",
+]
 viz = [
     "matplotlib>=3.5.0",
     "seaborn>=0.11.0",

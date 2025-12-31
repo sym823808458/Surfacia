@@ -1,309 +1,332 @@
 Electronic Properties Descriptors
-==================================
+==============================
 
-Quantum mechanical descriptors that characterize the electronic structure and properties of molecular surfaces.
+The electronic properties of a molecule, which govern its reactivity and interaction potential, are described by a suite of quantum mechanical descriptors. These parameters capture electron donor-acceptor behavior, charge distribution, and stability.
 
 Overview
 --------
 
-Electronic properties descriptors provide insights into the quantum mechanical nature of molecular surfaces, including electrostatic potential, electron density, and various electronic indices. These descriptors are crucial for understanding molecular reactivity, binding interactions, and electronic effects.
+Electronic descriptors (28 features total) characterize:
 
-Available Descriptors
----------------------
+- **Frontier orbitals**: HOMO, LUMO energies and gap
+- **Orbital delocalization**: Spatial distribution of electrons
+- **Surface analysis**: Local properties on vdW surface
+- **Dipole moment**: Overall charge separation
 
-Electrostatic Properties
-~~~~~~~~~~~~~~~~~~~~~~~~
+2.1 Frontier Molecular Orbitals (3 Features)
+-----------------------------------------
 
-**Electrostatic Potential (ESP)**
-  - Potential energy of a unit positive charge at surface points
-  - Units: kcal/mol or hartree
-  - Calculated from quantum mechanical wavefunctions
-  - Essential for understanding intermolecular interactions
+According to frontier molecular orbital theory, chemical reactivity is primarily dictated by highest occupied and lowest unoccupied molecular orbitals.
 
-**ESP Statistics**
-  - Minimum ESP (V_min): Most negative potential
-  - Maximum ESP (V_max): Most positive potential
-  - ESP Range: V_max - V_min
-  - Average ESP: Mean potential over surface
-  - ESP Variance: Measure of potential variation
+**HOMO (Highest Occupied Molecular Orbital)**
+   - **Units**: a.u. (atomic units)
+   - **Definition**: Energy level of the highest occupied molecular orbital
+   - **Application**: 
+     - High energy = good electron donor (nucleophile)
+     - Low energy = poor electron donor
+     - Correlates with oxidation potential
 
-**Local Ionization Energy (LIE)**
-  - Energy required to remove an electron at each surface point
-  - Indicates nucleophilic attack sites
-  - Lower values suggest easier electron removal
-  - Important for reactivity predictions
+**LUMO (Lowest Unoccupied Molecular Orbital)**
+   - **Units**: a.u.
+   - **Definition**: Energy level of the lowest unoccupied molecular orbital
+   - **Application**: 
+     - Low energy = good electron acceptor (electrophile)
+     - High energy = poor electron acceptor
+     - Correlates with reduction potential
 
-**Electron Affinity Surface**
-  - Energy released when adding an electron
-  - Indicates electrophilic attack sites
-  - Higher values suggest favorable electron addition
-  - Complementary to local ionization energy
+**HOMO-LUMO Gap**
+   - **Units**: a.u.
+   - **Definition**: Energy difference between HOMO and LUMO
+   - **Formula**: Gap = E(LUMO) - E(HOMO)
+   - **Application**: 
+     - Large gap = chemically stable, low reactivity
+     - Small gap = high reactivity, soft molecules
+     - Key indicator of kinetic stability
 
-Electron Density Properties
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2.2 Orbital Delocalization Index (6 Features)
+------------------------------------------
 
-**Electron Density (ρ)**
-  - Probability density of finding electrons
-  - Units: electrons/bohr³
-  - Fundamental quantum mechanical property
-  - Basis for many other descriptors
+Orbital delocalization indices provide quantitative measures of electron delocalization within molecular orbitals, offering insights into electron mobility and chemical bonding character.
 
-**Electron Density Statistics**
-  - Average density over surface
-  - Density variance and distribution
-  - Maximum and minimum density points
-  - Density gradient information
+**The ODI Concept**
 
-**Fukui Functions**
-  - f⁺: Nucleophilic attack susceptibility
-  - f⁻: Electrophilic attack susceptibility
-  - f⁰: Radical attack susceptibility
-  - Derived from frontier molecular orbitals
+The Orbital Delocalization Index (ODI) was defined by Tian Lu to quantify extent of orbital spatial delocalization. For orbital i, the ODI value is calculated using the following formula:
 
-**Local Hardness and Softness**
-  - Chemical hardness at surface points
-  - Softness as inverse of hardness
-  - Related to polarizability
-  - Important for reactivity analysis
+.. math::
 
-Molecular Orbital Properties
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   {\rm ODI}_i=0.01\times\sum_{A}{\left(\Theta_{A,i}\right)^2}
 
-**HOMO/LUMO Analysis**
-  - Highest Occupied Molecular Orbital energy
-  - Lowest Unoccupied Molecular Orbital energy
-  - HOMO-LUMO gap (electronic excitation energy)
-  - Orbital contributions to surface properties
+where Θ_(A,i) represents the composition of atom A in orbital i.
 
-**Frontier Orbital Densities**
-  - HOMO density at surface points
-  - LUMO density at surface points
-  - Mixed HOMO-LUMO contributions
-  - Orbital overlap analysis
+**Interpretation**
 
-**Molecular Orbital Projections**
-  - Projection of MOs onto surface
-  - Visualization of orbital character
-  - Identification of reactive sites
-  - Electronic delocalization analysis
+- **Low ODI values** (0.1-0.3): Strong delocalization
+  - Characteristic of π-conjugated systems
+  - Aromatic compounds
+  - Extended bonding networks
+  
+- **High ODI values** (0.5-1.0): Localized orbitals
+  - Characteristic of σ-bonds
+  - Isolated functional groups
+  - Non-conjugated systems
 
-Polarizability and Response
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Specific Descriptors**
 
-**Local Polarizability**
-  - Response to external electric fields
-  - Anisotropic polarizability components
-  - Average polarizability over surface
-  - Important for intermolecular interactions
+**ODI_HOMO_1**
+   - **Units**: unitless
+   - **Definition**: ODI value for HOMO-1 orbital
+   - **Application**: Delocalization of second-highest occupied orbital
 
-**Hyperpolarizability**
-  - Nonlinear optical properties
-  - Second-order response properties
-  - Important for NLO applications
-  - Surface contribution analysis
+**ODI_HOMO**
+   - **Units**: unitless
+   - **Definition**: ODI value for HOMO orbital
+   - **Application**: Electron donor orbital delocalization, critical for reactivity
 
-**Electric Field Effects**
-  - Response to external fields
-  - Field-induced property changes
-  - Stark effect analysis
-  - Environmental sensitivity
+**ODI_LUMO**
+   - **Units**: unitless
+   - **Definition**: ODI value for LUMO orbital
+   - **Application**: Electron acceptor orbital delocalization, influences electrophilicity
 
-Charge Distribution
-~~~~~~~~~~~~~~~~~~~
+**ODI_LUMO+1**
+   - **Units**: unitless
+   - **Definition**: ODI value for LUMO+1 orbital
+   - **Application**: Delocalization of second-lowest unoccupied orbital
 
-**Atomic Charges**
-  - Mulliken population analysis
-  - Natural population analysis (NPA)
-  - Electrostatic potential (ESP) charges
-  - Hirshfeld charges
+**ODI_Mean**
+   - **Units**: unitless
+   - **Definition**: Average orbital delocalization index across all considered orbitals
+   - **Calculation**: Mean of ODI_HOMO_1, ODI_HOMO, ODI_LUMO, ODI_LUMO+1
+   - **Application**: Overall measure of electron delocalization within the molecule
 
-**Charge Transfer Analysis**
-  - Intermolecular charge transfer
-  - Donor-acceptor interactions
-  - Charge transfer complexes
-  - Electronic coupling analysis
+**ODI_Standard_Deviation**
+   - **Units**: unitless
+   - **Definition**: Quantifies heterogeneity in delocalization patterns
+   - **Calculation**: Standard deviation of ODI values
+   - **Application**: 
+     - Large values = significant variation in electron mobility
+     - Small values = uniform delocalization across orbitals
+     - Indicates mixed bonding character
 
-**Dipole and Multipole Moments**
-  - Electric dipole moment
-  - Quadrupole and higher moments
-  - Local multipole contributions
-  - Anisotropy analysis
+2.3 Molecular Quantitative Surface Analysis (18 Features)
+----------------------------------------------------
 
-Calculation Methods
--------------------
+Local electronic properties provide detailed insights into molecular reactivity and interaction sites through surface-based analysis of electron density-derived quantities.
 
-Quantum Mechanical Calculations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### 2.3.1 Theoretical Foundation
 
-1. **Wavefunction Generation**
-   - Hartree-Fock (HF) calculations
-   - Density Functional Theory (DFT)
-   - Post-HF methods (MP2, CCSD)
-   - Basis set selection and optimization
+The analysis of local electronic properties relies on partitioning the molecular van der Waals surface into atom-specific regions using a weight-based assignment algorithm.
 
-2. **Property Calculation**
-   - Direct wavefunction analysis
-   - Finite difference methods
-   - Response theory approaches
-   - Perturbation theory methods
+**Surface Point Assignment**
 
-3. **Surface Mapping**
-   - Property evaluation at surface points
-   - Interpolation and smoothing
-   - Statistical analysis of distributions
-   - Visualization and interpretation
+Surface points are attributed to atoms based on distance-weighted calculations:
 
-Implementation Details
-~~~~~~~~~~~~~~~~~~~~~~
+.. math::
 
-.. code-block:: python
+   w_A=1-\frac{\left|r-r_A\right|}{R_A}
 
-   # Example calculation of electronic descriptors
-   from surfacia.descriptors import ElectronicDescriptors
+where r represents a surface point, r_A is the atomic coordinate, and R_A is the atomic radius. Each surface point is assigned to the atom with the highest weight value, naturally accommodating atomic size differences.
+
+### 2.3.2 Local Electron Attachment Energy (LEAE)
+
+Local Electron Attachment Energy characterizes the local propensity for electron acceptance across the molecular surface.
+
+**LEAE Formula**
+
+.. math::
+
+   E_{att}\left(r\right)=\frac{\sum_{i=LUMO}^{\varepsilon_i<0}\left|\phi_i\left(r\right)\right|^2\times\varepsilon_i}{\rho\left(r\right)}
+
+where ρ(r) represents total electron density, |φ_i(r)|² is the probability density of the i-th unoccupied molecular orbital, and ε_i is the corresponding orbital energy.
+
+**Descriptors (4 Features)**
+
+**LEAE_Minimal_Value**
+   - **Units**: eV
+   - **Definition**: Minimum LEAE value on molecular surface
+   - **Application**: Identifies the hardest electron-accepting region (most stable toward reduction)
+
+**LEAE_Maximal_Value**
+   - **Units**: eV
+   - **Definition**: Maximum LEAE value on molecular surface
+   - **Application**: Locates the most electrophilic site (easiest to reduce)
+
+**LEAE_Average_Value**
+   - **Units**: eV
+   - **Definition**: Average LEAE across molecular surface
+   - **Application**: Overall measure of electron-accepting capability
+
+**LEAE_Variance**
+   - **Units**: eV²
+   - **Definition**: Variance in LEAE values across surface
+   - **Application**: Quantifies heterogeneity in electron affinity
+
+### 2.3.3 Electrostatic Potential (ESP)
+
+The molecular electrostatic potential describes the interaction energy between the molecule and a unit positive test charge.
+
+**ESP Formula**
+
+.. math::
+
+   V\left(r\right)=\sum_{A}\frac{Z_A}{\left|r-R_A\right|}-\int\frac{\rho\left(r^\prime\right)}{\left|r-r^\prime\right|}dr^\prime
+
+where Z_A represents nuclear charges and R_A denotes nuclear coordinates.
+
+**Basic Descriptors (3 Features)**
+
+**ESP_Minimal_Value**
+   - **Units**: kcal/mol
+   - **Definition**: Minimum ESP on molecular surface
+   - **Application**: Identifies the most electron-rich (nucleophilic) region
+
+**ESP_Maximal_Value**
+   - **Units**: kcal/mol
+   - **Definition**: Maximum ESP on molecular surface
+   - **Application**: Locates the most electron-deficient (electrophilic) site
+
+**ESP_Overall_Average_Value**
+   - **Units**: kcal/mol
+   - **Definition**: Average ESP across molecular surface
+   - **Application**: Characterizes the general electrostatic environment
+
+**Statistical Descriptors (7 Features)**
+
+**ESP_Overall_Variance**
+   - **Units**: (kcal/mol)²
+   - **Definition**: σ²_tot, quantifies electrostatic potential heterogeneity
+   - **Application**: High values indicate diverse electrostatic environment
+
+**Balance_of_Charges (ν)**
+   - **Units**: unitless
+   - **Definition**: Measure of charge balance
+   - **Formula**:
+     
+     .. math::
+     
+        \nu=\frac{\sigma_+^2\times\sigma_-^2}{\left(\sigma_{tot}^2\right)^2}
    
-   # Initialize calculator
-   calculator = ElectronicDescriptors()
+   - **Application**: 
+     - ν = 0: One charged region dominates
+     - ν = 1: Perfect balance between positive and negative regions
+     - Indicates polarity character
+
+**Product_of_Sigma_and_Nu**
+   - **Units**: (kcal/mol)²
+   - **Definition**: Composite charge indicator
+   - **Formula**: Product of σ²_tot and ν
+   - **Application**: Combined measure of polarity magnitude and balance
+
+**Internal_Charge_Separation (Π)**
+   - **Units**: kcal/mol
+   - **Definition**: Average absolute deviation from surface ESP mean
+   - **Formula**:
+     
+     .. math::
+     
+        \Pi=\frac{1}{t}\sum_{t}\left|V\left(r_k\right)-\bar{V_s}\right|
    
-   # Calculate descriptors from wavefunction file
-   descriptors = calculator.calculate(
-       wfn_file="molecule.wfn",
-       surface_file="molecule_surface.wfn",
-       properties=['esp', 'density', 'fukui'],
-       method='dft',
-       basis='6-31G*'
-   )
+   - **Application**: Quantifies internal charge distribution
+
+**Molecular_Polarity_Index (MPI)**
+   - **Units**: kcal/mol
+   - **Definition**: Average absolute electrostatic potential
+   - **Formula**:
+     
+     .. math::
+     
+        MPI=\frac{1}{t}\sum_{t}\left|V\left(r_k\right)\right|
    
-   # Access individual descriptors
-   esp_stats = descriptors['esp_statistics']
-   lie_values = descriptors['local_ionization_energy']
-   fukui_plus = descriptors['fukui_plus']
+   - **Application**: Overall polarity measure, correlates with solvation
 
-Parameters and Options
-~~~~~~~~~~~~~~~~~~~~~~
+**Polar_Surface_Area**
+   - **Units**: Å²
+   - **Definition**: Surface area with |ESP| > 10 kcal/mol
+   - **Application**: Regions of significant electrostatic character
 
-**Calculation Level**
-  - Method: HF, DFT (B3LYP, M06-2X, etc.), MP2
-  - Basis set: STO-3G, 6-31G*, cc-pVDZ, etc.
-  - Functional choice for DFT calculations
-  - Dispersion corrections when needed
+**Polar_Surface_Area_Percent**
+   - **Units**: %
+   - **Definition**: Percentage of polar surface relative to total surface area
+   - **Application**: Important for drug-likeness and membrane permeability
 
-**Surface Resolution**
-  - Number of surface points
-  - Point distribution algorithm
-  - Adaptive refinement options
-  - Quality vs. computational cost
+### 2.3.4 Average Local Ionization Energy (ALIE)
 
-**Property Options**
-  - Which properties to calculate
-  - Statistical analysis depth
-  - Visualization requirements
-  - Output format preferences
+Average Local Ionization Energy identifies sites susceptible to electrophilic attack.
+
+**ALIE Formula**
+
+.. math::
+
+   \bar{I}\left(r\right)=\frac{\sum_{i}{\rho_i\left(r\right)\left|\varepsilon_i\right|}}{\rho\left(r\right)}
+
+where ρ_i(r) and ε_i represent the electron density and orbital energy of the i-th occupied molecular orbital.
+
+**Descriptors (4 Features)**
+
+**ALIE_Minimal_Value**
+   - **Units**: eV
+   - **Definition**: Minimum ALIE on molecular surface
+   - **Application**: Identifies the most nucleophilic site (easiest to oxidize)
+
+**ALIE_Maximal_Value**
+   - **Units**: eV
+   - **Definition**: Maximum ALIE on molecular surface
+   - **Application**: Locates the least nucleophilic site (hardest to oxidize)
+
+**ALIE_Average_Value**
+   - **Units**: eV
+   - **Definition**: Average ALIE across molecular surface
+   - **Application**: Overall measure of electron-donating ability
+
+**ALIE_Variance**
+   - **Units**: eV²
+   - **Definition**: Variance in ALIE values across surface
+   - **Application**: Quantifies heterogeneity in ionization energy
+
+2.4 Dipole Moment (1 Feature)
+-------------------------------
+
+**Dipole_Moment**
+   - **Units**: a.u. (atomic units)
+   - **Definition**: Overall charge separation within the molecule
+   - **Formula**: μ = Σ(q_i × r_i) where q_i is atomic charge and r_i is position
+   - **Application**: 
+     - Influences intermolecular interactions
+     - Affects solvation properties
+     - Correlates with dielectric constant
 
 Applications
 ------------
 
-Drug Design and Discovery
-~~~~~~~~~~~~~~~~~~~~~~~~~
+**Chemical Reactivity**
+   - Predicting reaction sites and mechanisms
+   - Understanding electron transfer processes
+   - Designing redox-active compounds
 
-- **Binding affinity prediction**: ESP complementarity analysis
-- **Selectivity studies**: Electronic property differences
-- **ADMET properties**: Electronic effects on metabolism
-- **Lead optimization**: Electronic property optimization
+**Drug Design**
+   - Pharmacophore identification
+   - ADMET property prediction
+   - Structure-activity relationships
 
-Chemical Reactivity
-~~~~~~~~~~~~~~~~~~~
+**Materials Science**
+   - Electronic property engineering
+   - Charge transport prediction
+   - Surface chemistry optimization
 
-- **Reaction site prediction**: Fukui function analysis
-- **Mechanism elucidation**: Electronic property changes
-- **Catalyst design**: Active site electronic properties
-- **Regioselectivity**: Local reactivity indices
+**Theoretical Chemistry**
+   - Validating quantum chemical calculations
+   - Benchmarking computational methods
+   - Understanding chemical bonding
 
-Intermolecular Interactions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+References
+----------
 
-- **Hydrogen bonding**: ESP and electron density analysis
-- **π-π stacking**: Orbital overlap and ESP analysis
-- **Halogen bonding**: ESP hole identification
-- **Weak interactions**: Dispersion and polarization effects
+- **Frontier Orbital Theory**: Fukui (1952) "The role of frontier orbitals in chemical reactions"
+- **Electrostatic Potential**: Murray et al. (1978) "Electrostatic potential"
+- **Multiwfn Documentation**: http://sobereva.com/multiwfn/
 
-Material Properties
-~~~~~~~~~~~~~~~~~~~
+See Also
+--------
 
-- **Electronic materials**: Band structure analysis
-- **Optical properties**: Excitation and polarizability
-- **Conductivity**: Electronic delocalization
-- **Sensor applications**: Electronic response analysis
-
-Validation and Quality Control
-------------------------------
-
-Accuracy Assessment
-~~~~~~~~~~~~~~~~~~~
-
-- **Basis set convergence**: Test with larger basis sets
-- **Method validation**: Compare HF, DFT, and post-HF
-- **Experimental correlation**: Compare with measured properties
-- **Literature benchmarking**: Validate against known systems
-
-Common Issues
-~~~~~~~~~~~~~
-
-- **Basis set superposition error**: Use counterpoise correction
-- **Self-interaction error**: Consider DFT functional choice
-- **Convergence problems**: Adjust SCF parameters
-- **Numerical precision**: Monitor calculation stability
-
-Best Practices
-~~~~~~~~~~~~~~
-
-1. **Choose appropriate method** for the system and property
-2. **Validate basis set adequacy** with convergence tests
-3. **Consider environmental effects** (solvent, crystal packing)
-4. **Analyze statistical significance** of property differences
-5. **Visualize properties** for intuitive understanding
-
-Integration with Experimental Data
-----------------------------------
-
-Spectroscopic Correlations
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- **NMR chemical shifts**: Electron density correlations
-- **UV-Vis spectra**: HOMO-LUMO gap relationships
-- **IR frequencies**: Charge distribution effects
-- **Photoelectron spectroscopy**: Ionization energy validation
-
-Thermodynamic Properties
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-- **Solvation energies**: ESP and polarizability correlations
-- **Binding constants**: Electronic complementarity analysis
-- **Reaction energies**: Electronic property changes
-- **Phase transitions**: Electronic structure effects
-
-Advanced Applications
----------------------
-
-Machine Learning Integration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- **Feature engineering**: Electronic descriptors as ML features
-- **Property prediction**: Electronic structure-property relationships
-- **Pattern recognition**: Electronic fingerprinting
-- **Model interpretation**: Understanding electronic contributions
-
-Multiscale Modeling
-~~~~~~~~~~~~~~~~~~~
-
-- **QM/MM calculations**: Electronic effects in large systems
-- **Embedding methods**: Local electronic environment
-- **Coarse-graining**: Electronic property averaging
-- **Hierarchical approaches**: Multiple levels of theory
-
-References and Further Reading
-------------------------------
-
-- Politzer, P., & Murray, J. S. (2002). The fundamental nature and role of the electrostatic potential in atoms and molecules. *Theoretical Chemistry Accounts*, 108(3), 134-142.
-- Parr, R. G., & Yang, W. (1989). *Density-functional theory of atoms and molecules*. Oxford University Press.
-- Geerlings, P., De Proft, F., & Langenaeker, W. (2003). Conceptual density functional theory. *Chemical Reviews*, 103(5), 1793-1874.
-- Murray, J. S., & Sen, K. (Eds.). (1996). *Molecular electrostatic potentials: concepts and applications*. Elsevier.
+- :doc:`size_and_shape`: Geometric descriptor definitions
+- :doc:`mqsa_modes`: Multi-scale analysis approaches
+- :doc:`../api/descriptors`: API reference

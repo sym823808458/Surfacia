@@ -45,8 +45,9 @@ Contact Information
 For technical questions, bug reports, or feature requests:
 
 - **GitHub Issues**: https://github.com/sym823808458/Surfacia/issues
-- **Email**: Contact through GitHub profile
+- **Email**: 823808458@qq.com
 - **Documentation**: https://surfacia.readthedocs.io
+  +++++++ REPLACE
 
 **Academic Collaboration**
 
