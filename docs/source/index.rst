@@ -1,7 +1,7 @@
 Surfacia: Surface-Based Feature Engineering and Interpretable Machine Learning
 ==============================================================================
 
-.. image:: https://github.com/sym823808458/Surfacia/raw/master/Surfacia.png
+.. image:: _static/images/surfacia_logo.png
    :alt: Surfacia Framework
    :align: center
    :width: 400px

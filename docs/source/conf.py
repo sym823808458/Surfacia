@@ -41,8 +41,8 @@ exclude_patterns = []
 
 html_theme = 'furo'
 html_title = 'Surfacia Documentation'
-html_logo = 'https://github.com/sym823808458/Surfacia/raw/master/Surfacia.png'
-html_favicon = 'https://github.com/sym823808458/Surfacia/raw/master/Surfacia.png'
+html_logo = '_static/images/surfacia_logo.png'
+html_favicon = '_static/images/surfacia_logo.png'
 
 html_theme_options = {
     "sidebar_hide_name": True,
