@@ -116,4 +116,5 @@ If Surfacia helps your research, please cite the project and related publication
 
 - Author: Yuming Su
 - Email: 823808458@qq.com
+- Academic homepage: https://sym823808458.github.io/yumingsu_homepage/
 - Issues: [https://github.com/sym823808458/Surfacia/issues](https://github.com/sym823808458/Surfacia/issues)

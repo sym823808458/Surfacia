@@ -1,7 +1,7 @@
 User Guide
 ==========
 
-This section provides comprehensive guides for using Surfacia effectively.
+This section is for day-to-day usage and debugging.
 
 .. toctree::
    :maxdepth: 2
@@ -12,25 +12,10 @@ This section provides comprehensive guides for using Surfacia effectively.
    troubleshooting
    advanced_usage
 
-Overview
---------
+When to read each page
+----------------------
 
-The user guide covers practical aspects of using Surfacia for molecular surface analysis and machine learning applications. It includes step-by-step workflows, best practices, and troubleshooting tips.
-
-Key Topics
-----------
-
-* **Workflows**: Complete analysis pipelines from molecular input to results
-* **Best Practices**: Recommended approaches for different types of analyses
-* **Troubleshooting**: Common issues and their solutions
-* **Advanced Usage**: Expert-level features and customizations
-
-Getting Help
-------------
-
-If you need additional assistance:
-
-1. Check the :doc:`../getting_started/index` section for basic concepts
-2. Review the :doc:`../commands/index` for detailed command references
-3. Consult the troubleshooting section for common issues
-4. Visit the project repository for community support
+- ``workflows``: complete operational flow and rerun strategy
+- ``best_practices``: stable project organization and reproducibility tips
+- ``troubleshooting``: common errors and direct fixes
+- ``advanced_usage``: custom settings and advanced control
