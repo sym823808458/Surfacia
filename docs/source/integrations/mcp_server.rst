@@ -196,7 +196,5 @@ What still needs improvement:
 - dedicated regression tests for every MCP wrapper
 - more decoupling from filesystem-oriented legacy entrypoints
 
-Chinese Manual
---------------
 
-For a step-by-step Chinese startup guide, see :doc:`mcp_server_zh`.
+
