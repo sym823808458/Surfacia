@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/sym823808458/Surfacia/releases"><img alt="Version" src="https://img.shields.io/badge/version-3.0.1-blue.svg"></a>
+  <a href="https://github.com/sym823808458/Surfacia/releases"><img alt="Version" src="https://img.shields.io/badge/version-3.0.2-blue.svg"></a>
   <a href="https://www.python.org/downloads/"><img alt="Python" src="https://img.shields.io/badge/python-3.9+-blue.svg"></a>
   <a href="https://github.com/sym823808458/Surfacia/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green.svg"></a>
   <a href="#"><img alt="Platform" src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg"></a>
@@ -52,7 +52,9 @@ cd Surfacia
 
 # 2. Create and activate a virtual environment (recommended)
 python3 -m venv venv
-source venv/bin/activate  # On Linux/macOS
+conda create -n surfacia python=3.9
+conda activate surfacia
+conda install -c conda-forge rdkit # On Linux/macOS
 # venv\Scripts\activate    # On Windows
 
 # 3. Install all required Python dependencies
