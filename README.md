@@ -62,6 +62,8 @@ pip install -r requirements.txt
 
 # 4. Install the Surfacia package in editable mode
 pip install -e .
+
+or pip install surfacia
 ```
 
 ## Quick Start: Your First Analysis in 5 Minutes
