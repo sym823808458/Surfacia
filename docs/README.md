@@ -1,346 +1,389 @@
-# Surfacia 文档部署指南
+# Surfacia Documentation
 
-本文档详细说明如何构建和部署 Surfacia 项目的代码手册。
+This directory contains the complete Sphinx documentation for the Surfacia framework.
 
-## 📋 目录
+## 🚀 Quick Start - Building and Viewing the Documentation
 
-- [本地构建文档](#本地构建文档)
-- [部署到 Read the Docs](#部署到-read-the-docs)
-- [常见问题排查](#常见问题排查)
-- [更新文档](#更新文档)
+### Prerequisites
 
----
+1. **Install documentation dependencies**:
+   ```bash
+   cd docs/
+   pip install -r requirements.txt
+   ```
 
-## 🖥️ 本地构建文档
+2. **Ensure Sphinx is installed**:
+   ```bash
+   pip install sphinx
+   ```
 
-### 方法 1: 使用 Python 模块方式（推荐）
+### Building the Documentation
 
-```bash
-# 进入项目目录
-cd C:\Users\YumingSu\Sym_Python_codes\Surfacia
-
-# 创建虚拟环境（推荐）
-python -m venv venv
-
-# 激活虚拟环境（Windows）
-venv\Scripts\activate
-
-# 安装文档依赖
-cd docs
-pip install -r requirements.txt
-
-# 构建文档
-sphinx-build -b html source _build/html
-
-# 预览文档
-# 在浏览器中打开 _build/html/index.html
-```
-
-### 方法 2: 使用脚本构建
-
-创建批处理脚本 `build_docs.bat`:
-
-```batch
-@echo off
-cd /d C:\Users\YumingSu\Sym_Python_codes\Surfacia\docs
-sphinx-build -b html source _build/html
-echo.
-echo 文档构建完成！
-echo 请打开 _build/html\index.html 查看文档
-pause
-```
-
-### 构建输出
-
-成功构建后，文档将生成在 `docs/_build/html/` 目录下。主要文件包括：
-
-- `index.html` - 主页
-- `descriptors/` - 描述符文档
-- `api/` - API 参考
-- `tutorials/` - 教程
-
----
-
-## 🚀 部署到 Read the Docs
-
-### 步骤 1: 推送代码到 GitHub
+#### Option 1: Using Make (Linux/macOS)
 
 ```bash
-# 添加所有更改
-git add .
+# Navigate to docs directory
+cd docs/
 
-# 提交更改
-git commit -m "更新文档：添加描述符文档和修复配置"
+# Build HTML documentation
+make html
 
-# 推送到 GitHub
-git push origin main
+# Clean and rebuild
+make clean-build
+
+# Build with live reload (for development)
+make livehtml
 ```
 
-### 步骤 2: 在 Read the Docs 上注册项目
+#### Option 2: Using make.bat (Windows)
 
-1. 访问 [Read the Docs](https://readthedocs.org/)
-2. 使用 GitHub 账号登录
-3. 点击 "Import a Project"
-4. 填写项目信息：
-   - **Name**: `surfacia`
-   - **Repository**: `https://github.com/sym823808458/Surfacia`
-   - **Default branch**: `main`
-   - **Documentation Type**: `Sphinx`
-   - **Requirements file**: `docs/requirements.txt`
+```cmd
+# Navigate to docs directory
+cd docs\
 
-### 步骤 3: 配置项目设置
+# Build HTML documentation
+make.bat html
 
-在项目设置中：
-
-1. **Advanced Settings**:
-   - Python version: 3.11
-   - Python interpreter: CPython
-   - Build documentation with: Sphinx
-   - Conf file path: `docs/source/conf.py`
-   - Build directory: `_build/html`
-   - Keep build directory: Yes
-
-2. **Environment Variables** (如果需要):
-   - 可以添加任何需要的环境变量
-
-### 步骤 4: 手动触发构建
-
-推送新代码后，可以手动触发构建：
-
-1. 进入项目页面
-2. 点击 "Builds" 标签
-3. 点击 "Build version" 按钮
-4. 选择 `latest` 分支
-
-### 步骤 5: 访问文档
-
-构建成功后，文档将在线访问：
-
-```
-https://surfacia.readthedocs.io/
+# Clean build directory
+rmdir /s build
+make.bat html
 ```
 
----
-
-## 🔧 常见问题排查
-
-### 问题 1: Jinja2 版本冲突
-
-**错误信息**: `ImportError: cannot import name 'environmentfilter' from 'jinja2'`
-
-**解决方案**:
+#### Option 3: Direct Sphinx Commands
 
 ```bash
-# 卸载所有相关包
-pip uninstall sphinx jinja2 sphinx-autodoc-typehints -y
+# Navigate to docs directory
+cd docs/
 
-# 重新安装指定版本
-pip install sphinx==7.4.7 jinja2==3.1.6 sphinx-autodoc-typehints==2.5.0
+# Build HTML documentation
+sphinx-build -b html source build/html
+
+# Build with clean slate
+rm -rf build/
+sphinx-build -b html source build/html
 ```
 
-### 问题 2: 构建警告
+### 📖 Viewing the Documentation
 
-**警告**: `WARNING: document isn't included in any toctree`
+#### Method 1: Open in Browser (Recommended)
 
-**解决方案**: 确保所有文档都在 `index.rst` 的 `toctree` 中被引用。
+After building, open the main page:
 
-### 问题 3: 主题未找到
+**Windows:**
+```cmd
+# Open in default browser
+start build\html\index.html
+```
 
-**错误**: `Theme 'furo' not found`
+**Linux/macOS:**
+```bash
+# Open in default browser
+open build/html/index.html
+# or
+xdg-open build/html/index.html
+```
 
-**解决方案**:
+#### Method 2: Local HTTP Server
 
 ```bash
-pip install furo
+# Navigate to build directory
+cd build/html/
+
+# Start local server (Python 3)
+python -m http.server 8000
+
+# Or use the make target
+cd ../../  # back to docs/
+make serve
 ```
 
-### 问题 4: 图表不显示
+Then open your browser and go to: `http://localhost:8000`
 
-**问题**: Mermaid 图表不显示
+#### Method 3: Live Development Server
 
-**解决方案**:
-
-1. 确保安装了 `sphinxcontrib-mermaid`
-2. 在 `conf.py` 中添加扩展：
-
-```python
-extensions = [
-    'sphinxcontrib.mermaid',
-    # ... 其他扩展
-]
-```
-
-### 问题 5: API 文档未生成
-
-**问题**: API 参考文档缺少内容
-
-**解决方案**:
+For real-time editing and preview:
 
 ```bash
-# 生成 API 文档
-cd docs
-sphinx-apidoc -o source/api ../surfacia
+# Install sphinx-autobuild if not already installed
+pip install sphinx-autobuild
 
-# 重新构建
-sphinx-build -b html source _build/html
+# Start live server
+make livehtml
+# or directly:
+sphinx-autobuild source build/html
 ```
 
----
+This will start a server at `http://localhost:8000` that automatically rebuilds and refreshes when you edit source files.
 
-## 📝 更新文档
+## 🌐 Publish the Latest Docs to Web
 
-### 更新现有文档
+Surfacia is configured for Read the Docs via `.readthedocs.yaml`.
 
-1. 编辑 RST 文件
-2. 本地构建预览
-3. 测试链接和格式
-4. 提交并推送
+### Standard release flow (recommended)
 
-### 添加新文档
+1. Commit your documentation changes and push to GitHub:
+   ```bash
+   git add docs/ .readthedocs.yaml
+   git commit -m "docs: update troubleshooting and release notes"
+   git push origin main
+   ```
+2. Open Read the Docs project dashboard and trigger **Build** for `main`.
+3. After build success, verify your web docs URL:
+   - `https://surfacia.readthedocs.io/`
 
-1. 在 `docs/source/` 下创建新的 RST 文件
-2. 在 `index.rst` 中添加引用
-3. 更新相关文档的交叉引用
-4. 本地构建验证
-5. 提交并推送
+### If the website still shows old content
 
-### 更新 API 文档
+1. In Read the Docs, open **Builds** and check latest build status/log.
+2. Trigger **Build** again for `main`.
+3. Hard refresh browser cache (`Ctrl+F5`).
+4. Confirm the RTD default branch is `main`.
+
+### Versioned docs for releases (optional)
+
+For release-specific docs (for example `v3.0.2`):
 
 ```bash
-# 删除旧的 API 文档
-rm -rf source/api/*.rst
-
-# 重新生成 API 文档
-sphinx-apidoc -o source/api ../surfacia --force
-
-# 构建文档
-sphinx-build -b html source _build/html
+git tag v3.0.2
+git push origin v3.0.2
 ```
 
-### 更新依赖
+Then activate the new version in the Read the Docs admin panel.
 
-```bash
-# 更新 requirements.txt
-cd docs
-pip install --upgrade sphinx sphinx-rtd-theme furo sphinx-copybutton
-
-# 更新 requirements.txt
-pip freeze > requirements.txt
-
-# 测试构建
-sphinx-build -b html source _build/html
-```
-
----
-
-## 📊 文档结构
+## 📁 Documentation Structure
 
 ```
 docs/
-├── source/
-│   ├── conf.py                 # Sphinx 配置
-│   ├── index.rst               # 主页
-│   ├── getting_started/        # 入门指南
-│   │   ├── introduction.rst
+├── source/                          # Source files
+│   ├── conf.py                     # Sphinx configuration
+│   ├── index.rst                   # Main documentation page
+│   ├── getting_started/            # Getting started guide
+│   │   ├── index.rst
 │   │   ├── installation.rst
-│   │   └── quick_start.rst
-│   ├── descriptors/            # 描述符文档
+│   │   ├── quick_start.rst
+│   │   └── basic_concepts.rst
+│   ├── commands/                   # Command reference
 │   │   ├── index.rst
-│   │   ├── size_and_shape.rst
-│   │   ├── electronic_properties.rst
-│   │   └── mqsa_modes.rst
-│   ├── api/                    # API 参考
-│   │   ├── index.rst
-│   │   ├── core.rst
-│   │   ├── ml.rst
-│   │   ├── visualization.rst
-│   │   └── utils.rst
-│   ├── tutorials/              # 教程
-│   │   ├── index.rst
-│   │   └── basic_workflow.rst
-│   ├── _static/                # 静态文件
-│   │   ├── css/
-│   │   └── images/
-│   └── citation.rst            # 引用信息
-├── requirements.txt            # 文档依赖
-└── README.md                   # 本文件
+│   │   └── workflow.rst
+│   └── _static/                    # Static assets
+│       └── css/
+│           └── custom.css
+├── build/                          # Generated documentation
+│   └── html/                       # HTML output
+├── requirements.txt                # Documentation dependencies
+├── Makefile                        # Build commands (Linux/macOS)
+├── make.bat                        # Build commands (Windows)
+└── README.md                       # This file
 ```
 
----
+## 🛠️ Development Workflow
 
-## 🎨 自定义文档样式
+### Adding New Pages
 
-### 修改颜色主题
+1. **Create new .rst file** in appropriate directory:
+   ```bash
+   # Example: Add new command documentation
+   touch source/commands/new_command.rst
+   ```
 
-编辑 `docs/source/_static/css/custom.css`:
+2. **Add to table of contents** in parent index.rst:
+   ```rst
+   .. toctree::
+      :maxdepth: 2
+      
+      existing_page
+      new_command
+   ```
 
-```css
-:root {
-  --primary-color: #2563eb;
-  --secondary-color: #64748b;
-  --background-color: #ffffff;
-}
+3. **Build and test**:
+   ```bash
+   make html
+   ```
+
+### Editing Existing Content
+
+1. **Edit .rst files** in `source/` directory
+2. **Use live reload** for immediate feedback:
+   ```bash
+   make livehtml
+   ```
+3. **Check for warnings** during build
+
+### Adding Images and Assets
+
+1. **Place files** in `source/_static/`
+2. **Reference in documentation**:
+   ```rst
+   .. image:: _static/images/diagram.png
+      :alt: Description
+      :width: 600px
+   ```
+
+## 🎨 Customization
+
+### Themes and Styling
+
+- **Theme**: Currently using Furo theme
+- **Custom CSS**: Edit `source/_static/css/custom.css`
+- **Theme options**: Modify in `source/conf.py`
+
+### Extensions
+
+Current extensions in `conf.py`:
+- `sphinx.ext.autodoc` - Auto-generate API docs
+- `sphinx_copybutton` - Copy code blocks
+- `sphinx_tabs` - Tabbed content
+- `sphinxcontrib.mermaid` - Diagrams
+- `nbsphinx` - Jupyter notebook integration
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Build fails with import errors:**
+```bash
+# Install missing dependencies
+pip install -r requirements.txt
 ```
 
-### 修改字体
-
-在 `conf.py` 中:
-
-```python
-html_theme_options = {
-    'fonts': {
-        'family': 'sans-serif',
-        'language': 'en'
-    }
-}
+**Mermaid diagrams not rendering:**
+```bash
+# Check if sphinxcontrib-mermaid is installed
+pip install sphinxcontrib-mermaid
 ```
 
-### 添加 Logo
+**Live reload not working:**
+```bash
+# Install sphinx-autobuild
+pip install sphinx-autobuild
+```
 
-1. 将 Logo 文件放在 `docs/source/_static/images/`
-2. 在 `index.rst` 中引用:
+**CSS changes not visible:**
+```bash
+# Clear browser cache or use incognito mode
+# Or force rebuild:
+make clean-build
+```
+
+### Build Warnings
+
+- **Missing references**: Check internal links
+- **Image not found**: Verify paths in `_static/`
+- **Syntax errors**: Check .rst formatting
+
+## 📚 Writing Documentation
+
+### reStructuredText Basics
 
 ```rst
-.. image:: _static/images/logo.png
-   :alt: Surfacia Logo
-   :class: main-logo
+# Main heading
+===============
+
+## Section heading
+-----------------
+
+### Subsection
+~~~~~~~~~~~~~~
+
+**Bold text**
+*Italic text*
+``Code text``
+
+.. code-block:: python
+
+   # Python code block
+   print("Hello, world!")
+
+.. note::
+   This is a note admonition.
+
+.. warning::
+   This is a warning admonition.
 ```
 
----
+### Sphinx Directives
 
-## 📚 有用的资源
+```rst
+# Cross-references
+:doc:`other_page`
+:ref:`section-label`
 
-- [Sphinx 官方文档](https://www.sphinx-doc.org/)
-- [reStructuredText 语法](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html)
-- [Read the Docs 文档](https://docs.readthedocs.io/)
-- [Furo 主题文档](https://pradyunsg.me/furo/)
-- [MyST 语法](https://myst-parser.readthedocs.io/)
+# API documentation
+.. automodule:: surfacia.core
+   :members:
 
----
+# Tables of contents
+.. toctree::
+   :maxdepth: 2
+   
+   page1
+   page2
+```
 
-## 🆘 获取帮助
+## 🚀 Deployment
 
-如果遇到问题：
+### GitHub Pages
 
-1. 查看 [Sphinx 故障排查](https://www.sphinx-doc.org/en/master/usage/advanced.html#troubleshooting)
-2. 搜索 [Read the Docs 论坛](https://forum.readthedocs.io/)
-3. 查阅 GitHub Issues: https://github.com/sym823808458/Surfacia/issues
+1. **Build documentation**:
+   ```bash
+   make html
+   ```
 
----
+2. **Copy to gh-pages branch**:
+   ```bash
+   # Copy build/html/* to gh-pages branch
+   ```
 
-## ✅ 检查清单
+### Read the Docs
 
-部署前请确认：
+1. **Connect repository**: `https://github.com/sym823808458/Surfacia`
+2. **Read the Docs config**: use the repository root file `.readthedocs.yaml`
+3. **Sphinx config**: `docs/source/conf.py`
+4. **Dependency file**: `docs/requirements.txt`
+5. **Homepage source**: `docs/source/index.rst`
+6. **Custom styles**: `docs/source/_static/css/custom.css`
+7. **Automatic builds**: every push to the tracked branch can trigger a rebuild
 
-- [ ] 所有文档构建无错误
-- [ ] 所有链接可点击
-- [ ] 图片正确显示
-- [ ] API 文档是最新的
-- [ ] 示例代码可以运行
-- [ ] 拼写和语法正确
-- [ ] 代码注释准确
+### Repository Paths That Control the Docs Site
 
----
+The main files you will usually edit are:
 
-**最后更新**: 2025-12-23
-**维护者**: Surfacia Team
+```text
+Surfacia/
+├── .readthedocs.yaml              # Read the Docs build entry
+├── docs/
+│   ├── requirements.txt           # Docs build dependencies
+│   └── source/
+│       ├── conf.py                # Sphinx theme, repo links, extensions
+│       ├── index.rst              # Homepage and the main card layout
+│       └── _static/css/custom.css # Homepage and card styling
+```
+
+## 📞 Support
+
+For documentation issues:
+1. Check build logs for specific errors
+2. Verify all dependencies are installed
+3. Test with clean build: `make clean-build`
+4. Check Sphinx documentation for advanced features
+
+## 🎯 Next Steps
+
+After setting up the documentation:
+
+1. **Complete remaining sections**:
+   - Command references (ml-analysis, shap-viz, utilities)
+   - Descriptor documentation
+   - API reference
+   - Tutorial examples
+
+2. **Add more content**:
+   - Screenshots and diagrams
+   - Video tutorials
+   - FAQ section
+   - Troubleshooting guides
+
+3. **Set up automation**:
+   - Continuous integration builds
+   - Automatic deployment
+   - Link checking
+   - Spell checking

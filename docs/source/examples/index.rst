@@ -11,11 +11,12 @@ Practical examples demonstrating Surfacia's capabilities across various molecula
    complex_systems
    machine_learning
    custom_workflows
+   mode3_top20_remote_debug
 
 Overview
 --------
 
-This section provides comprehensive examples showcasing Surfacia's molecular surface analysis capabilities. Each example includes complete input files, command sequences, and detailed interpretation of results.
+This section is organized around problem types rather than around software components. The goal is to help you recognize which style of Surfacia usage matches your chemistry.
 
 Example Categories
 ------------------
@@ -73,6 +74,16 @@ Each example follows a consistent format:
 6. **Variations**: Alternative approaches and parameter modifications
 7. **Troubleshooting**: Common issues and solutions
 
+Recommended Reading Order
+-------------------------
+
+For most users, this order works best:
+
+1. start with :doc:`basic_molecules`
+2. move to :doc:`complex_systems`
+3. compare how the outputs feed into :doc:`machine_learning`
+4. use :doc:`custom_workflows` when you want more flexible project structure
+
 Quick Start Examples
 --------------------
 
@@ -81,52 +92,33 @@ Basic Workflow Example
 
 .. code-block:: bash
 
-   # Complete workflow for a simple molecule
-   surfacia workflow --input benzene.xyz --output results/ --config basic.yaml
-   
-   # View results
-   surfacia mol-viewer --file results/benzene_surface.wfn
+   # Run a first small workflow from a CSV input table
+   surfacia workflow -i molecules.csv --resume --test-samples "1,2"
 
 Machine Learning Example
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
-   # Feature extraction and ML analysis
-   surfacia workflow --input molecules.sdf --output ml_results/ --steps 1-6
-   surfacia ml-analysis --input ml_results/features.csv --target activity.csv
-   surfacia shap-viz --model ml_results/model.pkl --features ml_results/features.csv
+   # Reuse a descriptor table for compact modeling
+   surfacia ml-analysis -i descriptors.csv --target-property "LogP" --test-samples "1,2,3"
 
 Visualization Example
 ~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
-   # Interactive SHAP visualization
-   surfacia shap-viz --model model.pkl --features features.csv --interactive
-   
-   # Molecular structure viewer
-   surfacia mol-viewer --file molecule.wfn --surface --properties
+   # Interpret retained features with SHAP outputs
+   surfacia shap-viz -i training_data.csv --api-key YOUR_API_KEY
 
-Data Files
-----------
+How to Use These Example Pages
+------------------------------
 
-All example data files are available in the ``examples/data/`` directory:
+These pages are intentionally written so you can adapt them to your own data instead of depending on a bundled example dataset.
 
-* **Input Structures**: XYZ, SDF, and MOL files for various molecules
-* **Configuration Files**: YAML configuration files for different analysis types
-* **Reference Results**: Expected output files for validation
-* **Datasets**: Curated datasets for machine learning examples
-
-Download and Setup
-------------------
-
-To use the examples:
-
-1. Download the example data package
-2. Extract to your working directory
-3. Follow the individual example instructions
-4. Compare your results with the provided reference outputs
+- replace the sample input table with your own CSV
+- keep the workflow pattern the same
+- compare your outputs against the interpretation checklist in each page
 
 Advanced Examples
 -----------------

@@ -36,6 +36,24 @@ Fixed
 - Addressed Sphinx build warnings and formatting issues
 - Fixed title underline length problems in RST files
 
+[3.0.2] - 2026-04-08
+--------------------
+
+Changed
+~~~~~~~
+- Pinned machine-learning dependency compatibility range:
+  ``xgboost>=2.1.4,<3.0.0`` and ``shap>=0.48.0,<0.49.0``.
+- Updated package version metadata to ``3.0.2``.
+- Updated documentation release/version metadata to ``3.0.2``.
+
+Fixed
+~~~~~
+- Documented and mitigated ``ml-analysis`` failures with errors like
+  ``could not convert string to float: '[-3.xxxE0]'`` caused by incompatible
+  ``xgboost``/``shap`` combinations.
+- Added explicit troubleshooting guidance for remote Linux/SSH workflow reruns
+  of Step-7 (machine learning only).
+
 [1.0.0] - 2024-XX-XX
 --------------------
 

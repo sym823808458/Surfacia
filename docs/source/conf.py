@@ -13,8 +13,8 @@ sys.path.insert(0, os.path.abspath('../../'))
 project = 'Surfacia'
 copyright = '2024, Surfacia Development Team'
 author = 'Yuming Su, Yangtao Chen, Yiheng Dai, Cheng Wang'
-release = '3.0.0'
-version = '3.0'
+release = '3.0.2'
+version = '3.0.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -24,12 +24,13 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
     'sphinx_copybutton',
     'sphinx_tabs.tabs',
     'sphinx_design',
     'sphinxcontrib.mermaid',
+    'nbsphinx',
+    'myst_parser',
     'sphinx_autodoc_typehints',
 ]
 
@@ -42,7 +43,7 @@ exclude_patterns = []
 html_theme = 'furo'
 html_title = 'Surfacia Documentation'
 html_logo = '_static/images/surfacia_logo.png'
-html_favicon = '_static/images/surfacia_logo.png'
+html_favicon = '_static/favicon.ico'
 
 html_theme_options = {
     "sidebar_hide_name": True,
@@ -96,15 +97,6 @@ autodoc_default_options = {
 
 # Autosummary settings
 autosummary_generate = True
-
-# Intersphinx mapping
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3/', None),
-    'numpy': ('https://numpy.org/doc/stable/', None),
-    'pandas': ('https://pandas.pydata.org/docs/', None),
-    'matplotlib': ('https://matplotlib.org/stable/', None),
-    'sklearn': ('https://scikit-learn.org/stable/', None),
-}
 
 # Copy button configuration
 copybutton_prompt_text = r">>> |\.\.\. |\$ |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
