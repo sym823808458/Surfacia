@@ -28,7 +28,6 @@ Project Links
 - GitHub: https://github.com/sym823808458/Surfacia
 - PyPI: https://pypi.org/project/surfacia/
 - Academic homepage: https://sym823808458.github.io/yumingsu_homepage/
-
 Essential Commands
 ------------------
 
