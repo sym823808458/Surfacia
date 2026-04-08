@@ -45,6 +45,7 @@ Changed
   ``xgboost>=2.1.4,<3.0.0`` and ``shap>=0.48.0,<0.49.0``.
 - Updated package version metadata to ``3.0.2``.
 - Updated documentation release/version metadata to ``3.0.2``.
+- Added MCP server packaging entrypoint ``surfacia-mcp`` and integration docs.
 
 Fixed
 ~~~~~

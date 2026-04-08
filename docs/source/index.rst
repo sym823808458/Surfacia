@@ -1,99 +1,64 @@
-Surfacia: Surface-Based Feature Engineering and Interpretable Machine Learning
-==============================================================================
-
-.. image:: _static/images/surfacia_logo.png
-   :alt: Surfacia Framework
-   :align: center
-   :width: 400px
-   :class: main-logo
+Surfacia Documentation
+======================
 
 .. raw:: html
 
-   <div style="text-align: center; margin: 2rem 0;">
-   <h1 style="font-size: 3rem; color: #2563eb; margin: 1rem 0;">Surfacia</h1>
-   <p style="font-size: 1.2rem; color: #6b7280; margin-bottom: 2rem;">Surface-Based Feature Engineering and Interpretable Machine Learning</p>
+   <div class="surfacia-hero">
+   <p class="surfacia-hero-kicker">Documentation</p>
+   <img class="surfacia-hero-logo" src="_static/images/surfacia_logo.png" alt="Surfacia logo">
+   <p class="surfacia-hero-subtitle">Install quickly, run the workflow, and debug efficiently on local or remote Linux.</p>
+   <div class="surfacia-hero-actions">
+   <a class="surfacia-hero-button surfacia-hero-button-primary" href="getting_started/installation.html">Install</a>
+   <a class="surfacia-hero-button surfacia-hero-button-secondary" href="https://github.com/sym823808458/Surfacia">GitHub</a>
+   </div>
    </div>
 
-**Surfacia** is an automated framework for surface-based feature engineering and interpretable machine learning with reasoning language model integration. It addresses critical interpretability gap in structure-activity relationship analysis by systematically extracting quantitative descriptors across atomic, functional group, and molecular levels.
+Quick Navigation
+----------------
 
-Key Features
-------------
+- New users: :doc:`getting_started/index`
+- Daily usage and troubleshooting: :doc:`user_guide/index`
+- Command and parameter lookup: :doc:`commands/index`
+- Reproducible workflows and templates: :doc:`examples/index`
+- MCP server and agent integration: :doc:`integrations/index`
 
-🔬 **Surface-Based Analysis**
-   Systematic extraction of hierarchical surface descriptors from quantum mechanical calculations
-
-🤖 **Interpretable Machine Learning**
-   SHAP-based explainable AI with intelligent feature selection maintaining both predictive power and chemical interpretability
-
-🧠 **AI Assistant Integration**
-   Large language model integration for automated chemical interpretation and natural language explanations
-
-⚡ **Automated Workflow**
-   Complete 8-step pipeline from SMILES to interpretable predictions with intelligent resume capabilities
-
-🔧 **Comprehensive Toolkit**
-   Molecular visualization, batch processing, and error recovery tools
-
-Installation
-------------
+Essential Commands
+------------------
 
 .. code-block:: bash
 
-   # Install from PyPI (recommended)
+   # Install
    pip install surfacia
 
-   # Or install from source
-   git clone https://github.com/sym823808458/Surfacia.git
-   cd Surfacia
-   pip install -e .
+   # Full workflow
+   surfacia workflow -i molecules.csv --test-samples "1,3"
 
-Quick Example
--------------
-
-.. code-block:: bash
-
-   # Complete workflow from SMILES to interpretable predictions
-   surfacia workflow -i molecules.csv --resume --test-samples "1,2,3"
-
-   # Individual analysis steps
-   surfacia ml-analysis -i processed_data.csv --test-samples "1,2,3"
-   surfacia shap-viz -i training_data.csv --api-key YOUR_API_KEY
+   # ML-only rerun
+   surfacia ml-analysis -i FinalFull_Mode3_20_168.csv --test-samples "1,2,3"
 
 .. toctree::
    :maxdepth: 2
-   :caption: Getting Started
+   :caption: Contents
    :hidden:
 
-   getting_started/installation
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tutorials
-   :hidden:
-
-   tutorials/basic_workflow
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Descriptors
-   :hidden:
-
+   getting_started/index
+   user_guide/index
+   commands/index
+   tutorials/index
+   integrations/index
    descriptors/index
-   descriptors/mqsa_modes
-
-.. toctree::
-   :maxdepth: 2
-   :caption: API Reference
-   :hidden:
-
    api/index
+   examples/index
 
 .. toctree::
    :maxdepth: 1
-   :caption: About
+   :caption: Development
    :hidden:
 
    citation
+   contributing
+   changelog
+   license
 
 Indices and Tables
 ==================

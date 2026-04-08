@@ -1,23 +1,22 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "surfacia"
-version = "3.0.1"
+version = "3.0.2"
 authors = [
     {name = "YumingSu", email = "823808458@qq.com"},
 ]
 description = "A comprehensive Python package for molecular structure-activity relationship (QSAR/QSPR) studies with interactive SHAP visualization and AI-powered analysis"
 readme = "README.md"
-license = {text = "MIT"}
-requires-python = ">=3.7"
+license = "MIT"
+requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Chemistry",
     "Topic :: Scientific/Engineering :: Physics",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -43,12 +42,10 @@ dependencies = [
     "scipy>=1.7.0",
     "openbabel-wheel>=3.1.1",
     "scikit-learn>=1.0.0",
-    "xgboost>=1.6.0",
-    "shap>=0.41.0",
+    "xgboost>=2.1.4,<3.0.0",
+    "shap>=0.48.0,<0.49.0",
     "matplotlib>=3.5.0",
     "seaborn>=0.11.0",
-    "py3Dmol>=2.0.0",
-    "ipywidgets>=7.6.0",
     "plotly>=5.0.0",
     "zhipuai>=2.0.0",
     "dash>=2.0.0",
@@ -59,9 +56,6 @@ dependencies = [
     "tqdm>=4.64.0",
     "pathlib2>=2.3.7",
     "joblib>=1.1.0",
-    "jupyter>=1.0.0",
-    "notebook>=6.4.0",
-    "ipython>=7.0.0",
 ]
 
 [project.optional-dependencies]
@@ -73,26 +67,24 @@ dev = [
     "sphinx>=4.0",
     "sphinx-rtd-theme>=1.0",
 ]
-docs = [
-    "sphinx>=8.0",
-    "sphinx-rtd-theme",
-    "furo>=2024.0",
-    "sphinx-copybutton",
-    "sphinx-tabs",
-    "sphinx-design",
-    "sphinxcontrib-mermaid",
-    "sphinx-autodoc-typehints",
-    "myst-parser",
-    "nbsphinx",
-]
 viz = [
     "matplotlib>=3.5.0",
     "seaborn>=0.11.0",
     "plotly>=5.0.0",
+    "py3Dmol>=2.0.0",
+    "ipywidgets>=7.6.0",
+    "ipython>=7.0.0",
+]
+notebook = [
+    "jupyter>=1.0.0",
+    "notebook>=6.4.0",
+    "ipywidgets>=7.6.0",
+    "ipython>=7.0.0",
 ]
 
 [project.scripts]
 surfacia = "surfacia.cli:main"
+surfacia-mcp = "surfacia.mcp.server:main"
 
 [project.urls]
 Homepage = "https://github.com/sym823808458/Surfacia"
@@ -101,8 +93,10 @@ Homepage = "https://github.com/sym823808458/Surfacia"
 "Documentation" = "https://surfacia.readthedocs.io/"
 
 [tool.setuptools]
-packages = ["surfacia"]
 include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["surfacia*"]
 
 [tool.setuptools.package-data]
 surfacia = [
@@ -114,7 +108,7 @@ surfacia = [
 
 [tool.black]
 line-length = 88
-target-version = ['py37']
+target-version = ['py39']
 include = '\.pyi?$'
 extend-exclude = '''
 /(

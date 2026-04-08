@@ -10,8 +10,8 @@ openbabel-wheel>=3.1.1
 
 # Machine Learning
 scikit-learn>=1.0.0
-xgboost>=1.6.0,<3.0.0
-shap>=0.41.0
+xgboost>=2.1.4,<3.0.0
+shap>=0.48.0,<0.49.0
 
 # Visualization - Jupyter
 matplotlib>=3.5.0
