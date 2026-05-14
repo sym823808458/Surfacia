@@ -11,6 +11,7 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+dist_upload/
 downloads/
 eggs/
 .eggs/
@@ -26,6 +27,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+tmp_dist_release_*/
+tmp_build/
 
 # PyInstaller
 *.manifest
@@ -68,6 +71,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/build/
 
 # PyBuilder
 target/
@@ -98,6 +102,8 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venv-docs/
+.venv-publish/
 env/
 venv/
 ENV/

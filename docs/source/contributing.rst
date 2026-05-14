@@ -15,8 +15,8 @@ Development Setup
    
    .. code-block:: bash
    
-      git clone https://github.com/yourusername/surfacia.git
-      cd surfacia
+      git clone https://github.com/yourusername/Surfacia.git
+      cd Surfacia
 
 2. **Set Up Development Environment**
    

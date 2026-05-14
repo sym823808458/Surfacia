@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "surfacia"
-version = "3.0.2"
+version = "3.0.3"
 authors = [
     {name = "YumingSu", email = "823808458@qq.com"},
 ]

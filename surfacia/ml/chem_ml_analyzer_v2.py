@@ -24,6 +24,8 @@ warnings.filterwarnings('ignore')
 import matplotlib
 matplotlib.use('Agg')  # 设置为非交互式后端
 
+from .spes import infer_mode_hint, write_spes_artifacts
+
 # 设置默认随机种子
 np.random.seed(42)
 
@@ -229,30 +231,26 @@ class BaseChemMLAnalyzer:
         
         return results, train_idx, test_idx
 
-    def poolfit_optimized(self, TRAIN_TEST_SPLIT, EPOCH, CORE_NUM, X, y, paras, X_realtest=None, random_seed=42):
+    def poolfit_optimized(self, TRAIN_TEST_SPLIT, EPOCH, CORE_NUM, X, y, paras, X_realtest=None):
         """优化的并行训练函数，支持测试集SHAP值计算"""
-        print(f"Starting optimized training: {EPOCH} epochs, {CORE_NUM} cores, seed={random_seed}")
-
+        print(f"Starting optimized training: {EPOCH} epochs, {CORE_NUM} cores")
+        
         point = round(X.shape[0] * TRAIN_TEST_SPLIT)
-
+        
         # 初始化存储
         sample_shap_values = {}
         for i in range(X.shape[0]):
             for j in range(X.shape[1]):
                 sample_shap_values[(i, j)] = []
-
-        # 生成所有的训练-测试划分（使用传入的种子）
+    
+        # 生成所有的训练-测试划分（使用固定种子）
         all_splits = []
-        np.random.seed(random_seed)  # ✅ 使用传入的种子
+        np.random.seed(42)  # 确保可重现
         for epoch in range(EPOCH):
             permutation = np.random.permutation(y.shape[0])
             train_idx = permutation[:point]
             test_idx = permutation[point:]
             all_splits.append((train_idx, test_idx))
-
-        # 为XGBoost设置种子
-        current_paras = paras.copy()
-        current_paras['random_state'] = random_seed  # ✅ 动态设置XGBoost种子
     
         # 分批处理
         batch_size = max(1, CORE_NUM)
@@ -434,6 +432,7 @@ class BaseChemMLAnalyzer:
         train_df = pd.DataFrame(train_data, columns=column_names)
         save_path = save_dir / f'Training_Set_Detailed_{prefix}_{self.timestamp}.csv'
         train_df.to_csv(save_path, index=False)
+        train_csv_path = save_path
         
         # 保存测试集CSV（包含SHAP值）
         if len(self.X_realtest) > 0:
@@ -485,6 +484,20 @@ class BaseChemMLAnalyzer:
             test_df = pd.DataFrame(test_data, columns=test_column_names)
             save_path = save_dir / f'Test_Set_Detailed_{prefix}_{self.timestamp}.csv'
             test_df.to_csv(save_path, index=False)
+            test_csv_path = save_path
+
+            try:
+                mode_hint = infer_mode_hint(self.data_file, prefix, train_csv_path.name, test_csv_path.name)
+                spes_paths = write_spes_artifacts(
+                    training_df=train_df,
+                    test_df=test_df,
+                    output_dir=save_dir,
+                    base_name=f"{prefix}_{self.timestamp}",
+                    mode_hint=mode_hint,
+                )
+                print(f"  SPES overlay saved: {spes_paths['csv'].name}")
+            except Exception as exc:
+                print(f"  Warning: SPES overlay generation skipped ({exc})")
 
     def generate_prediction_scatter(self, perf_dict, feature_names, title_prefix="", save_dir=None):
         """生成预测散点图并保存原始数据"""
@@ -1549,22 +1562,17 @@ class WorkflowAnalyzer(BaseChemMLAnalyzer):
         selected_indices = []
         mse_history = []
         feature_names_history = []
-
-        # 设置当前轮次的随机种子
-        current_seed = 42 + run_id
-        print(f"  Using random seed: {current_seed}")
-
-        # 找最佳单特征
+        
+        # 找最佳单特征，使用固定种子但加入run_id以产生不同结果
+        np.random.seed(42 + run_id)
         best_single_mse = np.inf
         best_single_idx = None
-
+        
         print(f"  Finding best single feature...")
         for j in range(len(self.feature_names)):
             X_temp = self.X_train[:, [j]]
-            # ✅ 传入种子
             perf = self.poolfit_optimized(train_test_split, epoch, core_num,
-                                         X_temp, self.y_train, self.xgb_params, 
-                                         random_seed=current_seed)
+                                         X_temp, self.y_train, self.xgb_params)
             if perf['mse'] < best_single_mse:
                 best_single_mse = perf['mse']
                 best_single_idx = j
@@ -1587,7 +1595,7 @@ class WorkflowAnalyzer(BaseChemMLAnalyzer):
                 candidate = selected_indices + [feat_idx]
                 X_temp = self.X_train[:, candidate]
                 perf = self.poolfit_optimized(train_test_split, epoch, core_num,
-                                             X_temp, self.y_train, self.xgb_params,random_seed=current_seed)
+                                             X_temp, self.y_train, self.xgb_params)
                 
                 if perf['mse'] < best_mse:
                     best_mse = perf['mse']
@@ -1607,7 +1615,7 @@ class WorkflowAnalyzer(BaseChemMLAnalyzer):
             
             # 完整训练以获得准确结果
             perf = self.poolfit_optimized(train_test_split, epoch, core_num,
-                                         X_temp, self.y_train, self.xgb_params, X_realtest_temp,random_seed=current_seed)
+                                         X_temp, self.y_train, self.xgb_params, X_realtest_temp)
             
             # 生成散点图
             self.generate_prediction_scatter(perf, features, f"Run_{run_id}_{i+1}feats", run_dir)

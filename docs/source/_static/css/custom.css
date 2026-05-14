@@ -1,142 +1,263 @@
-/* Surfacia docs: minimal, clean, readable */
+/* Custom CSS for Surfacia Documentation */
 
+/* Brand colors */
 :root {
     --surfacia-primary: #2563eb;
-    --surfacia-text: #1f2937;
-    --surfacia-muted: #6b7280;
-    --surfacia-border: #e5e7eb;
-    --surfacia-bg-soft: #f8fafc;
+    --surfacia-secondary: #60a5fa;
+    --surfacia-accent: #dbeafe;
+    --surfacia-dark: #1e40af;
+    --surfacia-text-soft: #64748b;
+    --surfacia-surface: #ffffff;
+    --surfacia-border: #dbe4f0;
 }
 
-html,
 body {
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--surfacia-text);
+    font-size: 1.02rem !important;
+    line-height: 1.7 !important;
 }
 
 h1 {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
+    font-size: 2.45rem !important;
 }
 
 h2 {
-    font-size: 1.5rem;
-    margin-top: 1.6rem;
+    font-size: 1.9rem !important;
 }
 
 h3 {
-    font-size: 1.2rem;
-    margin-top: 1.2rem;
+    font-size: 1.45rem !important;
 }
 
-/* Keep logo and images natural size */
+h4 {
+    font-size: 1.2rem !important;
+}
+
+h5 {
+    font-size: 1.05rem !important;
+}
+
+h6 {
+    font-size: 1rem !important;
+}
+
+/* Code and pre blocks */
+code {
+    font-size: 0.96rem !important;
+}
+
+pre {
+    font-size: 0.96rem !important;
+}
+
+/* Tables */
+table {
+    font-size: 0.96rem !important;
+}
+
+/* Images */
 img {
     max-width: 100% !important;
     height: auto !important;
-    transform: none !important;
 }
 
-.main-logo {
-    max-width: 120px !important;
-    margin: 0.8rem auto !important;
-    display: block !important;
+/* Mermaid diagrams */
+.mermaid {
+    margin: 2rem 0 !important;
+    overflow-x: auto;
 }
 
-.sidebar-drawer .sidebar-logo img,
-.sidebar-brand img {
-    max-width: 96px !important;
-    height: auto !important;
-}
-
-/* Home hero (compact) */
+/* Homepage hero */
 .surfacia-hero {
+    text-align: center;
+    padding: 2.2rem 1.5rem 1.25rem;
+    margin: 0 0 2.5rem;
     border: 1px solid var(--surfacia-border);
-    border-radius: 10px;
-    padding: 1rem 1.2rem;
-    margin: 0.8rem 0 1.2rem 0;
-    background: #ffffff;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
 }
 
 .surfacia-hero-kicker {
-    margin: 0;
-    font-size: 0.78rem;
-    color: var(--surfacia-muted);
-    letter-spacing: 0.02em;
+    margin: 0 0 0.9rem;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--surfacia-primary);
 }
 
 .surfacia-hero-logo {
-    width: 108px;
-    height: auto;
-    margin: 0.5rem 0;
+    display: block;
+    width: min(100%, 860px);
+    margin: 0 auto 1rem;
+    filter: drop-shadow(0 10px 20px rgba(37, 99, 235, 0.10));
 }
 
 .surfacia-hero-subtitle {
-    margin: 0.2rem 0 0.8rem 0;
-    font-size: 1rem;
-    color: var(--surfacia-muted);
+    max-width: 760px;
+    margin: 0 auto 1.5rem;
+    color: var(--surfacia-text-soft);
+    font-size: 1.08rem;
 }
 
 .surfacia-hero-actions {
     display: flex;
-    gap: 0.6rem;
+    justify-content: center;
+    gap: 0.85rem;
     flex-wrap: wrap;
 }
 
 .surfacia-hero-button {
     display: inline-block;
-    border-radius: 8px;
-    padding: 0.42rem 0.8rem;
-    font-size: 0.92rem;
-    text-decoration: none !important;
-    border: 1px solid var(--surfacia-border);
+    padding: 0.78rem 1.15rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+.surfacia-hero-button:hover {
+    text-decoration: none;
 }
 
 .surfacia-hero-button-primary {
     background: var(--surfacia-primary);
-    color: #ffffff !important;
-    border-color: var(--surfacia-primary);
+    color: #fff !important;
+}
+
+.surfacia-hero-button-primary:hover {
+    background: var(--surfacia-dark);
 }
 
 .surfacia-hero-button-secondary {
-    background: #ffffff;
-    color: var(--surfacia-text) !important;
+    background: #fff;
+    color: var(--surfacia-primary) !important;
+    border-color: var(--surfacia-border);
 }
 
-/* Cards and tables */
+.sidebar-brand-text {
+    display: none;
+}
+
+.sidebar-logo-container img,
+.sidebar-brand img {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    margin: 0.5rem auto 0.25rem;
+}
+
+/* Custom styling for admonitions */
+.admonition.tip {
+    border-left: 4px solid var(--surfacia-primary);
+}
+
+.admonition.warning {
+    border-left: 4px solid #f59e0b;
+}
+
+/* Code block enhancements */
+.highlight {
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* Custom button styling */
+.btn-surfacia {
+    background-color: var(--surfacia-primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn-surfacia:hover {
+    background-color: var(--surfacia-dark);
+    color: white;
+    text-decoration: none;
+}
+
+/* Grid card styling */
 .sd-card {
-    border: 1px solid var(--surfacia-border) !important;
-    border-radius: 10px !important;
-    box-shadow: none !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    border-radius: 18px;
 }
 
+.sd-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 34px rgba(37, 99, 235, 0.10);
+    border-color: rgba(37, 99, 235, 0.28);
+}
+
+.surfacia-home-card {
+    min-height: 100%;
+}
+
+.surfacia-home-card .sd-card-title {
+    font-size: 1.15rem;
+    margin-bottom: 0.7rem;
+}
+
+.surfacia-home-card .sd-card-text {
+    color: var(--surfacia-text-soft);
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+/* Table styling */
 table.docutils {
-    border: 1px solid var(--surfacia-border);
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+table.docutils th,
+table.docutils td {
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem;
 }
 
 table.docutils th {
-    background: var(--surfacia-bg-soft);
+    background-color: #f9fafb;
+    font-weight: 600;
 }
 
-/* Code blocks */
-.highlight pre {
-    border-radius: 8px;
+/* Code inline styling */
+code.literal {
+    background-color: #f3f4f6;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
 }
 
-/* Mermaid: no forced scaling */
-.mermaid {
-    transform: none !important;
-    margin: 1rem 0 !important;
+/* Navigation enhancements */
+.sidebar-drawer {
+    border-right: 1px solid #e5e7eb;
 }
 
+/* Footer styling */
+.footer {
+    border-top: 1px solid #e5e7eb;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    color: #6b7280;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    html,
-    body {
-        font-size: 15px;
+    .sd-grid {
+        grid-template-columns: 1fr;
     }
 
     .surfacia-hero {
-        padding: 0.9rem;
+        padding: 2rem 1rem 0.75rem;
+    }
+
+    .surfacia-hero-logo {
+        width: 100%;
     }
 }

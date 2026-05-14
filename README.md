@@ -7,10 +7,11 @@ Surface Atomic Chemical Interaction Analyzer for descriptor extraction and inter
 - End-to-end workflow: `SMILES -> 3D -> xTB/Gaussian -> Multiwfn -> descriptors -> ML/SHAP`
 - CLI-first design for local and remote Linux/HPC usage
 - Supports full workflow mode and modular step-by-step execution
+- Includes `SPES-C`, a SHAP-landscape candidate-prioritization layer for high-value test-set ranking
 
 ## Current Release
 
-- Latest stable version: **3.0.2**
+- Latest stable version: **3.0.3**
 - Python requirement: **>= 3.9**
 - License: **MIT**
 
@@ -76,22 +77,24 @@ surfacia ml-analysis -i FinalFull_Mode3_20_168.csv \
   --test-samples "1,2,3"
 ```
 
-## MCP Server (New)
-
-Surfacia now ships an MCP stdio server so agent clients can call workflow stages as structured tools.
-
-Start MCP server:
+Launch SHAP visualization with SPES overlay:
 
 ```bash
-surfacia-mcp --log-level INFO
-# or
-python -m surfacia.mcp.server --log-level INFO
+surfacia shap-viz \
+  -i Training_Set_Detailed_Final_5feats_20260209_102423.csv \
+  -x ./xyz_files \
+  --test-csv Test_Set_Detailed_Final_5feats_20260209_102423.csv \
+  --spes-csv SPES_Test_Set_Detailed_Final_5feats_20260209_102423.csv
 ```
 
-Typical first tool calls:
+## SPES Candidate Prioritization
 
-1. `surfacia_check_environment`
-2. `surfacia_detect_workflow_state`
+SPES is not a replacement regression model. It is a post-prediction prioritization layer built on the selected Surfacia model and its SHAP landscape.
+
+- The raw selected-model prediction remains the main interpretable regression output.
+- `SPES-C` adds a conservative ranking score for high-value candidate discovery.
+- In the interactive SHAP dashboard, users can switch the external overlay from the raw test set to the SPES test-set layer.
+- When a test set is present, current ML analysis outputs now automatically write `SPES_Test_Set_Detailed_*.csv` and matching metadata JSON files.
 
 ## Source Install (Developers)
 
@@ -106,7 +109,6 @@ pip install -e .
 - Full docs: [https://surfacia.readthedocs.io/](https://surfacia.readthedocs.io/)
 - Troubleshooting: [https://surfacia.readthedocs.io/en/latest/user_guide/troubleshooting.html](https://surfacia.readthedocs.io/en/latest/user_guide/troubleshooting.html)
 - Mode3 top-20 remote debug example: [https://surfacia.readthedocs.io/en/latest/examples/mode3_top20_remote_debug.html](https://surfacia.readthedocs.io/en/latest/examples/mode3_top20_remote_debug.html)
-- MCP server guide: [https://surfacia.readthedocs.io/en/latest/integrations/mcp_server.html](https://surfacia.readthedocs.io/en/latest/integrations/mcp_server.html)
 
 ## Citation
 
@@ -116,5 +118,4 @@ If Surfacia helps your research, please cite the project and related publication
 
 - Author: Yuming Su
 - Email: 823808458@qq.com
-- Academic homepage: https://sym823808458.github.io/yumingsu_homepage/
 - Issues: [https://github.com/sym823808458/Surfacia/issues](https://github.com/sym823808458/Surfacia/issues)

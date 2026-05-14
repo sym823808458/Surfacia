@@ -10,20 +10,65 @@ import os
 import glob
 from pathlib import Path
 
+# Ensure Unicode help text prints correctly on Windows terminals.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8")
+        except Exception:
+            pass
+
 from .core.smi2xyz import smi2xyz_main
 from .core.xtb_opt import run_xtb_opt
 from .core.gaussian import xyz2gaussian_main, run_gaussian
-from .core.multiwfn import run_multiwfn_on_fchk_files, process_txt_files
 from .core.rerun_gaussian import rerun_failed_gaussian_calculations
-from .features.atom_properties import run_atom_prop_extraction
-from .visualization.interactive_shap_viz import InteractiveSHAPAnalyzer, MultiwfnPDBGenerator, interactive_shap_viz_main
-from .visualization.mol_drawer import draw_molecules_from_csv, draw_single_molecule
 from .utils.mol_properties import analyze_molecules_from_csv, analyze_single_molecule
 from .core.workflow import workflow_main
 from .ml.chem_ml_analyzer_v2 import ChemMLWorkflow
 
-# 标准入口函数现在总是可用
-INTERACTIVE_SHAP_MAIN_AVAILABLE = True
+try:
+    from .core.multiwfn import run_multiwfn_on_fchk_files, process_txt_files
+    MULTIWFN_AVAILABLE = True
+    MULTIWFN_IMPORT_ERROR = None
+except Exception as exc:
+    run_multiwfn_on_fchk_files = None
+    process_txt_files = None
+    MULTIWFN_AVAILABLE = False
+    MULTIWFN_IMPORT_ERROR = str(exc)
+
+try:
+    from .features.atom_properties import run_atom_prop_extraction
+    ATOM_PROP_AVAILABLE = True
+    ATOM_PROP_IMPORT_ERROR = None
+except Exception as exc:
+    run_atom_prop_extraction = None
+    ATOM_PROP_AVAILABLE = False
+    ATOM_PROP_IMPORT_ERROR = str(exc)
+
+try:
+    from .visualization.mol_drawer import draw_molecules_from_csv, draw_single_molecule
+    MOL_DRAWER_AVAILABLE = True
+    MOL_DRAWER_IMPORT_ERROR = None
+except Exception as exc:
+    draw_molecules_from_csv = None
+    draw_single_molecule = None
+    MOL_DRAWER_AVAILABLE = False
+    MOL_DRAWER_IMPORT_ERROR = str(exc)
+
+try:
+    from .visualization.interactive_shap_viz import (
+        InteractiveSHAPAnalyzer,
+        MultiwfnPDBGenerator,
+        interactive_shap_viz_main,
+    )
+    INTERACTIVE_SHAP_MAIN_AVAILABLE = True
+    INTERACTIVE_SHAP_IMPORT_ERROR = None
+except Exception as exc:
+    InteractiveSHAPAnalyzer = None
+    MultiwfnPDBGenerator = None
+    interactive_shap_viz_main = None
+    INTERACTIVE_SHAP_MAIN_AVAILABLE = False
+    INTERACTIVE_SHAP_IMPORT_ERROR = str(exc)
 
 def find_latest_surfacia_folder():
     """Find the latest Surfacia output folder"""
@@ -355,6 +400,9 @@ Examples:
   
   # Include test set visualization
   surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_folder --test-csv Test_Set_Detailed.csv
+
+  # Include SPES candidate-prioritization overlay
+  surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_folder --test-csv Test_Set_Detailed.csv --spes-csv SPES_Test_Set_Detailed.csv
   
   # Use AI assistant with API key
   surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_folder --api-key your_api_key
@@ -374,6 +422,8 @@ Features:
                             help='Folder containing XYZ files and molecular structure files')
     parser_shap.add_argument('--test-csv',
                             help='Test_Set_Detailed CSV file for test set visualization (optional)')
+    parser_shap.add_argument('--spes-csv',
+                            help='SPES_Test_Set_Detailed CSV file for SPES overlay visualization (optional)')
     parser_shap.add_argument('--api-key',
                             help='ZhipuAI API key for AI assistant features (optional)')
     parser_shap.add_argument('--skip-surface-gen', action='store_true',
@@ -661,6 +711,13 @@ Safety Features:
         print("🚀 Running Multiwfn analysis...")
         print(f"   Input directory: {args.input_dir}")
         print(f"   Output directory: {args.output_dir}")
+
+        if not MULTIWFN_AVAILABLE:
+            print("❌ Multiwfn dependencies are missing.")
+            if MULTIWFN_IMPORT_ERROR:
+                print(f"   Import error: {MULTIWFN_IMPORT_ERROR}")
+            print("   Please install RDKit first (recommended via conda-forge).")
+            sys.exit(1)
         
         try:
             print("Step 1: Running Multiwfn calculations...")
@@ -675,6 +732,13 @@ Safety Features:
     elif args.command == 'extract-features':
         print(f"🚀 Extracting features using Mode {args.mode}...")
         print(f"   Input file: {args.input}")
+
+        if not ATOM_PROP_AVAILABLE:
+            print("❌ Feature extraction dependencies are missing.")
+            if ATOM_PROP_IMPORT_ERROR:
+                print(f"   Import error: {ATOM_PROP_IMPORT_ERROR}")
+            print("   Please install RDKit first (recommended via conda-forge).")
+            sys.exit(1)
         
         if args.mode == 1 and not args.element:
             print("❌ Error: --element is required for Mode 1")
@@ -821,6 +885,14 @@ Safety Features:
         print("🚀 Starting interactive SHAP visualization...")
         print(f"   Training data: {args.input}")
         print(f"   XYZ folder: {args.xyz_folder}")
+
+        if not INTERACTIVE_SHAP_MAIN_AVAILABLE:
+            print("❌ Interactive SHAP dependencies are missing.")
+            if INTERACTIVE_SHAP_IMPORT_ERROR:
+                print(f"   Import error: {INTERACTIVE_SHAP_IMPORT_ERROR}")
+            print("   Install optional dependencies and retry:")
+            print('   pip install "surfacia[viz,notebook]"')
+            sys.exit(1)
         
         # 检查输入文件
         if not os.path.exists(args.input):
@@ -837,6 +909,7 @@ Safety Features:
                 csv_path=args.input,
                 xyz_path=args.xyz_folder,
                 test_csv_path=args.test_csv if hasattr(args, 'test_csv') else None,
+                spes_csv_path=args.spes_csv if hasattr(args, 'spes_csv') else None,
                 api_key=args.api_key if hasattr(args, 'api_key') else None,
                 skip_surface_gen=args.skip_surface_gen,
                 port=args.port,
@@ -969,6 +1042,12 @@ Safety Features:
         # Step 5: Multiwfn analysis
         if start_step <= 5:
             print("\n=== Step 5: Multiwfn Analysis ===")
+            if not MULTIWFN_AVAILABLE:
+                print("❌ Error in Step 5: Multiwfn dependencies are missing.")
+                if MULTIWFN_IMPORT_ERROR:
+                    print(f"   Import error: {MULTIWFN_IMPORT_ERROR}")
+                print("   Please install RDKit first (recommended via conda-forge).")
+                sys.exit(1)
             try:
                 run_multiwfn_on_fchk_files('.')
                 process_txt_files('.', '.')
@@ -982,6 +1061,12 @@ Safety Features:
         # Step 6: Feature extraction
         if start_step <= 6:
             print("\n=== Step 6: Feature Extraction ===")
+            if not ATOM_PROP_AVAILABLE:
+                print("❌ Error in Step 6: Feature extraction dependencies are missing.")
+                if ATOM_PROP_IMPORT_ERROR:
+                    print(f"   Import error: {ATOM_PROP_IMPORT_ERROR}")
+                print("   Please install RDKit first (recommended via conda-forge).")
+                sys.exit(1)
             try:
                 # 查找 Multiwfn 处理后的特征文件
                 surfacia_folder = find_latest_surfacia_folder()
@@ -1086,50 +1171,63 @@ Safety Features:
         # Step 8: Interactive SHAP Visualization
         if start_step <= 8:
             print("\n=== Step 8: Interactive SHAP Visualization ===")
-            try:
-                # 查找训练和测试文件
-                surfacia_folder = find_latest_surfacia_folder()
-                if not surfacia_folder:
-                    print("❌ Error: Could not find Surfacia output folder")
-                    sys.exit(1)
-                
-                # 查找 Auto 文件夹中的训练和测试文件
-                training_pattern = os.path.join(surfacia_folder, "**/Training_Set_Detailed*.csv")
-                test_pattern = os.path.join(surfacia_folder, "**/Test_Set_Detailed*.csv")
-                
-                training_files = glob.glob(training_pattern, recursive=True)
-                test_files = glob.glob(test_pattern, recursive=True)
-                
-                if not training_files:
-                    print("❌ Error: No Training_Set_Detailed files found. Step 7 may have failed.")
-                    sys.exit(1)
-                
-                # 使用最新的文件
-                latest_training = max(training_files, key=os.path.getmtime)
-                latest_test = max(test_files, key=os.path.getmtime) if test_files else None
-                
-                print(f"   Training file: {os.path.basename(latest_training)}")
-                if latest_test:
-                    print(f"   Test file: {os.path.basename(latest_test)}")
-                
-                # 启动 SHAP 可视化
-                success = interactive_shap_viz_main(
-                    csv_path=latest_training,
-                    xyz_path='.',
-                    test_csv_path=latest_test,
-                    api_key=getattr(args, 'api_key', None),
-                    skip_surface_gen=False,
-                    port=getattr(args, 'port', 8052),
-                    host=getattr(args, 'host', '0.0.0.0')
-                )
-                if success:
-                    print("✅ Interactive SHAP visualization launched successfully!")
-                else:
-                    print("⚠️ SHAP visualization completed with warnings")
-                
-            except Exception as e:
-                print(f"❌ Error in Step 8: {e}")
-                print("⚠️  Continuing without SHAP visualization...")
+            if not INTERACTIVE_SHAP_MAIN_AVAILABLE:
+                print("⚠️ Step 8 skipped: interactive SHAP dependencies are missing.")
+                if INTERACTIVE_SHAP_IMPORT_ERROR:
+                    print(f"   Import error: {INTERACTIVE_SHAP_IMPORT_ERROR}")
+                print('   To enable this step, run: pip install "surfacia[viz,notebook]"')
+                success = False
+            else:
+                try:
+                    # 查找训练和测试文件
+                    surfacia_folder = find_latest_surfacia_folder()
+                    if not surfacia_folder:
+                        print("❌ Error: Could not find Surfacia output folder")
+                        sys.exit(1)
+                    
+                    # 查找 Auto 文件夹中的训练和测试文件
+                    training_pattern = os.path.join(surfacia_folder, "**/Training_Set_Detailed*.csv")
+                    test_pattern = os.path.join(surfacia_folder, "**/Test_Set_Detailed*.csv")
+                    spes_pattern = os.path.join(surfacia_folder, "**/SPES_Test_Set_Detailed*.csv")
+                    
+                    training_files = glob.glob(training_pattern, recursive=True)
+                    test_files = glob.glob(test_pattern, recursive=True)
+                    spes_files = glob.glob(spes_pattern, recursive=True)
+                    
+                    if not training_files:
+                        print("❌ Error: No Training_Set_Detailed files found. Step 7 may have failed.")
+                        sys.exit(1)
+                    
+                    # 使用最新的文件
+                    latest_training = max(training_files, key=os.path.getmtime)
+                    latest_test = max(test_files, key=os.path.getmtime) if test_files else None
+                    latest_spes = max(spes_files, key=os.path.getmtime) if spes_files else None
+                    
+                    print(f"   Training file: {os.path.basename(latest_training)}")
+                    if latest_test:
+                        print(f"   Test file: {os.path.basename(latest_test)}")
+                    if latest_spes:
+                        print(f"   SPES file: {os.path.basename(latest_spes)}")
+                    
+                    # 启动 SHAP 可视化
+                    success = interactive_shap_viz_main(
+                        csv_path=latest_training,
+                        xyz_path='.',
+                        test_csv_path=latest_test,
+                        spes_csv_path=latest_spes,
+                        api_key=getattr(args, 'api_key', None),
+                        skip_surface_gen=False,
+                        port=getattr(args, 'port', 8052),
+                        host=getattr(args, 'host', '0.0.0.0')
+                    )
+                    if success:
+                        print("✅ Interactive SHAP visualization launched successfully!")
+                    else:
+                        print("⚠️ SHAP visualization completed with warnings")
+                    
+                except Exception as e:
+                    print(f"❌ Error in Step 8: {e}")
+                    print("⚠️  Continuing without SHAP visualization...")
         else:
             print("\n⏭️  Step 8: Interactive SHAP Visualization (Skipped)")
         
@@ -1168,6 +1266,13 @@ Safety Features:
     
     elif args.command == 'mol-draw':
         print("🎨 Running molecular drawing tool...")
+
+        if not MOL_DRAWER_AVAILABLE:
+            print("❌ Molecular drawing dependencies are missing.")
+            if MOL_DRAWER_IMPORT_ERROR:
+                print(f"   Import error: {MOL_DRAWER_IMPORT_ERROR}")
+            print("   Please install RDKit first (recommended via conda-forge).")
+            sys.exit(1)
         
         if args.smiles and args.input:
             print("❌ Error: Please specify either --smiles OR --input, not both.")

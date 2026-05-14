@@ -169,7 +169,7 @@ If you use Surfacia in your research, please cite:
      title={Surfacia: A Comprehensive Molecular Surface Analysis Tool},
      author={Surfacia Development Team},
      year={2024},
-     url={https://github.com/username/surfacia},
+     url={https://github.com/sym823808458/Surfacia},
      license={MIT}
    }
 

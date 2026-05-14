@@ -301,7 +301,7 @@ Resume functionality can save significant computation time:
    # ⚡ Starting from Step 5: Surface Mapping
 
 Performance Considerations
--------------------------
+--------------------------
 
 **Memory Usage**
 

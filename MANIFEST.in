@@ -6,20 +6,12 @@ include pyproject.toml
 include setup.py
 
 # Include documentation
-recursive-include docs *
-recursive-include docs/source *
-
-# Include package data
-recursive-include surfacia/data *
-recursive-include surfacia/config *
-recursive-include surfacia/templates *
-
-# Include tests
-recursive-include tests *
-
-# Include examples and tutorials
-include *.ipynb
-include *.py
+include docs/Makefile
+include docs/make.bat
+include docs/README.md
+include docs/requirements.txt
+graft docs/source
+prune docs/build
 
 # Exclude unnecessary files
 global-exclude *.pyc

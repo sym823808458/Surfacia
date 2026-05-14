@@ -11,6 +11,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--training-csv", required=True, help="Training_Set_Detailed CSV path")
     parser.add_argument("--xyz-dir", required=True, help="Directory containing xyz/fchk files")
     parser.add_argument("--test-csv", help="Optional Test_Set_Detailed CSV path")
+    parser.add_argument("--spes-csv", help="Optional SPES_Test_Set_Detailed CSV path")
     parser.add_argument("--port", type=int, default=8052, help="Server port")
     parser.add_argument("--host", default="127.0.0.1", help="Server host")
     parser.add_argument(
@@ -29,6 +30,7 @@ def main() -> int:
         csv_path=args.training_csv,
         xyz_path=args.xyz_dir,
         test_csv_path=args.test_csv,
+        spes_csv_path=args.spes_csv,
         api_key=api_key,
         skip_surface_gen=args.skip_surface_gen,
         port=args.port,

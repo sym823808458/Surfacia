@@ -18,20 +18,20 @@ Utility Commands Overview
    :gutter: 3
 
    .. grid-item-card:: 🎨 mol-drawer
-      :link: #mol-drawer
-      :link-type: ref
+      :link: mol_drawer
+      :link-type: doc
 
       Generate 2D molecular structure visualizations from SMILES strings
 
    .. grid-item-card:: 🔍 mol-viewer
-      :link: #mol-viewer
-      :link-type: ref
+      :link: mol_viewer
+      :link-type: doc
 
       Interactive 3D molecular structure viewer for XYZ files
 
    .. grid-item-card:: 🔄 rerun-gaussian
-      :link: #rerun-gaussian
-      :link-type: ref
+      :link: rerun_gaussian
+      :link-type: doc
 
       Recover and rerun failed Gaussian quantum chemistry calculations
 

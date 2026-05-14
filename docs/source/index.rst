@@ -20,14 +20,8 @@ Quick Navigation
 - Daily usage and troubleshooting: :doc:`user_guide/index`
 - Command and parameter lookup: :doc:`commands/index`
 - Reproducible workflows and templates: :doc:`examples/index`
-- MCP server and agent integration: :doc:`integrations/index`
+- SPES candidate prioritization and SHAP overlays: :doc:`commands/shap_viz`
 
-Project Links
--------------
-
-- GitHub: https://github.com/sym823808458/Surfacia
-- PyPI: https://pypi.org/project/surfacia/
-- Academic homepage: https://sym823808458.github.io/yumingsu_homepage/
 Essential Commands
 ------------------
 
@@ -41,6 +35,18 @@ Essential Commands
 
    # ML-only rerun
    surfacia ml-analysis -i FinalFull_Mode3_20_168.csv --test-samples "1,2,3"
+
+   # SHAP dashboard with SPES overlay
+   surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_files --test-csv Test_Set_Detailed.csv --spes-csv SPES_Test_Set_Detailed.csv
+
+SPES Layer
+----------
+
+Surfacia now includes ``SPES-C`` as a conservative candidate-prioritization layer on top of the selected model.
+
+- It does not replace the core regression model.
+- It uses the training-derived SHAP landscape to score high-potential external candidates.
+- When a test set is available, current ML outputs automatically write ``SPES_Test_Set_Detailed_*.csv`` for use in the interactive SHAP dashboard.
 
 .. toctree::
    :maxdepth: 2

@@ -1,147 +1,103 @@
 Basic Workflow Tutorial
 =======================
 
-This tutorial walks you through the complete Surfacia workflow from molecular input to interpretable machine learning results.
+This tutorial shows the simplest end-to-end Surfacia workflow from input structures to interpretable output.
 
-Objective
----------
+Goal
+----
 
-In this tutorial, you will learn how to:
+Learn how to:
 
-* Prepare molecular input data
-* Run the complete 8-step Surfacia workflow
-* Interpret the results
-* Generate visualizations
+- prepare a minimal input table
+- run the main workflow command
+- locate the most important output files
+- understand what each stage produced
 
-Prerequisites
--------------
+Before You Start
+----------------
 
-Before starting this tutorial, ensure you have:
+You should already have:
 
-* Surfacia installed (see :doc:`../getting_started/installation`)
-* Basic knowledge of SMILES notation
-* Gaussian and Multiwfn installed (for quantum calculations)
-* A sample CSV file with molecular structures
+- Surfacia installed
+- Gaussian and Multiwfn available in your environment
+- a CSV file with at least ``Sample Name`` and ``SMILES`` columns
 
-Step 1: Prepare Input Data
---------------------------
-
-Create a CSV file with your molecules. The file should contain at least a SMILES column:
-
-.. code-block:: csv
-
-   name,smiles,activity
-   benzene,c1ccccc1,1.2
-   toluene,c1ccccc1C,1.5
-   phenol,c1ccccc1O,2.1
-
-Save this as ``molecules.csv`` in your working directory.
-
-Step 2: Run Complete Workflow
-------------------------------
-
-Use the workflow command to process your molecules:
-
-.. code-block:: bash
-
-   surfacia workflow -i molecules.csv --resume --test-samples "1,2,3"
-
-This command will:
-
-1. Convert SMILES to 3D structures
-2. Optimize geometries using XTB
-3. Run quantum chemical calculations with Gaussian
-4. Analyze wavefunctions with Multiwfn
-5. Extract surface descriptors
-6. Perform feature engineering
-7. Train machine learning models
-8. Generate SHAP explanations
-
-Step 3: Monitor Progress
-------------------------
-
-The workflow provides detailed progress updates:
+Minimal Input Example
+---------------------
 
 .. code-block:: text
 
-   [INFO] Starting Surfacia workflow...
-   [INFO] Processing 3 molecules...
-   [INFO] Step 1: Converting SMILES to XYZ...
-   [INFO] Step 2: Geometry optimization with XTB...
-   [INFO] Step 3: Quantum calculations with Gaussian...
-   ...
+   Sample Name,SMILES
+   caffeine,CN1C=NC2=C1C(=O)N(C(=O)N2C)C
+   aspirin,CC(=O)OC1=CC=CC=C1C(=O)O
+   ibuprofen,CC(C)CC1=CC=C(C=C1)C(C)C(=O)O
 
-Step 4: Examine Results
------------------------
+Recommended Path
+----------------
 
-After completion, you'll find several output files:
+1. Prepare your molecule table and target values.
+2. Run the standard workflow command.
+3. Inspect generated descriptor tables.
+4. Review the compact model and SHAP outputs.
 
-* ``results.csv`` - Final predictions and descriptors
-* ``model_results.pkl`` - Trained machine learning model
-* ``shap_analysis.html`` - Interactive SHAP visualization
-* ``molecular_structures/`` - 3D molecular structures
+Run the Workflow
+----------------
 
-Step 5: Visualize Results
-------------------------
-
-Open the SHAP visualization:
+For a first pass, use the full workflow with resume enabled:
 
 .. code-block:: bash
 
-   # Open in browser
-   surfacia shap-viz -i results.csv --api-key YOUR_API_KEY
-   
-   # Or open the HTML file directly
-   open shap_analysis.html
+   surfacia workflow -i molecules.csv --resume --test-samples "1,2"
 
-Expected Results
------------------
+What to Inspect First
+---------------------
 
-You should see:
+After the workflow finishes, focus on these outputs first:
 
-* Molecular structures displayed in 3D
-* SHAP value plots showing feature importance
-* Predicted activities with confidence intervals
-* Surface property visualizations
+- the complete descriptor table
+- the training or modeling table used downstream
+- the compact retained feature list
+- the SHAP visualization outputs
 
-Troubleshooting
-----------------
+Practical Reading Order
+-----------------------
 
-Common issues and solutions:
+If you are new to Surfacia, this order usually works best:
 
-**Gaussian not found**
-   Ensure Gaussian is properly installed and in your PATH. Test with:
+1. confirm the workflow finished cleanly
+2. inspect whether descriptor columns look reasonable
+3. check which features survived compact modeling
+4. inspect SHAP outputs only after the retained features make chemical sense
 
-   .. code-block:: bash
+What a Good First Result Looks Like
+-----------------------------------
 
-      g16 --version
+A good first tutorial run usually gives you:
 
-**Memory issues**
-   Reduce memory allocation for Gaussian:
+- a clean output directory structure
+- descriptors spanning size, shape, electronics, and surface analysis
+- a compact feature subset that is smaller than the raw matrix
+- SHAP results that can be connected back to recognizable chemistry
 
-   .. code-block:: bash
+Common Beginner Mistakes
+------------------------
 
-      surfacia workflow -i molecules.csv --memory 8GB
+- starting with too many molecules before checking one small test run
+- trusting prediction metrics without checking the retained descriptors
+- treating all features as equally meaningful instead of focusing on the compact model
+- using SHAP before confirming the feature table itself is sensible
 
-**Convergence problems**
-   Skip XTB optimization step:
+What to Do Next
+---------------
 
-   .. code-block:: bash
+After one successful run, choose a direction:
 
-      surfacia workflow -i molecules.csv --skip-xtb
+- go to :doc:`advanced_analysis` if you want to compare Surfacia modes
+- go to :doc:`machine_learning` if you want to focus on compact modeling
+- go to :doc:`../examples/index` if you want problem-oriented usage patterns
 
-Next Steps
-----------
+See Also
+--------
 
-After completing this tutorial:
-
-* Try the :doc:`advanced_analysis` tutorial for more complex analyses
-* Learn about :doc:`custom_descriptors` for specialized applications
-* Explore the :doc:`machine_learning` tutorial for advanced ML techniques
-
-Additional Resources
---------------------
-
-* :doc:`../commands/workflow` - Detailed workflow command options
-* :doc:`../commands/mol_viewer` - Molecular visualization tools
-* :doc:`../commands/shap_viz` - SHAP analysis and visualization
+- :doc:`../getting_started/quick_start`
+- :doc:`../commands/workflow`

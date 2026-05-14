@@ -13,8 +13,8 @@ sys.path.insert(0, os.path.abspath('../../'))
 project = 'Surfacia'
 copyright = '2024, Surfacia Development Team'
 author = 'Yuming Su, Yangtao Chen, Yiheng Dai, Cheng Wang'
-release = '3.0.2'
-version = '3.0.2'
+release = '3.0.3'
+version = '3.0.3'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

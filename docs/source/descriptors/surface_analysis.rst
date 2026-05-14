@@ -1,299 +1,113 @@
 Surface Analysis Descriptors
 ============================
 
-Advanced descriptors for detailed characterization of molecular surface properties and features.
+This page describes the Surfacia descriptors that come directly from molecular surface electronic structure and from multi-scale quantitative surface analysis.
 
 Overview
 --------
 
-Surface analysis descriptors provide comprehensive characterization of molecular surfaces beyond basic geometric properties. These descriptors analyze surface topology, curvature, roughness, and local features that are important for understanding molecular recognition, binding, and interactions.
+Surface descriptors are central to Surfacia because many chemically important processes are expressed at the molecular surface:
 
-Available Descriptors
----------------------
+- intermolecular recognition
+- steric accessibility
+- electrostatic complementarity
+- local electron donation and acceptance
 
-Curvature Analysis
-~~~~~~~~~~~~~~~~~~
+Core Surface Properties
+-----------------------
 
-**Mean Curvature**
-  - Average of principal curvatures at each surface point
-  - Units: Ų⁻¹ (inverse Angstroms)
-  - Indicates local surface bending
-  - Positive for convex regions, negative for concave
+Surfacia uses three main surface-electronic quantities.
 
-**Gaussian Curvature**
-  - Product of principal curvatures
-  - Intrinsic measure of surface curvature
-  - Positive for elliptic points (bowl-like)
-  - Negative for hyperbolic points (saddle-like)
+**ESP (Electrostatic Potential)**
+  - Describes charge distribution on the molecular surface
+  - ``ESP_min`` usually marks the most electron-rich region
+  - ``ESP_max`` usually marks the most electron-deficient region
 
-**Principal Curvatures**
-  - Maximum (κ₁) and minimum (κ₂) curvatures
-  - Fundamental geometric properties
-  - Define local surface shape
-  - Used to calculate other curvature measures
+**ALIE (Average Local Ionization Energy)**
+  - Reports local resistance to electron removal
+  - Lower values usually indicate easier electron donation
 
-**Curvature Statistics**
-  - Mean, variance, and distribution of curvatures
-  - Curvature histograms and percentiles
-  - Identification of highly curved regions
-  - Surface roughness quantification
+**LEAE (Local Electron Attachment Energy)**
+  - Reports local tendency to accept electrons
+  - Useful for identifying electrophilic character and local acceptor strength
 
-Surface Topology
-~~~~~~~~~~~~~~~~
-
-**Surface Patches**
-  - Identification of distinct surface regions
-  - Convex, concave, and saddle regions
-  - Patch size and distribution analysis
-  - Connectivity and adjacency relationships
-
-**Critical Points**
-  - Maxima, minima, and saddle points
-  - Topological classification
-  - Critical point density and distribution
-  - Relationship to molecular features
-
-**Ridges and Valleys**
-  - Principal curvature lines
-  - Ridge and valley networks
-  - Structural organization analysis
-  - Flow patterns on surfaces
-
-**Surface Genus**
-  - Topological invariant (number of holes)
-  - Euler characteristic calculation
-  - Surface complexity measure
-  - Important for cavity analysis
-
-Roughness and Texture
-~~~~~~~~~~~~~~~~~~~~~
-
-**Surface Roughness**
-  - Root-mean-square deviation from smooth surface
-  - Average roughness parameters
-  - Peak-to-valley measurements
-  - Texture characterization
-
-**Fractal Dimension**
-  - Self-similarity measure
-  - Scale-invariant surface complexity
-  - Box-counting and other methods
-  - Important for irregular surfaces
-
-**Local Variation**
-  - Surface normal variation
-  - Gradient magnitude analysis
-  - Local smoothness measures
-  - Feature detection
-
-**Texture Descriptors**
-  - Surface pattern analysis
-  - Spatial frequency content
-  - Directional preferences
-  - Anisotropy measures
-
-Cavity and Pocket Analysis
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-**Cavity Detection**
-  - Identification of surface cavities
-  - Volume and depth measurements
-  - Accessibility analysis
-  - Druggability assessment
-
-**Pocket Descriptors**
-  - Pocket volume and surface area
-  - Depth and width measurements
-  - Shape complementarity analysis
-  - Hydrophobic/hydrophilic character
-
-**Tunnel Analysis**
-  - Identification of surface tunnels
-  - Tunnel geometry and connectivity
-  - Accessibility pathways
-  - Molecular transport analysis
-
-**Cleft Characterization**
-  - Surface cleft identification
-  - Geometric properties
-  - Binding site potential
-  - Selectivity analysis
-
-Calculation Methods
--------------------
-
-Surface Representation
-~~~~~~~~~~~~~~~~~~~~~
-
-1. **Triangulated Surfaces**
-   - Mesh-based surface representation
-   - Triangle quality and density
-   - Adaptive refinement
-   - Smooth surface approximation
-
-2. **Implicit Surfaces**
-   - Level-set representations
-   - Signed distance functions
-   - Smooth analytical derivatives
-   - Efficient curvature calculation
-
-3. **Point Cloud Methods**
-   - Discrete surface sampling
-   - Neighborhood analysis
-   - Statistical surface properties
-   - Robust to noise
-
-Curvature Computation
-~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-   # Example surface analysis calculation
-   from surfacia.descriptors import SurfaceAnalysis
-   
-   # Initialize analyzer
-   analyzer = SurfaceAnalysis()
-   
-   # Calculate surface descriptors
-   descriptors = analyzer.calculate(
-       surface_file="molecule_surface.wfn",
-       analysis_types=['curvature', 'topology', 'cavities'],
-       resolution=0.1,
-       smoothing=True
-   )
-   
-   # Access results
-   mean_curvature = descriptors['mean_curvature']
-   cavities = descriptors['cavity_analysis']
-   roughness = descriptors['surface_roughness']
-
-Parameters and Options
-~~~~~~~~~~~~~~~~~~~~~~
-
-**Surface Resolution**
-  - Mesh density and quality
-  - Adaptive refinement criteria
-  - Balance between accuracy and speed
-  - Memory considerations
-
-**Smoothing Options**
-  - Gaussian smoothing parameters
-  - Noise reduction methods
-  - Feature preservation
-  - Scale-dependent analysis
-
-**Analysis Depth**
-  - Which descriptors to calculate
-  - Statistical analysis level
-  - Visualization requirements
-  - Output format preferences
-
-Applications
-------------
-
-Drug Design
-~~~~~~~~~~~
-
-- **Binding site analysis**: Cavity and pocket characterization
-- **Shape complementarity**: Surface matching analysis
-- **Druggability assessment**: Pocket properties evaluation
-- **Selectivity prediction**: Surface feature comparison
-
-Protein Structure Analysis
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- **Active site characterization**: Detailed surface analysis
-- **Allosteric sites**: Surface communication pathways
-- **Protein-protein interfaces**: Contact surface analysis
-- **Conformational changes**: Surface deformation analysis
-
-Material Science
-~~~~~~~~~~~~~~~~
-
-- **Surface catalysis**: Active site identification
-- **Adsorption studies**: Surface accessibility analysis
-- **Wetting properties**: Surface roughness effects
-- **Mechanical properties**: Surface topology relationships
-
-Molecular Recognition
-~~~~~~~~~~~~~~~~~~~~
-
-- **Host-guest interactions**: Complementarity analysis
-- **Enzyme-substrate binding**: Shape and electrostatic matching
-- **Antibody-antigen recognition**: Surface epitope analysis
-- **DNA-protein interactions**: Major groove analysis
-
-Validation and Quality Control
-------------------------------
-
-Accuracy Assessment
-~~~~~~~~~~~~~~~~~~~
-
-- **Mesh quality validation**: Triangle aspect ratios
-- **Convergence testing**: Resolution independence
-- **Method comparison**: Different calculation approaches
-- **Experimental correlation**: Surface property validation
-
-Common Issues
-~~~~~~~~~~~~~
-
-- **Surface artifacts**: Unrealistic features from poor meshing
-- **Numerical instability**: Curvature calculation problems
-- **Scale dependence**: Resolution-dependent results
-- **Boundary effects**: Edge and corner artifacts
-
-Best Practices
-~~~~~~~~~~~~~~
-
-1. **Validate surface quality** before analysis
-2. **Test resolution convergence** for critical applications
-3. **Use appropriate smoothing** to reduce noise
-4. **Visualize results** for quality assessment
-5. **Compare multiple methods** for validation
-
-Advanced Features
+Common Statistics
 -----------------
 
-Multi-scale Analysis
-~~~~~~~~~~~~~~~~~~~
+For a given property, Surfacia frequently reports:
 
-- **Hierarchical surface analysis**: Multiple resolution levels
-- **Scale-space methods**: Feature tracking across scales
-- **Wavelet analysis**: Frequency domain characterization
-- **Coarse-graining**: Simplified surface representations
+- ``*_min``: most extreme low-value region
+- ``*_max``: most extreme high-value region
+- ``*_mean`` or ``*_average``: overall character
+- ``*_delta``: heterogeneity across sites
+- ``*_variance``: statistical spread across the surface
 
-Dynamic Surface Analysis
+Three MQSA Modes
+----------------
+
+Mode 1: Element-Specific
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use this mode when one element is already known to be chemically central.
+
+- generates 13 descriptors
+- aggregates surface properties over atoms of a chosen element
+- useful for element-aware hypothesis testing
+
+Mode 2: Fragment-Specific
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use this mode when you already know the important fragment, catalytic core, or pharmacophore.
+
+- generates 18 descriptors
+- uses the naming pattern ``Fragment_[Property]_[Statistic]``
+- captures how a fixed local motif is perturbed by the surrounding structure
+
+Mode 3: LOFFI Automated
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-- **Time-dependent surfaces**: Molecular dynamics analysis
-- **Surface evolution**: Conformational change tracking
-- **Flow analysis**: Surface deformation patterns
-- **Stability assessment**: Surface feature persistence
+Use this mode when you want broad exploratory analysis without imposing a mechanism first.
 
-Comparative Analysis
-~~~~~~~~~~~~~~~~~~~
+- generates 32 descriptors
+- combines atom-level and functional-group-level summaries
+- is best suited to diverse molecular datasets
 
-- **Surface alignment**: Optimal surface superposition
-- **Difference mapping**: Surface change quantification
-- **Similarity measures**: Surface comparison metrics
-- **Classification**: Surface type identification
+How to Read the Names
+---------------------
 
-Integration with Other Descriptors
------------------------------------
+**Atom_ descriptors**
+  - global atom-level summaries over the full molecular surface
+  - example: ``Atom_ALIE_mean``
 
-Surface analysis descriptors complement:
+**Fun_ descriptors**
+  - statistics over automatically detected functional groups
+  - example: ``Fun_ESP_delta``
 
-- **Electronic properties**: Surface reactivity analysis
-- **Size and shape**: Comprehensive geometric characterization
-- **Hydrophobic properties**: Surface wetting analysis
-- **Binding affinity**: Structure-activity relationships
+**Fragment_ descriptors**
+  - statistics for a user-defined fragment
+  - example: ``Fragment_ESP_mean``
 
-The combination provides detailed molecular surface characterization for various applications in chemistry, biology, and materials science.
+**Element-centered descriptors**
+  - statistics aggregated over a selected element in Mode 1
+  - example: element-specific area, min, max, mean, and delta features
 
-References and Further Reading
-------------------------------
+What the Modes Are Good For
+---------------------------
 
-- Do Carmo, M. P. (1976). *Differential geometry of curves and surfaces*. Prentice-Hall.
-- Koenderink, J. J., & Van Doorn, A. J. (1992). Surface shape and curvature scales. *Image and Vision Computing*, 10(8), 557-564.
-- Connolly, M. L. (1986). Measurement of protein surface shape by solid angles. *Journal of Molecular Graphics*, 4(1), 3-6.
-- Liang, J., Edelsbrunner, H., & Woodward, C. (1998). Anatomy of protein pockets and cavities. *Protein Science*, 7(9), 1884-1897.
+Each mode answers a slightly different question:
+
+- **Mode 1**: "Is this particular element driving the chemistry?"
+- **Mode 2**: "How do substituents perturb a shared reactive fragment?"
+- **Mode 3**: "What local and global surface features matter when I do not want to assume a mechanism first?"
+
+Why These Descriptors Matter
+----------------------------
+
+In practical modeling, surface descriptors often provide the most chemically interpretable bridge between:
+
+- quantum calculations
+- compact machine-learning models
+- SHAP explanations
+- human-readable design insight
+
+They are especially useful when you want to explain not only whether a molecule performs well, but also which regions and which physicochemical patterns are likely responsible.

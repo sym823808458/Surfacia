@@ -309,7 +309,7 @@ Molecular Representations
   - Good for macromolecules
 
 Surface Representations
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 **Solid Surface**
   - Opaque surface rendering
@@ -366,7 +366,7 @@ Structure Formats
   - Chemical structure
 
 Wavefunction Formats
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 **WFN Files**
   - Gaussian wavefunction

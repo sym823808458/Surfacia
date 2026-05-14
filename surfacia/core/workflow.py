@@ -154,10 +154,10 @@ class SurfaciaWorkflow:
         
         # 记录输出
         self.step_outputs['step3'] = {
-            'gjf_files': list(self.workflow_dir.glob("*.gjf"))
+            'com_files': list(self.workflow_dir.glob("*.com"))
         }
         
-        logger.info(f"✅ Step 3 completed. Generated {len(self.step_outputs['step3']['gjf_files'])} Gaussian input files")
+        logger.info(f"✅ Step 3 completed. Generated {len(self.step_outputs['step3']['com_files'])} Gaussian input files")
     
     def _step4_run_gaussian(self):
         """Step 4: Run Gaussian calculations"""
@@ -236,7 +236,7 @@ class SurfaciaWorkflow:
         """Step 7: Machine learning analysis"""
         logger.info("=== Step 7: ML Analysis ===")
         
-        from ..ml.chem_ml_analyzer import ChemMLAnalyzer
+        from ..ml.chem_ml_analyzer_v2 import ChemMLWorkflow
         
         # 找到 FinalFull 文件
         finalfull_files = self.step_outputs['step6']['finalfull_files']
@@ -259,27 +259,22 @@ class SurfaciaWorkflow:
         if kwargs.get('initial_features'):
             initial_features = [f.strip() for f in kwargs['initial_features'].split(',')]
         
-        # 创建分析器
-        analyzer = ChemMLAnalyzer(
+        # 兼容当前 v2 分析器入口
+        output_dir = self.step_outputs['step5']['output_dir']
+        results = ChemMLWorkflow.run_analysis(
+            mode='workflow',
             data_file=str(finalfull_file),
             test_sample_names=test_samples,
-            nan_handling='drop_columns'
-        )
-        
-        # 运行分析
-        results = analyzer.run_full_analysis(
+            nan_handling='drop_columns',
+            output_dir=str(output_dir),
             max_features=kwargs.get('max_features', 5),
-            stepreg_runs=kwargs.get('stepreg_runs', 3),
-            initial_features=initial_features,
+            n_runs=kwargs.get('stepreg_runs', 3),
             epoch=kwargs.get('epoch', 64),
             core_num=kwargs.get('cores', 32),
             train_test_split=kwargs.get('train_test_split', 0.85),
-            shap_fit_threshold=kwargs.get('shap_fit_threshold', 0.3),
-            generate_fitting=kwargs.get('generate_fitting', True)
         )
         
         # 找到生成的分析文件夹
-        output_dir = self.step_outputs['step5']['output_dir']
         analysis_folders = list(output_dir.glob("*Analysis*"))
         if analysis_folders:
             latest_analysis = max(analysis_folders, key=os.path.getmtime)
@@ -288,11 +283,13 @@ class SurfaciaWorkflow:
             # 记录输出
             training_files = list(latest_analysis.glob("**/Training_Set_Detailed*.csv"))
             test_files = list(latest_analysis.glob("**/Test_Set_Detailed*.csv"))
+            spes_files = list(latest_analysis.glob("**/SPES_Test_Set_Detailed*.csv"))
             
             self.step_outputs['step7'] = {
                 'analysis_dir': latest_analysis,
                 'training_files': training_files,
                 'test_files': test_files,
+                'spes_files': spes_files,
                 'results': results
             }
             
@@ -312,9 +309,11 @@ class SurfaciaWorkflow:
             if 'training_files' in self.step_outputs['step7'] and self.step_outputs['step7']['training_files']:
                 training_files = self.step_outputs['step7']['training_files']
                 test_files = self.step_outputs['step7'].get('test_files', [])
+                spes_files = self.step_outputs['step7'].get('spes_files', [])
                 
                 latest_training = max(training_files, key=os.path.getmtime)
                 latest_test = max(test_files, key=os.path.getmtime) if test_files else None
+                latest_spes = max(spes_files, key=os.path.getmtime) if spes_files else None
                 
                 logger.info(f"Using training file: {latest_training}")
                 if latest_test:
@@ -329,6 +328,7 @@ class SurfaciaWorkflow:
                     csv_path=str(latest_training),
                     xyz_path=str(self.workflow_dir),
                     test_csv_path=str(latest_test) if latest_test else None,
+                    spes_csv_path=str(latest_spes) if latest_spes else None,
                     api_key=None,  # 用户可以通过环境变量设置
                     skip_surface_gen=False,
                     port=8052,

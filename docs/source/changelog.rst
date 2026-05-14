@@ -36,6 +36,30 @@ Fixed
 - Addressed Sphinx build warnings and formatting issues
 - Fixed title underline length problems in RST files
 
+[3.0.3] - 2026-05-14
+--------------------
+
+Added
+~~~~~
+- Introduced a packaged ``SPES-C`` candidate-prioritization layer in
+  ``surfacia.ml.spes``.
+- Added automatic ``SPES_Test_Set_Detailed_*.csv`` and metadata JSON outputs
+  when ML analysis includes an external test set.
+- Added SHAP dashboard overlay switching between the raw test set and the SPES
+  layer.
+- Added CLI and MCP support for ``--spes-csv``.
+- Expanded documentation and homepage guidance for SPES usage.
+
+Changed
+~~~~~~~
+- Updated package version metadata to ``3.0.3``.
+- Updated documentation release/version metadata to ``3.0.3``.
+
+Fixed
+~~~~~
+- Aligned workflow auto-discovery so SPES overlay files can be picked up
+  automatically by the final SHAP visualization step.
+
 [3.0.2] - 2026-04-08
 --------------------
 
