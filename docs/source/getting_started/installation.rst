@@ -16,6 +16,10 @@ Requirements
 Install Surfacia
 ----------------
 
+The current release page is:
+
+`Surfacia 3.0.3 on PyPI <https://pypi.org/project/surfacia/3.0.3/>`_
+
 .. code-block:: bash
 
    # optional but recommended
@@ -23,7 +27,7 @@ Install Surfacia
    source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
    pip install --upgrade pip
-   pip install surfacia
+   pip install surfacia==3.0.3
 
 For development from source:
 
