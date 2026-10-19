@@ -171,8 +171,9 @@ def check_calculation_status():
     
     return start_step, step_name, status_info
 
-def main():
+def build_parser():
     parser = argparse.ArgumentParser(
+        prog='surfacia',
         description='Surfacia - Surface Atomic Chemical Interaction Analyzer',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
@@ -197,7 +198,7 @@ UTILITY TOOLS (Independent):
   rerun-gaussian    Rerun failed Gaussian calculations
 
 📚 For detailed help on any command: surfacia <command> --help
-🌐 Documentation: https://github.com/your-repo/surfacia
+🌐 Documentation: https://surfacia.readthedocs.io/zh-cn/latest/
         """)
     
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
@@ -401,8 +402,6 @@ Examples:
   # Include test set visualization
   surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_folder --test-csv Test_Set_Detailed.csv
 
-  # Include SPES candidate-prioritization overlay
-  surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_folder --test-csv Test_Set_Detailed.csv --spes-csv SPES_Test_Set_Detailed.csv
   
   # Use AI assistant with API key
   surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_folder --api-key your_api_key
@@ -422,8 +421,6 @@ Features:
                             help='Folder containing XYZ files and molecular structure files')
     parser_shap.add_argument('--test-csv',
                             help='Test_Set_Detailed CSV file for test set visualization (optional)')
-    parser_shap.add_argument('--spes-csv',
-                            help='SPES_Test_Set_Detailed CSV file for SPES overlay visualization (optional)')
     parser_shap.add_argument('--api-key',
                             help='ZhipuAI API key for AI assistant features (optional)')
     parser_shap.add_argument('--skip-surface-gen', action='store_true',
@@ -598,6 +595,11 @@ Safety Features:
   - Provides detailed progress reporting
                                         """)
     
+    return parser
+
+
+def main():
+    parser = build_parser()
     args = parser.parse_args()
     
     # Command execution logic
@@ -909,7 +911,6 @@ Safety Features:
                 csv_path=args.input,
                 xyz_path=args.xyz_folder,
                 test_csv_path=args.test_csv if hasattr(args, 'test_csv') else None,
-                spes_csv_path=args.spes_csv if hasattr(args, 'spes_csv') else None,
                 api_key=args.api_key if hasattr(args, 'api_key') else None,
                 skip_surface_gen=args.skip_surface_gen,
                 port=args.port,
@@ -1188,11 +1189,9 @@ Safety Features:
                     # 查找 Auto 文件夹中的训练和测试文件
                     training_pattern = os.path.join(surfacia_folder, "**/Training_Set_Detailed*.csv")
                     test_pattern = os.path.join(surfacia_folder, "**/Test_Set_Detailed*.csv")
-                    spes_pattern = os.path.join(surfacia_folder, "**/SPES_Test_Set_Detailed*.csv")
                     
                     training_files = glob.glob(training_pattern, recursive=True)
                     test_files = glob.glob(test_pattern, recursive=True)
-                    spes_files = glob.glob(spes_pattern, recursive=True)
                     
                     if not training_files:
                         print("❌ Error: No Training_Set_Detailed files found. Step 7 may have failed.")
@@ -1201,20 +1200,16 @@ Safety Features:
                     # 使用最新的文件
                     latest_training = max(training_files, key=os.path.getmtime)
                     latest_test = max(test_files, key=os.path.getmtime) if test_files else None
-                    latest_spes = max(spes_files, key=os.path.getmtime) if spes_files else None
                     
                     print(f"   Training file: {os.path.basename(latest_training)}")
                     if latest_test:
                         print(f"   Test file: {os.path.basename(latest_test)}")
-                    if latest_spes:
-                        print(f"   SPES file: {os.path.basename(latest_spes)}")
                     
                     # 启动 SHAP 可视化
                     success = interactive_shap_viz_main(
                         csv_path=latest_training,
                         xyz_path='.',
                         test_csv_path=latest_test,
-                        spes_csv_path=latest_spes,
                         api_key=getattr(args, 'api_key', None),
                         skip_surface_gen=False,
                         port=getattr(args, 'port', 8052),
@@ -1393,7 +1388,8 @@ if __name__ == '__main__':
     # Set start method for compatibility, 'fork' is good for Linux/macOS
     # 'spawn' might be needed for Windows in some cases.
     try:
-        mp.set_start_method('fork')
+        if 'fork' in mp.get_all_start_methods():
+            mp.set_start_method('fork')
     except RuntimeError:
         print("Start method 'fork' already set or not available.")
         

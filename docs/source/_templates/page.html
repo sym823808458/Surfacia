@@ -1,0 +1,5 @@
+{% extends "!page.html" %}
+{% block content %}
+<nav class="language-bar" aria-label="Language"><a href="{{ pathto(current_language_home) }}">Surfacia {{ release }}</a><a class="language-switch" href="{{ pathto(other_language_page) }}" lang="{{ 'en' if pagename.startswith('zh/') else 'zh-CN' }}">{{ other_language_label }}</a></nav>
+{{ super() }}
+{% endblock %}

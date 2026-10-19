@@ -1,112 +1,71 @@
-Surfacia Documentation
-======================
+Surfacia documentation
+============================================================
 
-.. raw:: html
+Molecular surface descriptors, predictive modeling, and chemical interpretation.
 
-   <div class="surfacia-hero">
-   <p class="surfacia-hero-kicker">Documentation</p>
-   <img class="surfacia-hero-logo" src="_static/images/surfacia_logo.png" alt="Surfacia logo">
-   <p class="surfacia-hero-subtitle">A practical manual for installing Surfacia, running the molecular surface workflow, and interpreting outputs.</p>
-   <div class="surfacia-hero-actions">
-   <a class="surfacia-hero-button surfacia-hero-button-primary" href="https://pypi.org/project/surfacia/3.0.3/">Install from PyPI</a>
-   <a class="surfacia-hero-button surfacia-hero-button-secondary" href="getting_started/quick_start.html">Quick Start</a>
-   <a class="surfacia-hero-button surfacia-hero-button-secondary" href="https://github.com/sym823808458/Surfacia">GitHub</a>
-   </div>
-   </div>
+Surfacia connects molecular structures and quantum calculations to whole-molecule,
+surface and local descriptors, compact XGBoost models and SHAP analysis.
+The surface is a **molecular surface**, not a solid catalyst interface simulation.
 
-Choose Your Path
-----------------
+Choose your starting point
+------------------------------------------------------------
 
 .. grid:: 2
    :gutter: 3
 
-   .. grid-item-card:: Install and Run
-      :link: getting_started/index
+   .. grid-item-card:: I have a descriptor table
+      :link: getting_started/quick_start
       :link-type: doc
-      :class-card: surfacia-home-card
 
-      Install the package, check external programs, and run the first workflow.
+      Run a downloadable example, without Gaussian or Multiwfn.
 
-   .. grid-item-card:: User Guide
-      :link: user_guide/index
+   .. grid-item-card:: I have molecular structures
+      :link: user_guide/workflows
       :link-type: doc
-      :class-card: surfacia-home-card
 
-      Learn day-to-day workflows, result interpretation, SPES usage, and troubleshooting.
+      Configure chemistry tools, choose a local region and inspect each stage.
 
-   .. grid-item-card:: Command Reference
-      :link: commands/index
+   .. grid-item-card:: I want to read an explanation
+      :link: examples/interpretation
       :link-type: doc
-      :class-card: surfacia-home-card
 
-      Look up CLI commands, required inputs, common options, and examples.
+      Inspect original predictions, SHAP trends and structures together.
 
-   .. grid-item-card:: API and MCP
-      :link: api/index
+   .. grid-item-card:: I am upgrading
+      :link: migration
       :link-type: doc
-      :class-card: surfacia-home-card
 
-      Use Python APIs directly, or connect Surfacia through the MCP server.
+      Check versions and removal of the former candidate-ranking extension.
 
-Minimal Commands
-----------------
+.. image:: /_static/images/workflow.svg
+   :alt: Structures, molecular surfaces, descriptors, models and interpretation
+   :class: workflow-figure
 
-.. code-block:: bash
+This manual describes the **4.0.0 source revision**. Check the installed version;
+an old pip installation does not change when the website changes.
 
-   pip install surfacia==3.0.3
-   surfacia workflow -i molecules.csv --test-samples "1,3"
-   surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_files --test-csv Test_Set_Detailed.csv
-
-Manual Structure
-----------------
-
-- :doc:`getting_started/index`: installation, first run, and core concepts
-- :doc:`user_guide/index`: practical workflows, SPES guide, best practices, and troubleshooting
-- :doc:`commands/index`: command-line reference
-- :doc:`api/index`: Python API reference
-- :doc:`integrations/index`: MCP server and automation integration
-- :doc:`descriptors/index`: descriptor naming and interpretation
-- :doc:`examples/index`: worked examples and reusable templates
+`GitHub <https://github.com/sym823808458/Surfacia>`_ ·
+`PyPI <https://pypi.org/project/surfacia/>`_ ·
+`Yuming Su <http://yumingsu.top/>`_
 
 .. toctree::
    :maxdepth: 2
-   :caption: Getting Started
    :hidden:
 
-   getting_started/index
-   user_guide/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: References
-   :hidden:
-
+   getting_started/installation
+   getting_started/quick_start
+   getting_started/basic_concepts
+   user_guide/workflows
+   descriptors/index
+   user_guide/results
+   examples/index
    commands/index
    api/index
-   descriptors/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Workflows
-   :hidden:
-
-   tutorials/index
-   examples/index
    integrations/index
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Project
-   :hidden:
-
+   user_guide/best_practices
+   user_guide/troubleshooting
+   migration
    citation
-   contributing
    changelog
+   contributing
    license
-
-Indices and Tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

@@ -458,7 +458,7 @@ class MultiwfnPDBGenerator:
             os.chdir(original_dir)
 
 class InteractiveSHAPAnalyzer:
-    def __init__(self, csv_file_path=None, xyz_folder_path=None, test_csv_path=None, spes_csv_path=None, api_key=None):
+    def __init__(self, csv_file_path=None, xyz_folder_path=None, test_csv_path=None, api_key=None):
         """
         交互式SHAP分析器
         
@@ -466,17 +466,13 @@ class InteractiveSHAPAnalyzer:
         csv_file_path: str, Training_Set_Detailed_xxx.csv文件的绝对路径
         xyz_folder_path: str, 包含xyz文件和等值面PDB文件的文件夹路径
         test_csv_path: str, Test_Set_Detailed_xxx.csv文件的绝对路径（可选）
-        spes_csv_path: str, SPES_Test_Set_Detailed_xxx.csv文件的绝对路径（可选）
         api_key: str, ZhipuAI API密钥（可选）
         """
         self.csv_file_path = csv_file_path
         self.xyz_folder_path = xyz_folder_path
         self.test_csv_path = test_csv_path
-        self.spes_csv_path = spes_csv_path
         self.data = None
         self.test_data = None
-        self.spes_data = None
-        self.spes_metadata = {}
         self.feature_columns = []
         self.shap_columns = []
         self.app = None
@@ -758,10 +754,7 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
         if test_csv_path and os.path.exists(test_csv_path):
             self.load_test_data()
         
-        # 加载SPES数据（如果提供）
-        if spes_csv_path and os.path.exists(spes_csv_path):
-            self.load_spes_data()
-    
+
     def check_and_generate_surface_files(self):
         """检查并生成表面文件"""
         if not self.xyz_folder_path:
@@ -795,32 +788,6 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
             logger.error(f"Test data loading failed: {e}")
             self.test_data = None
 
-    def load_spes_data(self):
-        """加载SPES测试集CSV数据"""
-        try:
-            self.spes_data = pd.read_csv(self.spes_csv_path)
-            logger.info(f"SPES data loaded successfully! Samples: {len(self.spes_data)}")
-
-            metadata_path = None
-            spes_path = Path(self.spes_csv_path)
-            if spes_path.name.startswith("SPES_Test_Set_Detailed_"):
-                metadata_name = spes_path.name.replace("SPES_Test_Set_Detailed_", "SPES_Metadata_").replace(".csv", ".json")
-                metadata_path = spes_path.with_name(metadata_name)
-            if metadata_path and metadata_path.exists():
-                self.spes_metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
-            else:
-                self.spes_metadata = {}
-
-            required_cols = ['Sample_Name', 'Target']
-            missing_cols = [col for col in required_cols if col not in self.spes_data.columns]
-            if missing_cols:
-                logger.warning(f"⚠️ SPES测试集缺少必要列: {missing_cols}")
-
-        except Exception as e:
-            logger.error(f"SPES data loading failed: {e}")
-            self.spes_data = None
-            self.spes_metadata = {}
-    
     def load_data(self):
         """加载CSV数据"""
         try:
@@ -895,25 +862,9 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
                 for key, value in self.user_context.items():
                     context_info += f"- {key}: {value}\n"
 
-            spes_context = ""
-            if self.spes_data is not None:
-                spes_label = self.spes_metadata.get("label", "SPES-C")
-                params = self.spes_metadata.get("parameters", {})
-                spes_context = (
-                    "\n\n当前界面还提供了一个SPES候选优先级图层。"
-                    f"\n- 标签: {spes_label}"
-                    f"\n- 角色: 不是替代回归模型，而是在原始预测上增加候选优先级修正"
-                    f"\n- 可参考列: SPES_Score, SPES_Percentile, SPES_Delta, SPES_Rank"
-                    f"\n- 当前参数: alpha={params.get('alpha', 'N/A')}, k={params.get('k', 'N/A')}, "
-                    f"tau={params.get('tau', 'N/A')}, power={params.get('power', 'N/A')}, "
-                    f"lambda_multiplier={params.get('lambda_multiplier', 'N/A')}"
-                    "\n当用户提到SPES时，要解释它更适合高值候选优先排序，而不是把它说成新的真实标签。"
-                )
-
             system_prompt = f"""你是一个专业的计算化学与数据科学交叉领域的AI助手。你的核心任务是帮助研究人员深入解读基于XGBoost模型生成的SHAP (SHapley Additive exPlanations)图。该模型使用了一套独特的、基于量子化学计算的多尺度分子描述符进行训练，这些描述符旨在从基础属性、电子结构、三维形状到局域反应性等多个层面量化分子的特征。你的目标是将SHAP图所揭示的数学规律，与描述符背后深刻的物理化学原理联系起来，提供具有化学洞察力的分析。
 
 {context_info}
-{spes_context}
 
 以下是详细的分子描述符背景知识，请结合这些知识为用户提供专业解释：
 
@@ -1350,9 +1301,6 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
         options = [{'label': ' 不显示外部样本', 'value': 'none'}]
         if self.test_data is not None:
             options.append({'label': ' 原始测试集', 'value': 'test'})
-        if self.spes_data is not None:
-            spes_label = self.spes_metadata.get('label', 'SPES测试集')
-            options.append({'label': f' {spes_label}', 'value': 'spes'})
         return options
 
     def get_overlay_dataset(self, overlay_mode):
@@ -1366,18 +1314,6 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
                 'color_title': 'Predicted Value',
                 'symbol': 'diamond',
                 'line_color': 'black',
-            }
-        if overlay_mode == 'spes' and self.spes_data is not None:
-            return {
-                'frame': self.spes_data,
-                'name': self.spes_metadata.get('label', 'SPES-C'),
-                'sample_prefix': self.spes_metadata.get('label', 'SPES测试集'),
-                'color_column': 'SPES_Score' if 'SPES_Score' in self.spes_data.columns else (
-                    'Realtest_Pred' if 'Realtest_Pred' in self.spes_data.columns else 'Target'
-                ),
-                'color_title': 'SPES Score' if 'SPES_Score' in self.spes_data.columns else 'Predicted Value',
-                'symbol': 'diamond-open',
-                'line_color': '#5b2c6f',
             }
         return None
     
@@ -1956,7 +1892,7 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
         })
     
     def create_feature_shap_plot(self, selected_feature, overlay_mode='none'):
-        """创建特征-SHAP图 (Feature vs SHAP)，支持测试集或SPES叠加显示"""
+        """创建特征-SHAP图 (Feature vs SHAP)，支持原始测试集叠加显示"""
         if self.data is None or not selected_feature:
             return go.Figure()
 
@@ -2029,7 +1965,7 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
 
         fig.add_trace(scatter_train)
 
-        # 添加外部叠加散点（测试集或SPES）
+        # 添加外部叠加散点（原始测试集）
         overlay_feature_values = None
         overlay_shap_values = None
         overlay_spec = self.get_overlay_dataset(overlay_mode)
@@ -2055,10 +1991,6 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
                     ]
                     if 'Realtest_Pred' in row.index:
                         hover_lines.append(f"Predicted: {row.get('Realtest_Pred', 0):.3f}")
-                    if 'SPES_Score' in row.index:
-                        hover_lines.append(f"SPES Score: {row.get('SPES_Score', 0):.3f}")
-                    if 'SPES_Percentile' in row.index:
-                        hover_lines.append(f"SPES Percentile: {row.get('SPES_Percentile', 0):.1f}")
                     hover_lines.extend(
                         [
                             f"{selected_feature}: {feature_display}",
@@ -2927,7 +2859,7 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
             print(f"📚 知识库：内置分子描述符背景知识")
             print(f"🎓 研究引导：首次使用将引导了解研究背景")
             print(f"🔧 自动计算：自动检查并生成缺失的表面PDB文件")
-            print(f"📈 外部样本显示：支持在SHAP图中切换原始测试集或SPES测试集图层")
+            print(f"📈 外部样本显示：支持在SHAP图中显示原始测试集图层")
             print(f"📋 2D视图增强：详细的特征值与SHAP值表格显示")
             print(f"💾 聊天记录：自动保存所有对话到chat_log.txt文件")
             self.app.run(debug=debug, port=port, host=host)
@@ -2936,7 +2868,7 @@ SHAP图观察: 该图显示，随着 Fun_ESP_delta 值的增大（横轴从左�
 
 
 # 标准的命令行入口函数
-def interactive_shap_viz_main(csv_path, xyz_path, test_csv_path=None, spes_csv_path=None, api_key=None,
+def interactive_shap_viz_main(csv_path, xyz_path, test_csv_path=None, api_key=None,
                              skip_surface_gen=False, port=8052, host='0.0.0.0'):
     """
     标准的命令行入口函数 - 符合 Surfacia CLI 架构
@@ -2945,7 +2877,6 @@ def interactive_shap_viz_main(csv_path, xyz_path, test_csv_path=None, spes_csv_p
     csv_path: Path to Training_Set_Detailed CSV file
     xyz_path: Path to folder containing xyz files
     test_csv_path: Path to Test_Set_Detailed CSV file (optional)
-    spes_csv_path: Path to SPES_Test_Set_Detailed CSV file (optional)
     api_key: ZhipuAI API key (optional)
     skip_surface_gen: Skip surface generation if True
     port: Port for web server
@@ -2981,7 +2912,6 @@ def interactive_shap_viz_main(csv_path, xyz_path, test_csv_path=None, spes_csv_p
             csv_file_path=csv_path,
             xyz_folder_path=xyz_path,
             test_csv_path=test_csv_path,
-            spes_csv_path=spes_csv_path,
             api_key=api_key
         )
         
@@ -2993,12 +2923,12 @@ def interactive_shap_viz_main(csv_path, xyz_path, test_csv_path=None, spes_csv_p
         return False
 
 # 保持向后兼容性的别名
-def run_interactive_shap_viz(csv_path, xyz_path, test_csv_path=None, spes_csv_path=None, api_key=None,
+def run_interactive_shap_viz(csv_path, xyz_path, test_csv_path=None, api_key=None,
                 skip_surface_gen=False, port=8052, host='0.0.0.0'):
     """
     向后兼容性函数 - 调用新的标准入口函数
     """
-    return interactive_shap_viz_main(csv_path, xyz_path, test_csv_path, spes_csv_path, api_key,
+    return interactive_shap_viz_main(csv_path, xyz_path, test_csv_path, api_key,
                                    skip_surface_gen, port, host)
 
 if __name__ == "__main__":
@@ -3011,7 +2941,6 @@ if __name__ == "__main__":
         csv_file_path=csv_file_path,
         xyz_folder_path=xyz_folder_path,
         test_csv_path=test_csv_path,
-        spes_csv_path=None,
 
     )
     analyzer.run_app(debug=True, port=8052)

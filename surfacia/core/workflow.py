@@ -283,13 +283,11 @@ class SurfaciaWorkflow:
             # 记录输出
             training_files = list(latest_analysis.glob("**/Training_Set_Detailed*.csv"))
             test_files = list(latest_analysis.glob("**/Test_Set_Detailed*.csv"))
-            spes_files = list(latest_analysis.glob("**/SPES_Test_Set_Detailed*.csv"))
             
             self.step_outputs['step7'] = {
                 'analysis_dir': latest_analysis,
                 'training_files': training_files,
                 'test_files': test_files,
-                'spes_files': spes_files,
                 'results': results
             }
             
@@ -309,11 +307,9 @@ class SurfaciaWorkflow:
             if 'training_files' in self.step_outputs['step7'] and self.step_outputs['step7']['training_files']:
                 training_files = self.step_outputs['step7']['training_files']
                 test_files = self.step_outputs['step7'].get('test_files', [])
-                spes_files = self.step_outputs['step7'].get('spes_files', [])
                 
                 latest_training = max(training_files, key=os.path.getmtime)
                 latest_test = max(test_files, key=os.path.getmtime) if test_files else None
-                latest_spes = max(spes_files, key=os.path.getmtime) if spes_files else None
                 
                 logger.info(f"Using training file: {latest_training}")
                 if latest_test:
@@ -328,7 +324,6 @@ class SurfaciaWorkflow:
                     csv_path=str(latest_training),
                     xyz_path=str(self.workflow_dir),
                     test_csv_path=str(latest_test) if latest_test else None,
-                    spes_csv_path=str(latest_spes) if latest_spes else None,
                     api_key=None,  # 用户可以通过环境变量设置
                     skip_surface_gen=False,
                     port=8052,

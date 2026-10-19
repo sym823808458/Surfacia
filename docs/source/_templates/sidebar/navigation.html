@@ -1,0 +1,8 @@
+<div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">{{ '使用手册' if pagename.startswith('zh/') else 'Manual' }}</span></p>
+  <ul>
+  {% for route, label in manual_navigation %}
+    <li class="toctree-l1{% if pagename == route %} current{% endif %}"><a class="reference internal" href="{{ pathto(route) }}">{{ label }}</a></li>
+  {% endfor %}
+  </ul>
+</div>

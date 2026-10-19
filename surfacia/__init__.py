@@ -4,7 +4,7 @@ Surfacia - Surface Atomic Chemical Interaction Analyzer.
 
 from importlib import import_module
 
-__version__ = "3.0.3"
+__version__ = "4.0.0"
 __author__ = "YumingSu"
 
 

@@ -24,7 +24,6 @@ warnings.filterwarnings('ignore')
 import matplotlib
 matplotlib.use('Agg')  # 设置为非交互式后端
 
-from .spes import infer_mode_hint, write_spes_artifacts
 
 # 设置默认随机种子
 np.random.seed(42)
@@ -486,18 +485,6 @@ class BaseChemMLAnalyzer:
             test_df.to_csv(save_path, index=False)
             test_csv_path = save_path
 
-            try:
-                mode_hint = infer_mode_hint(self.data_file, prefix, train_csv_path.name, test_csv_path.name)
-                spes_paths = write_spes_artifacts(
-                    training_df=train_df,
-                    test_df=test_df,
-                    output_dir=save_dir,
-                    base_name=f"{prefix}_{self.timestamp}",
-                    mode_hint=mode_hint,
-                )
-                print(f"  SPES overlay saved: {spes_paths['csv'].name}")
-            except Exception as exc:
-                print(f"  Warning: SPES overlay generation skipped ({exc})")
 
     def generate_prediction_scatter(self, perf_dict, feature_names, title_prefix="", save_dir=None):
         """生成预测散点图并保存原始数据"""

@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "surfacia"
-version = "3.0.3"
+version = "4.0.0"
 authors = [
     {name = "YumingSu", email = "823808458@qq.com"},
 ]
-description = "A comprehensive Python package for molecular structure-activity relationship (QSAR/QSPR) studies with interactive SHAP visualization and AI-powered analysis"
+description = "Molecular surface descriptors, predictive modeling and chemically interpretable SHAP analysis"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
@@ -41,6 +41,7 @@ dependencies = [
     "pandas>=1.3.0",
     "scipy>=1.7.0",
     "openbabel-wheel>=3.1.1",
+    "rdkit>=2022.9",
     "scikit-learn>=1.0.0",
     "xgboost>=2.1.4,<3.0.0",
     "shap>=0.48.0,<0.49.0",

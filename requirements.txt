@@ -7,6 +7,7 @@ scipy>=1.7.0
 # RDKit installation notes:
 # - For conda users: conda install -c conda-forge rdkit
 openbabel-wheel>=3.1.1
+rdkit>=2022.9
 
 # Machine Learning
 scikit-learn>=1.0.0

@@ -1,121 +1,71 @@
 # Surfacia
 
-Surface Atomic Chemical Interaction Analyzer for descriptor extraction and interpretable machine learning in computational chemistry.
+Molecular surface descriptors, predictive modeling and chemical interpretation.
 
-## At a Glance
+Surfacia connects **SMILES → 3D → xTB/Gaussian → Multiwfn → descriptors → ML/SHAP**.
+Choose whole-molecule, molecular-surface or local regions to relate a model's
+predictions to chemical structure. It analyzes molecular surfaces; it does not
+by itself simulate an electrode or a solid catalyst interface.
 
-- End-to-end workflow: `SMILES -> 3D -> xTB/Gaussian -> Multiwfn -> descriptors -> ML/SHAP`
-- CLI-first design for local and remote Linux/HPC usage
-- Supports full workflow mode and modular step-by-step execution
-- Includes `SPES-C`, a SHAP-landscape candidate-prioritization layer for high-value test-set ranking
+## Start with your data
 
-## Current Release
+- **Already have descriptors:** run the [downloadable 36-molecule tutorial](https://surfacia.readthedocs.io/zh-cn/latest/examples/descriptor_table.html).
+- **Start from molecular structures:** follow the [surface workflow](https://surfacia.readthedocs.io/zh-cn/latest/user_guide/workflows.html).
+- **Inspect model explanations:** open original predictions and ordinary SHAP in the [interactive case](https://surfacia.readthedocs.io/zh-cn/latest/examples/interpretation.html).
+- **中文手册:** [切换到完整中文内容](https://surfacia.readthedocs.io/zh-cn/latest/zh/index.html).
 
-- Latest stable version: **3.0.3**
-- Python requirement: **>= 3.9**
-- License: **MIT**
-
-PyPI: [https://pypi.org/project/surfacia/](https://pypi.org/project/surfacia/)
-
-## Quick Install (Recommended for Most Users)
+## Install and check your version
 
 ```bash
-# optional but recommended
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-pip install --upgrade pip
-pip install surfacia
-```
-
-Check installation:
-
-```bash
-surfacia --help
+python -m pip install "surfacia[viz]"
 python -c "import surfacia; print(surfacia.__version__)"
+surfacia --help
 ```
 
-## Important Compatibility Note (ML Stage)
-
-To avoid ML parsing failures such as:
-
-`could not convert string to float: '[-3.xxxE0]'`
-
-use the validated dependency range:
-
-- `xgboost>=2.1.4,<3.0.0`
-- `shap>=0.48.0,<0.49.0`
-
-Quick fix:
-
-```bash
-pip install --force-reinstall "xgboost==2.1.4" "shap==0.48.0"
-```
-
-## External Software Requirements
-
-Surfacia orchestrates external quantum-chemistry tools. Ensure these commands are available in your `PATH`:
-
-- `xtb`
-- `g16` (and `formchk`)
-- `Multiwfn` or `Multiwfn_noGUI`
-
-## Minimal Usage
-
-Run full workflow:
-
-```bash
-surfacia workflow -i molecules.csv --test-samples "1,3"
-```
-
-Run ML only (for existing descriptor table):
-
-```bash
-surfacia ml-analysis -i FinalFull_Mode3_20_168.csv \
-  --max-features 1 --stepreg-runs 1 \
-  --train-test-split 0.85 --epoch 32 --cores 8 \
-  --test-samples "1,2,3"
-```
-
-Launch SHAP visualization with SPES overlay:
-
-```bash
-surfacia shap-viz \
-  -i Training_Set_Detailed_Final_5feats_20260209_102423.csv \
-  -x ./xyz_files \
-  --test-csv Test_Set_Detailed_Final_5feats_20260209_102423.csv \
-  --spes-csv SPES_Test_Set_Detailed_Final_5feats_20260209_102423.csv
-```
-
-## SPES Candidate Prioritization
-
-SPES is not a replacement regression model. It is a post-prediction prioritization layer built on the selected Surfacia model and its SHAP landscape.
-
-- The raw selected-model prediction remains the main interpretable regression output.
-- `SPES-C` adds a conservative ranking score for high-value candidate discovery.
-- In the interactive SHAP dashboard, users can switch the external overlay from the raw test set to the SPES test-set layer.
-- When a test set is present, current ML analysis outputs now automatically write `SPES_Test_Set_Detailed_*.csv` and matching metadata JSON files.
-
-## Source Install (Developers)
+This source revision is **4.0.0**. Check [PyPI](https://pypi.org/project/surfacia/)
+for the currently uploaded version. If pip installs 3.0.3, it retains the former
+behavior; install current source to use the scope described here:
 
 ```bash
 git clone https://github.com/sym823808458/Surfacia.git
 cd Surfacia
-pip install -e .
+python -m pip install -e ".[viz]"
 ```
 
-## Documentation
+Use a separate environment, preferably Python 3.10–3.12. The package declares
+Python >=3.9. The ML compatibility ranges remain `xgboost>=2.1.4,<3` and
+`shap>=0.48,<0.49`. The full quantum workflow additionally needs independently
+installed/licensed xTB, Gaussian (`g16`, `formchk`) and Multiwfn. The descriptor-table
+tutorial does not need these external tools.
 
-- Full docs: [https://surfacia.readthedocs.io/](https://surfacia.readthedocs.io/)
-- Troubleshooting: [https://surfacia.readthedocs.io/en/latest/user_guide/troubleshooting.html](https://surfacia.readthedocs.io/en/latest/user_guide/troubleshooting.html)
-- Mode3 top-20 remote debug example: [https://surfacia.readthedocs.io/en/latest/examples/mode3_top20_remote_debug.html](https://surfacia.readthedocs.io/en/latest/examples/mode3_top20_remote_debug.html)
+## A runnable example
 
-## Citation
+From the repository, after installing dependencies:
 
-If Surfacia helps your research, please cite the project and related publication when available.
+```bash
+python examples/descriptor_table/make_data.py
+surfacia ml-analysis -i examples/descriptor_table/descriptors.csv --manual --manual-features Full --test-samples "6,12,18,24,30,36" --epoch 32 --cores 1 --train-test-split 0.85 --no-generate-fitting
+```
 
-## Contact
+The six features and target are computed with RDKit. This is a reproducible
+software tutorial, **not a quantum-surface benchmark or experimental logP validation**.
+The current CLI uses XGBoost regression and repeated random splits. The manual
+documents its evaluation boundaries and distinguishes it from a frozen research
+benchmark. Ordinary SHAP is retained; attribution alone does not prove causality.
 
-- Author: Yuming Su
-- Email: 823808458@qq.com
-- Issues: [https://github.com/sym823808458/Surfacia/issues](https://github.com/sym823808458/Surfacia/issues)
+## Upgrade from 3.0.3
+
+The former Go Beyond/SPES candidate-ranking extension is removed from current
+source: no automatic ranking CSVs, ranking dashboard layer, `--spes-csv` option,
+or `surfacia.ml.spes` API. Original regression predictions and SHAP interpretation
+remain. See [migration notes](https://surfacia.readthedocs.io/zh-cn/latest/migration.html).
+The major version marks removed interfaces, not a new quantum method. Historical
+releases and manuscript archives remain available through their original records.
+
+## Maintain and cite
+
+- [Maintenance](https://github.com/sym823808458/Surfacia/blob/main/MAINTENANCE.md): update docs/cases and build/release checks.
+- [Release audit](https://github.com/sym823808458/Surfacia/blob/main/RELEASE_AUDIT_20261019.md): GitHub, PyPI and Read the Docs findings.
+- [Issues](https://github.com/sym823808458/Surfacia/issues)
+- Author: Yuming Su / 苏禹铭 · 823808458@qq.com
+- License: MIT. Cite the exact software version and commit; no publication DOI is assigned here.

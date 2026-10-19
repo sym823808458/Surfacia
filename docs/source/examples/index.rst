@@ -1,44 +1,33 @@
-Examples
-========
+Reproducible examples
+============================================================
 
-This section is a compact template library. Pick one example and run it directly.
+Start with case 1, then add chemistry stages as needed. Each case separates
+inputs, commands, observed outputs and interpretation limits.
 
-Recommended Order
------------------
+.. grid:: 3
+   :gutter: 2
 
-1. :doc:`basic_molecules`
-2. :doc:`machine_learning`
-3. :doc:`mode3_top20_remote_debug`
+   .. grid-item-card:: 01 · Descriptor table
+      :link: descriptor_table
+      :link-type: doc
 
-Use Case Map
-------------
+      36 public SMILES, computed properties, regression and SHAP.
 
-- Learn the full pipeline quickly: :doc:`basic_molecules`
-- Focus on modeling and SHAP: :doc:`machine_learning`
-- Reproduce remote Linux debugging workflow: :doc:`mode3_top20_remote_debug`
-- Need larger systems: :doc:`complex_systems`
-- Need custom orchestration: :doc:`custom_workflows`
+   .. grid-item-card:: 02 · Sulfur-centered surfaces
+      :link: surface_workflow
+      :link-type: doc
 
-Fast Start Commands
--------------------
+      Inspect real structures and configure your quantum workflow.
 
-.. code-block:: bash
+   .. grid-item-card:: 03 · Read an explanation
+      :link: interpretation
+      :link-type: doc
 
-   # Full workflow
-   surfacia workflow -i molecules.csv --test-samples "1,3"
-
-   # ML only
-   surfacia ml-analysis -i FinalFull_Mode3_20_168.csv --test-samples "1,2,3"
-
-   # Visualization
-   surfacia shap-viz -i Training_Set_Detailed.csv -x ./xyz_files/
+      Actual detailed CSVs, feature values and attribution.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Example Pages
 
-   basic_molecules
-   complex_systems
-   machine_learning
-   custom_workflows
-   mode3_top20_remote_debug
+   descriptor_table
+   surface_workflow
+   interpretation

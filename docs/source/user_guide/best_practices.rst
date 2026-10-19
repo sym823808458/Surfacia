@@ -1,13 +1,14 @@
-Best Practices
-==============
+Reliability and research boundaries
+======================================================================
 
-The best Surfacia results usually come from pairing clean inputs with realistic interpretation.
+Lock targets, identities, molecular states, descriptor settings and test splits
+before fitting. Keep preprocessing in training folds. Compare simple local and
+conventional representations under the same evaluation protocol.
 
-Recommendations
----------------
+Check prediction reliability before interpreting SHAP. Correlated descriptors
+can exchange attribution. Inspect direction, coverage, repeat stability and
+physical plausibility; test mechanisms with independent evidence.
 
-- keep input structures and target tables well organized
-- prefer chemically meaningful subsets over overly broad feature dumping
-- treat very small test sets cautiously
-- use SHAP as a guide to chemistry, not as a substitute for chemical judgment
-- compare compact models before trusting the largest model by default
+Teaching cases do not prove a published validation, universal advantage, causal
+mechanism or performance on a new catalytic system. Do not call an internal
+holdout independent external validation.

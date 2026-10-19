@@ -1,72 +1,32 @@
-Installation
-============
+Installation and versions
+============================================================
 
-This page keeps only the minimum steps needed to start using Surfacia.
-
-Requirements
-------------
-
-- Python ``>=3.9``
-- Linux/macOS/Windows (Linux recommended for long calculations)
-- External tools in ``PATH``:
-  - ``xtb``
-  - ``g16`` and ``formchk``
-  - ``Multiwfn`` or ``Multiwfn_noGUI``
-
-Install Surfacia
-----------------
-
-The current release page is:
-
-`Surfacia 3.0.3 on PyPI <https://pypi.org/project/surfacia/3.0.3/>`_
+Use an isolated environment. Python 3.10–3.12 is a practical choice for the pinned
+ML stack; the declared minimum is 3.9. New Python releases may lack binary wheels.
+Linux is recommended for the full quantum workflow.
 
 .. code-block:: bash
 
-   # optional but recommended
    python -m venv .venv
-   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+   # Linux / macOS
+   source .venv/bin/activate
+   # Windows PowerShell: .venv\Scripts\Activate.ps1
+   python -m pip install --upgrade pip
+   python -m pip install "surfacia[viz]"
+   python -c "import surfacia; print(surfacia.__version__)"
+   surfacia --help
 
-   pip install --upgrade pip
-   pip install surfacia==3.0.3
-
-For development from source:
+PyPI may lag behind this source manual. If the printed version is 3.0.3,
+read :doc:`../migration` or install current source:
 
 .. code-block:: bash
 
    git clone https://github.com/sym823808458/Surfacia.git
    cd Surfacia
-   pip install -e .
+   python -m pip install -e ".[viz]"
 
-Compatibility Note (Important)
-------------------------------
-
-If you see errors like:
-
-.. code-block:: text
-
-   could not convert string to float: '[-3.xxxE0]'
-
-pin ML dependencies to the validated combination:
-
-.. code-block:: bash
-
-   pip install --force-reinstall "xgboost==2.1.4" "shap==0.48.0"
-
-Quick Verification
-------------------
-
-.. code-block:: bash
-
-   surfacia --help
-   python -c "import surfacia, xgboost, shap; print(surfacia.__version__, xgboost.__version__, shap.__version__)"
-   which xtb
-   which g16
-   which formchk
-   which Multiwfn
-
-Next
-----
-
-- First run: :doc:`quick_start`
-- Error handling: :doc:`../user_guide/troubleshooting`
-- Parameter details: :doc:`../commands/index`
+ML constraints remain ``xgboost>=2.1.4,<3`` and ``shap>=0.48,<0.49``.
+The full quantum workflow additionally needs xTB, Gaussian (g16, formchk) and
+Multiwfn, separately installed and licensed. They are not in the pip wheel.
+The descriptor-table case needs none of them. Install ``viz`` for py3Dmol and
+interactive visualization. Next: :doc:`quick_start`.

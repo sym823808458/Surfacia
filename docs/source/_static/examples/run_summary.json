@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-19",
+  "source_version": "4.0.0",
+  "target": "RDKit-computed Crippen logP; not experimental",
+  "features": "RDKit MolWt TPSA HBD HBA RotB Rings; not Surfacia quantum descriptors",
+  "sample_count": 36,
+  "modeling_count": 30,
+  "held_out_names": [
+    6,
+    12,
+    18,
+    24,
+    30,
+    36
+  ],
+  "command": [
+    "surfacia",
+    "ml-analysis",
+    "-i",
+    "examples/descriptor_table/descriptors.csv",
+    "--manual",
+    "--manual-features",
+    "Full",
+    "--test-samples",
+    "6,12,18,24,30,36",
+    "--epoch",
+    "32",
+    "--cores",
+    "1",
+    "--train-test-split",
+    "0.85",
+    "--no-generate-fitting"
+  ],
+  "validation": {
+    "r2": 0.766220121020625,
+    "mae": 0.26720436666666664,
+    "minimum_validation_appearances": 2
+  },
+  "held_out": {
+    "r2": 0.07606792667697748,
+    "mae": 0.30703848333333333
+  },
+  "environment": {
+    "surfacia": "4.0.0",
+    "rdkit": "2025.9.2",
+    "numpy": "2.0.2",
+    "pandas": "2.3.3",
+    "xgboost": "2.1.4",
+    "shap": "0.48.0",
+    "scikit-learn": "1.6.1"
+  },
+  "python": "3.9.23",
+  "quantum_workflow_rerun": false,
+  "unpublished_experiment_data_included": false,
+  "sha256": {
+    "descriptors.csv": "152f5c8ea6a6725c5cfe1309782a6f0a124b52bc6ef879270ab9062aaa596d93",
+    "molecules.csv": "34b31b3a969e84611eea16b8d9c5b3cd308da9105e43b986364048db20a34f03",
+    "sulfur_molecules.csv": "e248a9f6c48bf2e129071460eb66b8db0d4f075885c240ad41532b299f22b571",
+    "Test_Set_Detailed_demo.csv": "d87f178f005867e0bc701954bc29084da1dc0417e94e40ec56c5db6586394c8d",
+    "Training_Set_Detailed_demo.csv": "d422c36d7727c6ebd8dbece72ba445f2c5248afda43c5bfe256fb5cf62b5fe4e"
+  }
+}

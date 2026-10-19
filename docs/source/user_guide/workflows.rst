@@ -1,22 +1,27 @@
-Workflows
-=========
+From structures to interpretation
+==================================================================
 
-Surfacia is most useful when you think in terms of workflow design rather than isolated commands.
+The configured local/Linux workflow is:
 
-A Practical Default
--------------------
+1. SMILES to 3D.
+2. xTB optimization.
+3. Gaussian inputs and wavefunctions.
+4. Multiwfn properties and molecular surfaces.
+5. Whole/local descriptor extraction.
+6. Fixed-feature modeling or exploratory selection.
+7. Original prediction and SHAP inspection.
 
-For most new projects:
+Check :doc:`../getting_started/installation` and work in a dedicated directory.
+The supervised full workflow requires known targets.
 
-1. start with a clean input table
-2. run the standard workflow
-3. inspect descriptor outputs
-4. review the compact model
-5. interpret SHAP results before changing the chemistry
+.. code-block:: bash
 
-When to Switch Modes
---------------------
+   surfacia workflow -i molecules.csv --mode 1 --element S --test-samples "6,12" --epoch 64 --cores 4
 
-- use **Mode 1** when one element is already central to the hypothesis
-- use **Mode 2** when a fixed fragment or scaffold is known
-- use **Mode 3** when you want the broadest exploratory analysis
+This is a **configured recipe**, not a quantum run executed by this manual.
+Inspect charge, spin, method, basis and solvent before long jobs.
+Actual parameters: :doc:`../commands/workflow`. ``--resume`` detects files; it
+does not certify their scientific settings or convergence.
+
+Structure-only inputs: :doc:`../examples/surface_workflow`.
+Existing descriptors: :doc:`../getting_started/quick_start`.

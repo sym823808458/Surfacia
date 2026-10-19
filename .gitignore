@@ -166,3 +166,7 @@ Surfacia_*/
 *.temp
 *.bak
 *.backup
+
+# Local validation and package audit
+.work/
+examples/descriptor_table/*_Analysis_*/
