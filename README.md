@@ -68,4 +68,5 @@ releases and manuscript archives remain available through their original records
 - [Release audit](https://github.com/sym823808458/Surfacia/blob/main/RELEASE_AUDIT_20261019.md): GitHub, PyPI and Read the Docs findings.
 - [Issues](https://github.com/sym823808458/Surfacia/issues)
 - Author: Yuming Su / 苏禹铭 · 823808458@qq.com
-- License: MIT. Cite the exact software version and commit; no publication DOI is assigned here.
+- [Research preprint and citation](https://surfacia.readthedocs.io/zh-cn/latest/citation.html): ChemRxiv v1, posted 2026-08-27, DOI [10.26434/chemrxiv.15007949/v1](https://doi.org/10.26434/chemrxiv.15007949/v1). This archived paper predates the 4.0.0 scope revision; cite the exact software version and commit as well.
+- License: MIT.

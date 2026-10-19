@@ -41,8 +41,13 @@ def main():
                 failures.append(str(page.relative_to(ROOT)) + ': ' + url)
     assert not failures, '\n'.join(failures)
     retired = re.compile(r'\bSPES\b|Go\s+Beyond|SHAP[- ]cliff', re.I)
+    archived_preprint_title = 'Explain and Go Beyond with Surfacia: A Surface-Descriptor based Workflow for Interpretable Molecular Machine Learning'
     for source in (ROOT.parents[1] / 'source').rglob('*.rst'):
-        assert not retired.search(source.read_text(encoding='utf-8')), 'Retired topic in current manual: ' + str(source)
+        text = source.read_text(encoding='utf-8')
+        if source.relative_to(ROOT.parents[1] / 'source').as_posix() in ('citation.rst', 'zh/citation.rst'):
+            # Preserve the exact registered bibliographic title, not retired feature prose.
+            text = text.replace(archived_preprint_title, '')
+        assert not retired.search(text), 'Retired topic in current manual: ' + str(source)
     raw_index = (ROOT / 'searchindex.js').read_text(encoding='utf-8')
     index = json.loads(raw_index.removeprefix('Search.setIndex(').removesuffix(')'))
     for field in ('terms', 'titleterms'):

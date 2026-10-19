@@ -22,6 +22,8 @@ Surfacia：从分子表面到化学解释
 
 `GitHub <https://github.com/sym823808458/Surfacia>`_ · `PyPI <https://pypi.org/project/surfacia/>`_ · `Yuming Su <http://yumingsu.top/>`_
 
+:doc:`研究预印本与引用 <citation>` · ChemRxiv v1（2026 年 8 月 27 日）。
+
 .. toctree::
    :maxdepth: 2
    :hidden:

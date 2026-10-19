@@ -21,6 +21,8 @@ Already have descriptors? Start with :doc:`examples/descriptor_table`; no quantu
 
 `GitHub <https://github.com/sym823808458/Surfacia>`_ · `PyPI <https://pypi.org/project/surfacia/>`_ · `Yuming Su <http://yumingsu.top/>`_
 
+:doc:`Research preprint and citation <citation>` · ChemRxiv v1 (27 August 2026).
+
 .. toctree::
    :maxdepth: 2
    :hidden:

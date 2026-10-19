@@ -29,8 +29,11 @@ Other local copies can contain unrelated work; do not overwrite them.
   dependencies or quantum calculations.
 - Keep the visible sidebar to four starting points: installation, workflow,
   explanation case and command reference. Link supporting pages in context.
-- Current searchable documentation omits retired ranking names, including release
-  and migration prose. Preserve historical records in Git instead.
+- Current documentation omits retired ranking descriptions, including release
+  and migration prose. Preserve historical records in Git. The exact registered
+  title of the archived ChemRxiv v1 is retained only in the paired citation pages;
+  the checker makes that narrow bibliographic exception. Keep the version note
+  explicit and do not present the archived title as current functionality.
 - `python tools/build_explanation_example.py` regenerates signed SHAP figures and
   the small explanation card from the recorded public tutorial CSVs. It does not
   train models, run quantum chemistry or call an LLM. Keep the source-file hashes.
