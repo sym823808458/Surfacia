@@ -2,17 +2,21 @@
 
 .. code-block:: text
 
-   usage: surfacia mol-info [-h] [-i INPUT] [--smiles SMILES] [-o OUTPUT]
-                            [--properties PROPERTIES [PROPERTIES ...]]
+   surfacia mol-info
+
+
 
    options:
-     -h, --help            show this help message and exit
-     -i, --input INPUT     Input CSV file containing SMILES column
-     --smiles SMILES       Single SMILES string to analyze
-     -o, --output OUTPUT   Output CSV file for molecular properties
-     --properties PROPERTIES [PROPERTIES ...]
-                           Properties to calculate: mw, logp, hbd, hba, tpsa,
-                           rotatable_bonds, etc.
+     -h, --help
+       show this help message and exit
+     -i, --input INPUT
+       Input CSV file containing SMILES column
+     --smiles SMILES
+       Single SMILES string to analyze
+     -o, --output OUTPUT
+       Output CSV file for molecular properties
+     --properties PROPERTIES
+       Properties to calculate: mw, logp, hbd, hba, tpsa, rotatable_bonds, etc.
 
    Examples:
      # Analyze single molecule

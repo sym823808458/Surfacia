@@ -2,18 +2,23 @@
 
 .. code-block:: text
 
-   usage: surfacia xyz2gaussian [-h] [--keywords KEYWORDS] [--charge CHARGE]
-                                [--multiplicity MULTIPLICITY] [--nproc NPROC]
-                                [--memory MEMORY]
+   surfacia xyz2gaussian
+
+
 
    options:
-     -h, --help            show this help message and exit
-     --keywords KEYWORDS   Gaussian calculation keywords
-     --charge CHARGE       Molecular charge (default: 0)
+     -h, --help
+       show this help message and exit
+     --keywords KEYWORDS
+       Gaussian calculation keywords
+     --charge CHARGE
+       Molecular charge (default: 0)
      --multiplicity MULTIPLICITY
-                           Spin multiplicity (default: 1)
-     --nproc NPROC         Number of processors (default: 32)
-     --memory MEMORY       Memory allocation (default: 30GB)
+       Spin multiplicity (default: 1)
+     --nproc NPROC
+       Number of processors (default: 32)
+     --memory MEMORY
+       Memory allocation (default: 30GB)
 
    Examples:
      # Generate Gaussian inputs with default DFT settings

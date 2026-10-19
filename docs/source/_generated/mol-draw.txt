@@ -2,17 +2,23 @@
 
 .. code-block:: text
 
-   usage: surfacia mol-draw [-h] [-i INPUT] [--smiles SMILES] [-o OUTPUT]
-                            [--size SIZE SIZE] [--prefix PREFIX]
+   surfacia mol-draw
+
+
 
    options:
-     -h, --help           show this help message and exit
-     -i, --input INPUT    Input CSV file containing SMILES column
-     --smiles SMILES      Single SMILES string to draw
-     -o, --output OUTPUT  Output directory (for CSV) or file path (for single
-                          SMILES)
-     --size SIZE SIZE     Image size as width height (default: 800 800)
-     --prefix PREFIX      Filename prefix for batch processing (default: mol)
+     -h, --help
+       show this help message and exit
+     -i, --input INPUT
+       Input CSV file containing SMILES column
+     --smiles SMILES
+       Single SMILES string to draw
+     -o, --output OUTPUT
+       Output directory (for CSV) or file path (for single SMILES)
+     --size SIZE
+       Image size as width height (default: 800 800)
+     --prefix PREFIX
+       Filename prefix for batch processing (default: mol)
 
    Examples:
      # Draw single molecule

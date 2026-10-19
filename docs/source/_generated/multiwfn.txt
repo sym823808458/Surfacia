@@ -2,15 +2,17 @@
 
 .. code-block:: text
 
-   usage: surfacia multiwfn [-h] [--input-dir INPUT_DIR]
-                            [--output-dir OUTPUT_DIR]
+   surfacia multiwfn
+
+
 
    options:
-     -h, --help            show this help message and exit
+     -h, --help
+       show this help message and exit
      --input-dir INPUT_DIR
-                           Directory containing .fchk files (default: current)
+       Directory containing .fchk files (default: current)
      --output-dir OUTPUT_DIR
-                           Output directory (default: current)
+       Output directory (default: current)
 
    Examples:
      # Analyze all .fchk files in current directory

@@ -2,19 +2,24 @@
 
 .. code-block:: text
 
-   usage: surfacia extract-features [-h] -i INPUT --mode {1,2,3}
-                                    [--element ELEMENT] [--xyz1 XYZ1]
-                                    [--threshold THRESHOLD]
+   surfacia extract-features
+
+
 
    options:
-     -h, --help            show this help message and exit
-     -i, --input INPUT     Input CSV file
-     --mode {1,2,3}        Feature extraction mode: 1=element, 2=fragment,
-                           3=LOFFI
-     --element ELEMENT     Target element for mode 1 (e.g., S, N, O)
-     --xyz1 XYZ1           Fragment XYZ file for mode 2
+     -h, --help
+       show this help message and exit
+     -i, --input INPUT (required)
+       Input CSV file
+     --mode MODE (required)
+       Feature extraction mode: 1=element, 2=fragment, 3=LOFFI
+       choices: 1, 2, 3
+     --element ELEMENT
+       Target element for mode 1 (e.g., S, N, O)
+     --xyz1 XYZ1
+       Fragment XYZ file for mode 2
      --threshold THRESHOLD
-                           Surface analysis threshold (default: 0.001)
+       Surface analysis threshold (default: 0.001)
 
    Examples:
      # Extract features in Mode 1 (element-specific)

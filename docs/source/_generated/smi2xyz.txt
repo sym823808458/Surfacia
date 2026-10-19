@@ -2,11 +2,15 @@
 
 .. code-block:: text
 
-   usage: surfacia smi2xyz [-h] -i INPUT
+   surfacia smi2xyz
+
+
 
    options:
-     -h, --help         show this help message and exit
-     -i, --input INPUT  Input CSV file containing SMILES
+     -h, --help
+       show this help message and exit
+     -i, --input INPUT (required)
+       Input CSV file containing SMILES
 
    Examples:
      # Convert SMILES from CSV file

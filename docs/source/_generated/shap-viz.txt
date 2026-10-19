@@ -2,23 +2,27 @@
 
 .. code-block:: text
 
-   usage: surfacia shap-viz [-h] -i INPUT -x XYZ_FOLDER [--test-csv TEST_CSV]
-                            [--api-key API_KEY] [--skip-surface-gen]
-                            [--port PORT] [--host HOST]
+   surfacia shap-viz
+
+
 
    options:
-     -h, --help            show this help message and exit
-     -i, --input INPUT     Training_Set_Detailed CSV file from ML analysis
-     -x, --xyz-folder XYZ_FOLDER
-                           Folder containing XYZ files and molecular structure
-                           files
-     --test-csv TEST_CSV   Test_Set_Detailed CSV file for test set visualization
-                           (optional)
-     --api-key API_KEY     ZhipuAI API key for AI assistant features (optional)
-     --skip-surface-gen    Skip surface PDB generation if files already exist
-     --port PORT           Port for the web server (default: 8052)
-     --host HOST           Host for the web server (default: 0.0.0.0 for all
-                           interfaces)
+     -h, --help
+       show this help message and exit
+     -i, --input INPUT (required)
+       Training_Set_Detailed CSV file from ML analysis
+     -x, --xyz-folder XYZ_FOLDER (required)
+       Folder containing XYZ files and molecular structure files
+     --test-csv TEST_CSV
+       Test_Set_Detailed CSV file for test set visualization (optional)
+     --api-key API_KEY
+       ZhipuAI API key for AI assistant features (optional)
+     --skip-surface-gen
+       Skip surface PDB generation if files already exist
+     --port PORT
+       Port for the web server (default: 8052)
+     --host HOST
+       Host for the web server (default: 0.0.0.0 for all interfaces)
 
    Examples:
      # Basic SHAP visualization

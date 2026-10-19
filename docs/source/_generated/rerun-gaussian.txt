@@ -2,10 +2,13 @@
 
 .. code-block:: text
 
-   usage: surfacia rerun-gaussian [-h]
+   surfacia rerun-gaussian
+
+
 
    options:
-     -h, --help  show this help message and exit
+     -h, --help
+       show this help message and exit
 
    Examples:
      # Check and rerun failed calculations

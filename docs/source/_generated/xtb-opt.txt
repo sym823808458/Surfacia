@@ -2,17 +2,23 @@
 
 .. code-block:: text
 
-   usage: surfacia xtb-opt [-h] [--method {gfn1,gfn2}]
-                           [--opt-level {crude,sloppy,loose,normal,tight,verytight}]
-                           [--solvent SOLVENT] [--params PARAMS]
+   surfacia xtb-opt
+
+
 
    options:
-     -h, --help            show this help message and exit
-     --method {gfn1,gfn2}  XTB method (default: gfn2)
-     --opt-level {crude,sloppy,loose,normal,tight,verytight}
-                           Optimization convergence level (default: normal)
-     --solvent SOLVENT     Solvent for ALPB model (default: none)
-     --params PARAMS       Custom XTB parameter file
+     -h, --help
+       show this help message and exit
+     --method METHOD
+       XTB method (default: gfn2)
+       choices: gfn1, gfn2
+     --opt-level OPT_LEVEL
+       Optimization convergence level (default: normal)
+       choices: crude, sloppy, loose, normal, tight, verytight
+     --solvent SOLVENT
+       Solvent for ALPB model (default: none)
+     --params PARAMS
+       Custom XTB parameter file
 
    Examples:
      # Basic XTB optimization with default settings

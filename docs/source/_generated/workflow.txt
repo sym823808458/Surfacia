@@ -2,65 +2,62 @@
 
 .. code-block:: text
 
-   usage: surfacia workflow [-h] -i INPUT [--resume] [--skip-xtb]
-                            [--test-samples TEST_SAMPLES] [--keywords KEYWORDS]
-                            [--charge CHARGE] [--multiplicity MULTIPLICITY]
-                            [--nproc NPROC] [--memory MEMORY]
-                            [--extract-mode {1,2,3}]
-                            [--extract-element EXTRACT_ELEMENT]
-                            [--extract-xyz1 EXTRACT_XYZ1]
-                            [--extract-threshold EXTRACT_THRESHOLD]
-                            [--max-features MAX_FEATURES]
-                            [--stepreg-runs STEPREG_RUNS]
-                            [--initial-features INITIAL_FEATURES]
-                            [--train-test-split TRAIN_TEST_SPLIT]
-                            [--shap-fit-threshold SHAP_FIT_THRESHOLD]
-                            [--no-generate-fitting] [--epoch EPOCH]
-                            [--cores CORES] [--api-key API_KEY] [--port PORT]
-                            [--host HOST]
+   surfacia workflow
+
+
 
    options:
-     -h, --help            show this help message and exit
-     -i, --input INPUT     Initial CSV file with SMILES
-     --resume              Resume workflow from existing calculations (smart
-                           continuation)
-     --skip-xtb            Skip XTB optimization
+     -h, --help
+       show this help message and exit
+     -i, --input INPUT (required)
+       Initial CSV file with SMILES
+     --resume
+       Resume workflow from existing calculations (smart continuation)
+     --skip-xtb
+       Skip XTB optimization
      --test-samples TEST_SAMPLES
-                           Test samples for ML analysis
-     --keywords KEYWORDS   Gaussian keywords
-     --charge CHARGE       Molecular charge
+       Test samples for ML analysis
+     --keywords KEYWORDS
+       Gaussian keywords
+     --charge CHARGE
+       Molecular charge
      --multiplicity MULTIPLICITY
-                           Spin multiplicity
-     --nproc NPROC         Number of processors
-     --memory MEMORY       Memory allocation
-     --extract-mode {1,2,3}
-                           Feature extraction mode: 1=element-specific,
-                           2=fragment-specific, 3=LOFFI comprehensive (default:
-                           3)
+       Spin multiplicity
+     --nproc NPROC
+       Number of processors
+     --memory MEMORY
+       Memory allocation
+     --extract-mode EXTRACT_MODE
+       Feature extraction mode: 1=element-specific, 2=fragment-specific, 3=LOFFI comprehensive (default: 3)
+       choices: 1, 2, 3
      --extract-element EXTRACT_ELEMENT
-                           Target element for mode 1 (e.g., S, N, O)
+       Target element for mode 1 (e.g., S, N, O)
      --extract-xyz1 EXTRACT_XYZ1
-                           Fragment XYZ file for mode 2
+       Fragment XYZ file for mode 2
      --extract-threshold EXTRACT_THRESHOLD
-                           Surface analysis threshold for mode 2 (default: 0.001)
+       Surface analysis threshold for mode 2 (default: 0.001)
      --max-features MAX_FEATURES
-                           Maximum features for ML
+       Maximum features for ML
      --stepreg-runs STEPREG_RUNS
-                           Number of stepwise regression runs
+       Number of stepwise regression runs
      --initial-features INITIAL_FEATURES
-                           Comma-separated initial features for stepwise
-                           regression
+       Comma-separated initial features for stepwise regression
      --train-test-split TRAIN_TEST_SPLIT
-                           Train/test split ratio
+       Train/test split ratio
      --shap-fit-threshold SHAP_FIT_THRESHOLD
-                           SHAP R2 threshold for feature recommendation
+       SHAP R2 threshold for feature recommendation
      --no-generate-fitting
-                           Disable generation of fitting plots for manual mode
-     --epoch EPOCH         Number of epochs
-     --cores CORES         Number of CPU cores
-     --api-key API_KEY     ZhipuAI API key for SHAP visualization
-     --port PORT           Port for SHAP visualization server
-     --host HOST           Host for SHAP visualization server
+       Disable generation of fitting plots for manual mode
+     --epoch EPOCH
+       Number of epochs
+     --cores CORES
+       Number of CPU cores
+     --api-key API_KEY
+       ZhipuAI API key for SHAP visualization
+     --port PORT
+       Port for SHAP visualization server
+     --host HOST
+       Host for SHAP visualization server
 
    Examples:
      # Complete workflow with default settings

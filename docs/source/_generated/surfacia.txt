@@ -2,30 +2,16 @@
 
 .. code-block:: text
 
-   usage: surfacia [-h]
-                   {smi2xyz,xtb-opt,xyz2gaussian,run-gaussian,multiwfn,extract-features,ml-analysis,shap-viz,workflow,mol-draw,mol-info,rerun-gaussian} ...
+   surfacia
 
    Surfacia - Surface Atomic Chemical Interaction Analyzer
 
    positional arguments:
-     {smi2xyz,xtb-opt,xyz2gaussian,run-gaussian,multiwfn,extract-features,ml-analysis,shap-viz,workflow,mol-draw,mol-info,rerun-gaussian}
-                           Available commands
-       smi2xyz             Convert SMILES to XYZ coordinates
-       xtb-opt             XTB geometry optimization
-       xyz2gaussian        Generate Gaussian input files
-       run-gaussian        Execute Gaussian calculations
-       multiwfn            Run Multiwfn analysis on .fchk files
-       extract-features    Extract atomic properties and features
-       ml-analysis         Machine learning analysis with feature selection
-       shap-viz            Interactive SHAP analysis with 3D molecular
-                           visualization
-       workflow            Complete end-to-end analysis pipeline
-       mol-draw            Generate 2D molecular structure images from SMILES
-       mol-info            Calculate and display molecular properties
-       rerun-gaussian      Rerun failed Gaussian calculations
+     commands: smi2xyz, xtb-opt, xyz2gaussian, run-gaussian, multiwfn, extract-features, ml-analysis, shap-viz, workflow, mol-draw, mol-info, rerun-gaussian
 
    options:
-     -h, --help            show this help message and exit
+     -h, --help
+       show this help message and exit
 
    🧪 SURFACIA COMMAND OVERVIEW:
 

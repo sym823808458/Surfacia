@@ -2,10 +2,13 @@
 
 .. code-block:: text
 
-   usage: surfacia run-gaussian [-h]
+   surfacia run-gaussian
+
+
 
    options:
-     -h, --help  show this help message and exit
+     -h, --help
+       show this help message and exit
 
    Examples:
      # Run all .com files in current directory
