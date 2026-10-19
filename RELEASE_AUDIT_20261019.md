@@ -29,3 +29,5 @@ edited in place. A new version must pass build/install checks and be uploaded wi
 the owner's publishing authorization. `MAINTENANCE.md` documents the prepared
 Trusted Publisher workflow. Until a new upload is confirmed, pip's default remains
 the version reported by the live PyPI endpoint.
+
+PyPI upload of 4.0.0 is deferred. The recommended install therefore uses GitHub source; plain `pip install surfacia` remains on 3.0.3 until a later confirmed upload.

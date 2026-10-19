@@ -11,11 +11,13 @@
    source .venv/bin/activate
    # Windows PowerShell: .venv\Scripts\Activate.ps1
    python -m pip install --upgrade pip
-   python -m pip install "surfacia[viz]"
+   python -m pip install "surfacia[viz] @ git+https://github.com/sym823808458/Surfacia.git"
    python -c "import surfacia; print(surfacia.__version__)"
    surfacia --help
 
-PyPI 可能落后于源码手册。若输出 3.0.3，阅读 :doc:`../migration` 或安装源码：
+**4.0.0 暂未上传 PyPI，目前 PyPI 仍是 3.0.3。**
+上面的命令从 GitHub 安装新版源码，需要 Git；普通 ``pip install surfacia``
+仍会安装旧版。也可以克隆后安装：
 
 .. code-block:: bash
 
