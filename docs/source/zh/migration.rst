@@ -1,21 +1,11 @@
-版本迁移与范围调整
-============================================================
+升级到 4.0.0
+===============
 
-**4.0.0 统一了程序与手册的范围。** 已上传版本以
-`PyPI <https://pypi.org/project/surfacia/>`_ 为准。安装的 3.0.3 仍有旧行为，需升级或
-改用当前源码。历史 wheel 与研究归档不覆盖。
+安装后运行 ``python -c "import surfacia; print(surfacia.__version__)"`` 核对版本。
 
-当前包移除
-------------------------------------------------------------
+4.0.0 聚焦分子表面描述符、预测与解释。旧脚本如依赖已移除的候选排序接口，需删去相关参数。
+留出样本通过 ``--test-csv`` 读取原始 ``Test_Set_Detailed_*.csv``。
+普通 SHAP、原始预测与表面分析仍可使用。
 
-- 自动 ``SPES_Test_Set_Detailed_*`` / 元数据输出。
-- SPES 图层与自动发现。
-- CLI/MCP 的 ``--spes-csv`` 与 Python 的 ``spes_csv_path`` 参数。
-- ``surfacia.ml.spes`` 排序模块。
-
-旧脚本删除这些参数，用 ``--test-csv`` 指向原始 ``Test_Set_Detailed`` 来查看留出
-预测/SHAP。普通 SHAP、原始预测和表面描述符保留。主版本号记录接口移除，不代表
-新的量子化学方法。
-
-修订研究范围不采用 Go Beyond、frontier acquisition、SHAP-cliff 主张。历史稿件
-保留为过程记录，不静默改写；案例不公开尚未发表的论文数据。
+具体安装见 :doc:`getting_started/installation`，输出见 :doc:`user_guide/results`。
+旧发行包及完整变更记录保留在 Git 历史中。

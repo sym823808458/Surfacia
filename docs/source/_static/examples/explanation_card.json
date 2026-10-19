@@ -1,0 +1,39 @@
+{
+  "source": "Recorded public 36-molecule RDKit-computed logP teaching run",
+  "source_sha256": {
+    "Training_Set_Detailed_demo.csv": "d422c36d7727c6ebd8dbece72ba445f2c5248afda43c5bfe256fb5cf62b5fe4e",
+    "Test_Set_Detailed_demo.csv": "d87f178f005867e0bc701954bc29084da1dc0417e94e40ec56c5db6586394c8d"
+  },
+  "sample": 6,
+  "smiles": "CCCCCO",
+  "computed_target": 1.1689,
+  "prediction": 1.297038,
+  "features": {
+    "MolWt": {
+      "value": 88.15,
+      "shap": 0.5745272
+    },
+    "TPSA": {
+      "value": 20.23,
+      "shap": -0.28170112
+    },
+    "HBD": {
+      "value": 1.0,
+      "shap": -0.088465564
+    },
+    "HBA": {
+      "value": 1.0,
+      "shap": -0.037232623
+    },
+    "RotB": {
+      "value": 3.0,
+      "shap": 0.15914285
+    },
+    "Rings": {
+      "value": 0.0,
+      "shap": -0.033002447
+    }
+  },
+  "not_a_surface_benchmark": true,
+  "no_quantum_rerun_or_llm_call": true
+}

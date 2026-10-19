@@ -35,12 +35,8 @@ def language_context(app, pagename, templatename, context, doctree):
     context['other_language_label'] = 'English' if is_chinese else '中文'
     context['current_language_home'] = 'zh/index' if is_chinese else 'index'
     context['language'] = 'zh-CN' if is_chinese else 'en'
-    routes = ['getting_started/installation', 'getting_started/quick_start',
-              'getting_started/basic_concepts', 'user_guide/workflows',
-              'descriptors/index', 'user_guide/results', 'examples/index',
-              'commands/index', 'api/index', 'integrations/index',
-              'user_guide/best_practices', 'user_guide/troubleshooting',
-              'migration', 'citation', 'changelog', 'contributing', 'license']
+    routes = ['getting_started/installation', 'user_guide/workflows',
+              'examples/interpretation', 'commands/index']
     prefix = 'zh/' if is_chinese else ''
     context['manual_navigation'] = [(prefix + route, app.env.titles[prefix + route].astext()) for route in routes]
 

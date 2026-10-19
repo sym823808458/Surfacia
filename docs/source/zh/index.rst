@@ -1,30 +1,26 @@
 :orphan:
 
-Surfacia 使用手册
-============================================================
+Surfacia：从分子表面到化学解释
+=========================================
 
-分子表面描述符、预测建模与化学解释。
+选择有化学意义的区域，把表面性质转化为描述符，再将模型归因对应回结构与可检验的假设。
+这里的表面是 **孤立分子的表面**。
 
-Surfacia 将结构、量子计算、全分子/表面/局部描述符连接到紧凑的 XGBoost 模型与
-SHAP 分析。这里是 **分子表面**，不是固体催化界面的直接模拟。
+.. image:: /_static/images/explanation_workflow_zh.svg
+   :alt: 化学问题、结构、表面描述符、模型归因、证据卡与可检验假设
+   :class: explanation-workflow
 
-从你的起点开始
-------------------------------------------------------------
+四个入口
+----------
 
-- 已有描述符表：:doc:`getting_started/quick_start`，下载案例直接跑，不需要量化软件。
-- 只有结构：:doc:`user_guide/workflows`，先配置外部程序并确认局部区域。
-- 已有输出：:doc:`examples/interpretation`，联合查看预测、SHAP 和结构。
-- 正在升级：:doc:`migration`，核对版本和已移除的旧候选排序扩展。
+- :doc:`getting_started/installation`：安装已发布的 4.0.0。
+- :doc:`user_guide/workflows`：串起结构、计算、描述符和建模。
+- :doc:`examples/interpretation`：先读一个解释，再下载数据动手。
+- :doc:`commands/index`：需要具体参数时再查。
 
-.. image:: /_static/images/workflow_zh.svg
-   :alt: 结构、分子表面、描述符、建模与解释
-   :class: workflow-figure
+已有描述符表可直接进入 :doc:`examples/descriptor_table`，无需量化软件。
 
-本手册对应 **4.0.0 源码修订**；网页更新不会自动改变本机 pip 包。
-
-`GitHub <https://github.com/sym823808458/Surfacia>`_ ·
-`PyPI <https://pypi.org/project/surfacia/>`_ ·
-`苏禹铭主页 <http://yumingsu.top/>`_
+`GitHub <https://github.com/sym823808458/Surfacia>`_ · `PyPI <https://pypi.org/project/surfacia/>`_ · `Yuming Su <http://yumingsu.top/>`_
 
 .. toctree::
    :maxdepth: 2

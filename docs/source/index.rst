@@ -1,52 +1,25 @@
-Surfacia documentation
+Surfacia · From molecular surfaces to chemical explanations
 ============================================================
 
-Molecular surface descriptors, predictive modeling, and chemical interpretation.
+Choose a chemically meaningful region, turn surface properties into descriptors,
+and connect model attribution to structures and testable hypotheses.
+The surface is an **isolated molecular surface**.
 
-Surfacia connects molecular structures and quantum calculations to whole-molecule,
-surface and local descriptors, compact XGBoost models and SHAP analysis.
-The surface is a **molecular surface**, not a solid catalyst interface simulation.
+.. image:: /_static/images/explanation_workflow.svg
+   :alt: Chemical question, structure, surface descriptors, model attribution, evidence card and hypothesis
+   :class: explanation-workflow
 
-Choose your starting point
-------------------------------------------------------------
+Four starting points
+----------------------
 
-.. grid:: 2
-   :gutter: 3
+- :doc:`getting_started/installation`: install the published 4.0.0 release.
+- :doc:`user_guide/workflows`: connect structures, calculations, descriptors and modeling.
+- :doc:`examples/interpretation`: read an explanation, then work with downloadable data.
+- :doc:`commands/index`: look up individual parameters when needed.
 
-   .. grid-item-card:: I have a descriptor table
-      :link: getting_started/quick_start
-      :link-type: doc
+Already have descriptors? Start with :doc:`examples/descriptor_table`; no quantum software is needed.
 
-      Run a downloadable example, without Gaussian or Multiwfn.
-
-   .. grid-item-card:: I have molecular structures
-      :link: user_guide/workflows
-      :link-type: doc
-
-      Configure chemistry tools, choose a local region and inspect each stage.
-
-   .. grid-item-card:: I want to read an explanation
-      :link: examples/interpretation
-      :link-type: doc
-
-      Inspect original predictions, SHAP trends and structures together.
-
-   .. grid-item-card:: I am upgrading
-      :link: migration
-      :link-type: doc
-
-      Check versions and removal of the former candidate-ranking extension.
-
-.. image:: /_static/images/workflow.svg
-   :alt: Structures, molecular surfaces, descriptors, models and interpretation
-   :class: workflow-figure
-
-This manual describes the **4.0.0 source revision**. Check the installed version;
-an old pip installation does not change when the website changes.
-
-`GitHub <https://github.com/sym823808458/Surfacia>`_ ·
-`PyPI <https://pypi.org/project/surfacia/>`_ ·
-`Yuming Su <http://yumingsu.top/>`_
+`GitHub <https://github.com/sym823808458/Surfacia>`_ · `PyPI <https://pypi.org/project/surfacia/>`_ · `Yuming Su <http://yumingsu.top/>`_
 
 .. toctree::
    :maxdepth: 2

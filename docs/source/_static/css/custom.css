@@ -3,6 +3,7 @@ body {line-height: 1.65;}
 .language-switch {border:1px solid currentColor; border-radius:6px; padding:.25rem .8rem; white-space:nowrap;}
 article h1 {font-size:2.1rem; line-height:1.2; letter-spacing:-.02em;}
 .workflow-figure {display:block; width:auto; max-width:100%; max-height:440px; margin:1.2rem auto;}
+.explanation-workflow {display:block; width:100%; max-width:660px; height:auto; margin:1.2rem auto;}
 .sd-card {border-radius:10px; box-shadow:none;}
 .sd-card-title {line-height:1.4;}
 figure img {max-width:100%; height:auto;}

@@ -22,3 +22,8 @@ ML 引擎是重复随机划分的 XGBoost 回归，不提供任意分类器/算�
    extract_features
    mol_draw
    mol_info
+
+其他资料
+----------
+
+:doc:`../api/index` · :doc:`../integrations/index` · :doc:`../user_guide/results` · :doc:`../user_guide/troubleshooting` · :doc:`../migration` · :doc:`../citation` · :doc:`../changelog` · :doc:`../license`

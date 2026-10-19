@@ -1,0 +1,15 @@
+.. list-table:: An observed output card: sample 6 (1-pentanol)
+   :header-rows: 1
+
+   * - Field
+     - Value and meaning
+   * - SMILES
+     - CCCCCO
+   * - RDKit Crippen logP
+     - 1.1689
+   * - Prediction
+     - 1.2970
+   * - MolWt
+     - 88.15 g/mol; SHAP +0.5745
+   * - TPSA
+     - 20.23 A²; SHAP -0.2817

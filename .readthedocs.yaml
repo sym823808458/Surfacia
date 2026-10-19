@@ -10,3 +10,11 @@ python:
   install:
     - requirements: docs/requirements.txt
 formats: []
+search:
+  ignore:
+    - search.html
+    - search/index.html
+    - 404.html
+    - 404/index.html
+    - user_guide/spes.html
+    - zh/user_guide/spes.html

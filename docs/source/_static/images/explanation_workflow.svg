@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 660" role="img">
+<title>Workflow schematic; not a calculated result</title>
+<rect width="660" height="660" rx="14" fill="#f4f7f9"/>
+<g font-family="Georgia,serif" fill="#183544">
+<rect x="18" y="18" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="54" font-size="23" font-weight="bold">01 · Chemical question</text>
+<text x="38" y="91" font-size="19">Element, conserved fragment, or automated local region</text>
+<path d="M330 125v15m-5-5 5 5 5-5" fill="none" stroke="#d9541a" stroke-width="2"/>
+<rect x="18" y="146" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="182" font-size="23" font-weight="bold">02 · Structure and surface</text>
+<text x="38" y="219" font-size="19">SMILES → xTB → Gaussian → Multiwfn</text>
+<path d="M330 253v15m-5-5 5 5 5-5" fill="none" stroke="#d9541a" stroke-width="2"/>
+<rect x="18" y="274" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="310" font-size="23" font-weight="bold">03 · Physical descriptors</text>
+<text x="38" y="347" font-size="19">Region + ESP / ALIE / LEAE + aggregation rule</text>
+<path d="M330 381v15m-5-5 5 5 5-5" fill="none" stroke="#d9541a" stroke-width="2"/>
+<rect x="18" y="402" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="438" font-size="23" font-weight="bold">04 · Model attribution</text>
+<text x="38" y="475" font-size="19">Prediction quality, then SHAP magnitude and direction</text>
+<path d="M330 509v15m-5-5 5 5 5-5" fill="none" stroke="#d9541a" stroke-width="2"/>
+<rect x="18" y="530" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="566" font-size="23" font-weight="bold">05 · Chemical evidence card</text>
+<text x="38" y="603" font-size="19">Definition, mapping, robustness and a testable hypothesis</text>
+</g></svg>

@@ -1,15 +1,11 @@
-可复现案例
-============================================================
+案例
+======
 
-先跑通案例一，再加入需要的量化阶段。每例分别说明输入、命令、实际输出与解释边界。
-
-- **案例一**：36 个公开 SMILES、计算性质、回归与 SHAP。
-- **案例二**：真实含硫结构与量化流程配置。
-- **案例三**：读取明细 CSV、特征值与模型归因。
+先读 :doc:`interpretation`，把化学问题连接到可阅读的证据卡；需要时再使用两个配套案例。
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   descriptor_table
-   surface_workflow
    interpretation
+   surface_workflow
+   descriptor_table

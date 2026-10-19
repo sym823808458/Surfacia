@@ -1,4 +1,8 @@
 :orphan:
+:no-search:
+
+.. meta::
+   :robots: noindex, follow
 
 Updated documentation
 ============================================================

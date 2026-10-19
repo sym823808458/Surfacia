@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 660" role="img">
+<title>工作流示意；不是计算结果</title>
+<rect width="660" height="660" rx="14" fill="#f4f7f9"/>
+<g font-family="Georgia,serif" fill="#183544">
+<rect x="18" y="18" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="54" font-size="23" font-weight="bold">01 · 化学问题</text>
+<text x="38" y="91" font-size="19">元素、共同片段，或自动局部环境</text>
+<path d="M330 125v15m-5-5 5 5 5-5" fill="none" stroke="#d9541a" stroke-width="2"/>
+<rect x="18" y="146" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="182" font-size="23" font-weight="bold">02 · 结构与表面</text>
+<text x="38" y="219" font-size="19">SMILES → xTB → Gaussian → Multiwfn</text>
+<path d="M330 253v15m-5-5 5 5 5-5" fill="none" stroke="#d9541a" stroke-width="2"/>
+<rect x="18" y="274" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="310" font-size="23" font-weight="bold">03 · 物理描述符</text>
+<text x="38" y="347" font-size="19">明确区域 + ESP / ALIE / LEAE + 统计量</text>
+<path d="M330 381v15m-5-5 5 5 5-5" fill="none" stroke="#d9541a" stroke-width="2"/>
+<rect x="18" y="402" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="438" font-size="23" font-weight="bold">04 · 模型归因</text>
+<text x="38" y="475" font-size="19">先看预测，再看 SHAP 大小与方向</text>
+<path d="M330 509v15m-5-5 5 5 5-5" fill="none" stroke="#d9541a" stroke-width="2"/>
+<rect x="18" y="530" width="624" height="104" rx="10" fill="white" stroke="#b5cad5"/>
+<text x="38" y="566" font-size="23" font-weight="bold">05 · 化学证据卡</text>
+<text x="38" y="603" font-size="19">定义、映射、稳健性、可检验的假设</text>
+</g></svg>

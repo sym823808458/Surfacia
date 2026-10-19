@@ -27,6 +27,18 @@ Other local copies can contain unrelated work; do not overwrite them.
 - Legacy URLs are retained as short pointers to the maintained pages.
 - Documentation builds install only `docs/requirements.txt`, without scientific
   dependencies or quantum calculations.
+- Keep the visible sidebar to four starting points: installation, workflow,
+  explanation case and command reference. Link supporting pages in context.
+- Current searchable documentation omits retired ranking names, including release
+  and migration prose. Preserve historical records in Git instead.
+- `python tools/build_explanation_example.py` regenerates signed SHAP figures and
+  the small explanation card from the recorded public tutorial CSVs. It does not
+  train models, run quantum chemistry or call an LLM. Keep the source-file hashes.
+- Describe element-mode aggregation from the implementation: it averages the
+  per-atom statistics over matching atoms. Do not equate its min/max columns with
+  extrema across all surface points when more than one matching atom is present.
+- The frozen article's dual-model/OOF/perturbation/LLM evaluation is distinct from
+  the public CLI. Do not imply that the viewer or workflow executes that pipeline.
 
 ## Checks
 

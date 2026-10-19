@@ -1,0 +1,15 @@
+.. list-table:: 一个真实输出的解释卡：样本 6（1-戊醇）
+   :header-rows: 1
+
+   * - 字段
+     - 数值与含义
+   * - SMILES
+     - CCCCCO
+   * - RDKit Crippen logP
+     - 1.1689
+   * - 预测
+     - 1.2970
+   * - MolWt
+     - 88.15 g/mol; SHAP +0.5745
+   * - TPSA
+     - 20.23 A²; SHAP -0.2817
