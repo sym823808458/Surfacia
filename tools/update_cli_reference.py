@@ -48,7 +48,8 @@ def generate():
         if item.epilog:
             lines += ['', textwrap.dedent(item.epilog).strip()]
         text += ''.join(('   ' + line.rstrip() if line.strip() else '') + '\n' for line in '\n'.join(lines).splitlines())
-        (folder / (name + '.txt')).write_text(text.rstrip() + '\n', encoding='utf-8', newline='\n')
+        with (folder / (name + '.txt')).open('w', encoding='utf-8', newline='\n') as handle:
+            handle.write(text.rstrip() + '\n')
     print('Generated CLI references:', len(choices) + 1)
 
 
