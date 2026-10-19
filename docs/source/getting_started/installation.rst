@@ -12,13 +12,19 @@ Linux is recommended for the full quantum workflow.
    source .venv/bin/activate
    # Windows PowerShell: .venv\Scripts\Activate.ps1
    python -m pip install --upgrade pip
-   python -m pip install "surfacia[viz] @ git+https://github.com/sym823808458/Surfacia.git"
+   python -m pip install --upgrade "surfacia[viz]==4.0.0"
    python -c "import surfacia; print(surfacia.__version__)"
    surfacia --help
 
-**PyPI publication of 4.0.0 is pending; the current PyPI release is 3.0.3.**
-The command above installs current GitHub source and requires Git. A plain
-``pip install surfacia`` still installs the former version. Alternatively clone:
+**This manual covers 4.0.0.** The upgrade removes the former candidate-ranking
+extension from 3.0.3. Verify the version printed above. If a package mirror still
+serves the older release, use the official index:
+
+.. code-block:: bash
+
+   python -m pip install --upgrade --index-url https://pypi.org/simple "surfacia[viz]==4.0.0"
+
+For development, install from GitHub source:
 
 .. code-block:: bash
 

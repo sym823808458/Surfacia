@@ -1,7 +1,7 @@
 Migration and scope alignment
 ============================================================
 
-**4.0.0 is a source revision for scope alignment.** Check
+**4.0.0 aligns the package and documentation scope.** Check
 `PyPI <https://pypi.org/project/surfacia/>`_ for uploaded versions. An installed
 3.0.3 retains its old behavior until upgraded or replaced with current source.
 Historical wheels and research archives are not overwritten.

@@ -25,9 +25,21 @@ fabricated target or claimed quantum rerun.
 ## Version availability
 
 This audit distinguishes source and uploaded distributions. PyPI 3.0.3 cannot be
-edited in place. A new version must pass build/install checks and be uploaded with
-the owner's publishing authorization. `MAINTENANCE.md` documents the prepared
-Trusted Publisher workflow. Until a new upload is confirmed, pip's default remains
-the version reported by the live PyPI endpoint.
+edited in place. Version 4.0.0 is a new distribution, with build/install checks
+and owner-authorized publication. `MAINTENANCE.md` documents the prepared
+Trusted Publisher workflow. Verify current availability using the live PyPI endpoint.
 
-PyPI upload of 4.0.0 is deferred. The recommended install therefore uses GitHub source; plain `pip install surfacia` remains on 3.0.3 until a later confirmed upload.
+Upgrade with `python -m pip install --upgrade "surfacia[viz]==4.0.0"`. Package mirrors may lag behind the official PyPI index. Older release artifacts remain unchanged.
+
+## Publication verification
+
+On 2026-10-19, the version-specific PyPI JSON endpoint confirmed both the 4.0.0
+wheel and source distribution. Both SHA-256 hashes matched the checked local
+artifacts. A fresh download and forced installation from the official PyPI
+index succeeded; the imported module reported 4.0.0 from site-packages.
+
+The installed package ran the 36-molecule descriptor-table case outside the
+source directory, using 32 training rounds and six held-out samples. Validation
+R-squared was 0.7662 and held-out R-squared was 0.0761, matching the documented
+teaching case. Original training/test prediction files were produced; no SPES
+ranking files were produced. This is not a quantum-surface benchmark.

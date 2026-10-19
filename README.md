@@ -17,14 +17,14 @@ by itself simulate an electrode or a solid catalyst interface.
 ## Install and check your version
 
 ```bash
-python -m pip install "surfacia[viz] @ git+https://github.com/sym823808458/Surfacia.git"
+python -m pip install --upgrade "surfacia[viz]"
 python -c "import surfacia; print(surfacia.__version__)"
 surfacia --help
 ```
 
-This source revision is **4.0.0**; its PyPI upload is pending. PyPI currently
-provides **3.0.3**, which retains the former behavior. The command above installs
-current GitHub source and requires Git. Alternatively clone it:
+The current version is **4.0.0**. Upgrade an existing 3.0.3 installation to remove
+the former candidate-ranking extension. Check the printed version after installing.
+For development from GitHub source:
 
 ```bash
 git clone https://github.com/sym823808458/Surfacia.git
